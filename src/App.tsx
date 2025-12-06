@@ -10,7 +10,7 @@ import { MainLayout } from './components/MainLayout';
 import { syncFromFirestore } from './utils/storage';
 
 function AppContent() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
   // 앱 시작 시 Firestore에서 데이터 동기화
   useEffect(() => {
@@ -18,6 +18,18 @@ function AppContent() {
       syncFromFirestore();
     }
   }, [isAuthenticated]);
+
+  // 로딩 중에는 로딩 화면 표시
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
 
   return isAuthenticated ? <MainLayout /> : <AuthPage />;
 }
