@@ -23,8 +23,9 @@ interface PartnerInfo {
 export const UserManagementPage = () => {
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
+  const [firebaseUsers, setFirebaseUsers] = useState<User[]>([]);
   const [partners, setPartners] = useState<PartnerInfo[]>([]);
-  const [activeTab, setActiveTab] = useState<'users' | 'partners'>('users');
+  const [activeTab, setActiveTab] = useState<'firebase' | 'users' | 'partners'>('firebase');
   const [isEditing, setIsEditing] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editingPartner, setEditingPartner] = useState<PartnerInfo | null>(null);
@@ -40,39 +41,32 @@ export const UserManagementPage = () => {
 
   useEffect(() => {
     if (currentUser?.role === 'admin') {
+      loadFirebaseUsers();
       loadUsers();
       loadPartners();
     }
   }, [currentUser]);
 
-  const loadUsers = async () => {
+  // Firebase 사용자 목록 로드
+  const loadFirebaseUsers = async () => {
     try {
-      // Firebase Firestore에서 사용자 목록 가져오기
       const usersCollection = collection(db, 'users');
       const usersSnapshot = await getDocs(usersCollection);
-      const firebaseUsers: User[] = usersSnapshot.docs.map(doc => ({
+      const fbUsers: User[] = usersSnapshot.docs.map(doc => ({
         ...doc.data() as User,
-        firebaseUid: doc.id, // Firebase UID 저장
+        firebaseUid: doc.id,
       }));
-
-      // 로컬 스토리지 사용자도 함께 표시 (호환성)
-      const localUsers = getUsers();
-
-      // Firebase 사용자와 로컬 사용자 합치기 (중복 제거)
-      const allUsers = [...firebaseUsers];
-      localUsers.forEach(localUser => {
-        if (!firebaseUsers.find(u => u.id === localUser.id)) {
-          allUsers.push(localUser);
-        }
-      });
-
-      setUsers(allUsers);
+      setFirebaseUsers(fbUsers);
     } catch (error) {
-      console.error('사용자 목록 로드 실패:', error);
-      // 오류 시 로컬 스토리지에서만 가져오기
-      const localUsers = getUsers();
-      setUsers(localUsers);
+      console.error('Firebase 사용자 목록 로드 실패:', error);
+      setFirebaseUsers([]);
     }
+  };
+
+  // 로컬 스토리지 사용자 목록 로드
+  const loadUsers = () => {
+    const localUsers = getUsers();
+    setUsers(localUsers);
   };
 
   const initializeSampleUsers = () => {
@@ -742,6 +736,16 @@ export const UserManagementPage = () => {
       <div className="bg-white rounded-lg shadow-md mb-6">
         <div className="flex border-b border-gray-200">
           <button
+            onClick={() => setActiveTab('firebase')}
+            className={`flex-1 px-6 py-4 font-semibold transition-colors ${
+              activeTab === 'firebase'
+                ? 'bg-green-600 text-white border-b-2 border-green-600'
+                : 'text-gray-700 hover:bg-gray-50'
+            }`}
+          >
+            🔐 Firebase 가입 회원 ({firebaseUsers.length})
+          </button>
+          <button
             onClick={() => setActiveTab('users')}
             className={`flex-1 px-6 py-4 font-semibold transition-colors ${
               activeTab === 'users'
@@ -755,7 +759,7 @@ export const UserManagementPage = () => {
             onClick={() => setActiveTab('partners')}
             className={`flex-1 px-6 py-4 font-semibold transition-colors ${
               activeTab === 'partners'
-                ? 'bg-blue-600 text-white border-b-2 border-blue-600'
+                ? 'bg-purple-600 text-white border-b-2 border-purple-600'
                 : 'text-gray-700 hover:bg-gray-50'
             }`}
           >
@@ -763,6 +767,74 @@ export const UserManagementPage = () => {
           </button>
         </div>
       </div>
+
+      {/* Firebase 가입 회원 목록 */}
+      {activeTab === 'firebase' && (
+        <>
+          {firebaseUsers.length === 0 ? (
+            <div className="bg-white rounded-lg shadow-md p-12 text-center">
+              <p className="text-gray-500">Firebase로 가입한 회원이 없습니다.</p>
+              <p className="text-sm text-gray-400 mt-2">
+                회원가입 페이지에서 가입하면 여기에 표시됩니다.
+              </p>
+            </div>
+          ) : (
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-green-50 border-b border-green-200 px-6 py-3">
+                <p className="text-sm text-green-800">
+                  🔐 Firebase Authentication으로 가입한 사용자 목록입니다.
+                </p>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                        이메일
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                        이름
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                        권한
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                        안내견 이름
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                        Firebase UID
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {firebaseUsers.map((user) => (
+                      <tr key={user.firebaseUid} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm text-gray-800 font-semibold">
+                          {user.id}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-800">
+                          {user.name}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-800">
+                          <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
+                            {getRoleName(user.role)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {user.dogName || '-'}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-400 font-mono text-xs">
+                          {user.firebaseUid?.substring(0, 8)}...
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </>
+      )}
 
       {/* 시스템 회원 목록 */}
       {activeTab === 'users' && (
