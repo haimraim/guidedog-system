@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import type { User, UserRole } from '../types/types';
 import { getUsers, saveUser, deleteUser } from '../utils/storage';
+import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 interface PartnerInfo {
   id: string;
@@ -43,9 +45,34 @@ export const UserManagementPage = () => {
     }
   }, [currentUser]);
 
-  const loadUsers = () => {
-    const allUsers = getUsers();
-    setUsers(allUsers);
+  const loadUsers = async () => {
+    try {
+      // Firebase Firestore에서 사용자 목록 가져오기
+      const usersCollection = collection(db, 'users');
+      const usersSnapshot = await getDocs(usersCollection);
+      const firebaseUsers: User[] = usersSnapshot.docs.map(doc => ({
+        ...doc.data() as User,
+        firebaseUid: doc.id, // Firebase UID 저장
+      }));
+
+      // 로컬 스토리지 사용자도 함께 표시 (호환성)
+      const localUsers = getUsers();
+
+      // Firebase 사용자와 로컬 사용자 합치기 (중복 제거)
+      const allUsers = [...firebaseUsers];
+      localUsers.forEach(localUser => {
+        if (!firebaseUsers.find(u => u.id === localUser.id)) {
+          allUsers.push(localUser);
+        }
+      });
+
+      setUsers(allUsers);
+    } catch (error) {
+      console.error('사용자 목록 로드 실패:', error);
+      // 오류 시 로컬 스토리지에서만 가져오기
+      const localUsers = getUsers();
+      setUsers(localUsers);
+    }
   };
 
   const initializeSampleUsers = () => {
