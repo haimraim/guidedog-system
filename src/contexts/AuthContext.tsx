@@ -1,17 +1,31 @@
 /**
  * 사용자 인증 컨텍스트
+ * Firebase Authentication 통합
  */
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { User } from '../types/types';
+import type { User as FirebaseUser } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  updateProfile
+} from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
 import { getGuideDogs, getActivities, getPartners, getUsers } from '../utils/storage';
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => boolean;
-  logout: () => void;
+  firebaseUser: FirebaseUser | null;
+  login: (username: string, password: string) => Promise<boolean>;
+  register: (email: string, password: string, userData: Partial<User>) => Promise<boolean>;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,16 +44,95 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // 세션 스토리지에서 사용자 정보 복원
+  // Firebase Auth 상태 변경 리스너
   useEffect(() => {
-    const savedUser = sessionStorage.getItem('guidedog_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setFirebaseUser(firebaseUser);
+
+      if (firebaseUser) {
+        // Firestore에서 사용자 역할 정보 가져오기
+        try {
+          const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data() as User;
+            setUser(userData);
+          } else {
+            // Firestore에 사용자 데이터가 없으면 기본값 설정
+            const defaultUser: User = {
+              id: firebaseUser.email || firebaseUser.uid,
+              role: 'admin',
+              name: firebaseUser.displayName || '사용자',
+            };
+            setUser(defaultUser);
+          }
+        } catch (error) {
+          console.error('사용자 데이터 로드 실패:', error);
+        }
+      } else {
+        setUser(null);
+      }
+
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const login = (username: string, password: string): boolean => {
+  // 회원가입 함수
+  const register = async (email: string, password: string, userData: Partial<User>): Promise<boolean> => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const firebaseUser = userCredential.user;
+
+      // 사용자 프로필 업데이트
+      if (userData.name) {
+        await updateProfile(firebaseUser, {
+          displayName: userData.name
+        });
+      }
+
+      // Firestore에 사용자 역할 정보 저장
+      const userDoc: User = {
+        id: email,
+        role: userData.role || 'admin',
+        name: userData.name || '사용자',
+        dogName: userData.dogName,
+        category: userData.category,
+      };
+
+      await setDoc(doc(db, 'users', firebaseUser.uid), userDoc);
+      return true;
+    } catch (error) {
+      console.error('회원가입 실패:', error);
+      return false;
+    }
+  };
+
+  const login = async (username: string, password: string): Promise<boolean> => {
+    try {
+      // Firebase Authentication 로그인 시도
+      // username을 이메일 형식으로 변환
+      const email = username.includes('@') ? username : `${username}@guidedogsystem.com`;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        return true;
+      } catch (firebaseError) {
+        console.log('Firebase 로그인 실패, 로컬 인증 시도:', firebaseError);
+        // Firebase 로그인 실패 시 기존 로컬 인증으로 폴백
+        return localLogin(username, password);
+      }
+    } catch (error) {
+      console.error('로그인 실패:', error);
+      return false;
+    }
+  };
+
+  // 기존 로컬 인증 로직 (폴백용)
+  const localLogin = (username: string, password: string): boolean => {
     // 먼저 로컬스토리지에 저장된 사용자 계정 확인
     const users = getUsers();
     const foundUser = users.find(u => u.id === username && u.password === password);
@@ -181,17 +274,38 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return false;
   };
 
-  const logout = () => {
-    setUser(null);
-    sessionStorage.removeItem('guidedog_user');
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setFirebaseUser(null);
+      sessionStorage.removeItem('guidedog_user');
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+    }
   };
 
   const value: AuthContextType = {
     user,
+    firebaseUser,
     login,
+    register,
     logout,
     isAuthenticated: !!user,
+    loading,
   };
+
+  // 로딩 중에는 로딩 화면 표시
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

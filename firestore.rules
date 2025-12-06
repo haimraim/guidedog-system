@@ -1,0 +1,104 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 사용자 인증 확인 헬퍼 함수
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // 사용자가 자신의 데이터에 접근하는지 확인
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 사용자가 관리자 역할인지 확인
+    function isAdmin() {
+      return isAuthenticated() &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // 사용자 컬렉션 규칙
+    match /users/{userId} {
+      // 읽기: 로그인한 사용자는 자신의 데이터만 읽을 수 있음
+      allow read: if isOwner(userId) || isAdmin();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 안내견 데이터 컬렉션 규칙
+    match /guideDogs/{dogId} {
+      // 읽기: 로그인한 사용자만 가능
+      allow read: if isAuthenticated();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 활동 데이터 컬렉션 규칙
+    match /activities/{activityId} {
+      // 읽기: 로그인한 사용자만 가능
+      allow read: if isAuthenticated();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 파트너 데이터 컬렉션 규칙
+    match /partners/{partnerId} {
+      // 읽기: 로그인한 사용자만 가능
+      allow read: if isAuthenticated();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 일지 데이터 컬렉션 규칙
+    match /diaries/{diaryId} {
+      // 읽기: 로그인한 사용자만 가능
+      allow read: if isAuthenticated();
+
+      // 쓰기: 로그인한 사용자만 가능 (자신의 일지 작성)
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() &&
+                             (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // 의료 기록 컬렉션 규칙
+    match /medicalRecords/{recordId} {
+      // 읽기: 로그인한 사용자만 가능
+      allow read: if isAuthenticated();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 제품 데이터 컬렉션 규칙
+    match /products/{productId} {
+      // 읽기: 로그인한 사용자만 가능
+      allow read: if isAuthenticated();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 주문 데이터 컬렉션 규칙
+    match /orders/{orderId} {
+      // 읽기: 로그인한 사용자만 가능
+      allow read: if isAuthenticated();
+
+      // 쓰기: 로그인한 사용자만 가능
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() &&
+                             (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // 기타 모든 컬렉션에 대한 기본 규칙
+    match /{document=**} {
+      // 기본적으로 로그인한 사용자만 읽기 가능, 관리자만 쓰기 가능
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

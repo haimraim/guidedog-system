@@ -1,6 +1,7 @@
 // Firebase 설정 및 초기화
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDFpZyTGYzi2N8SrK8JmWJi-iSRSZZ0NHk",
@@ -16,3 +17,6 @@ const app = initializeApp(firebaseConfig);
 
 // Firestore 데이터베이스 인스턴스
 export const db = getFirestore(app);
+
+// Firebase Authentication 인스턴스
+export const auth = getAuth(app);

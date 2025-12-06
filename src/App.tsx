@@ -5,7 +5,7 @@
 
 import { useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { LoginPage } from './components/LoginPage';
+import { AuthPage } from './components/AuthPage';
 import { MainLayout } from './components/MainLayout';
 import { syncFromFirestore } from './utils/storage';
 
@@ -19,7 +19,7 @@ function AppContent() {
     }
   }, [isAuthenticated]);
 
-  return isAuthenticated ? <MainLayout /> : <LoginPage />;
+  return isAuthenticated ? <MainLayout /> : <AuthPage />;
 }
 
 function App() {
