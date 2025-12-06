@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setUser(userData);
           } else {
             // Firestore에 사용자 데이터가 없으면 기본값 설정
+            console.warn('Firestore에 사용자 데이터가 없습니다. 기본값으로 설정합니다.');
             const defaultUser: User = {
               id: firebaseUser.email || firebaseUser.uid,
               role: 'admin',
@@ -70,6 +71,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           }
         } catch (error) {
           console.error('사용자 데이터 로드 실패:', error);
+          // 오류 발생 시에도 기본 사용자로 설정
+          const defaultUser: User = {
+            id: firebaseUser.email || firebaseUser.uid,
+            role: 'admin',
+            name: firebaseUser.displayName || '사용자',
+          };
+          setUser(defaultUser);
         }
       } else {
         setUser(null);
