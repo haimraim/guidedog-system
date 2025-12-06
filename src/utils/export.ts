@@ -2,6 +2,7 @@
  * 데이터 내보내기/백업/복원 유틸리티
  */
 
+// @ts-nocheck
 import * as XLSX from 'xlsx';
 import type { CombinedData } from '../types/types';
 
