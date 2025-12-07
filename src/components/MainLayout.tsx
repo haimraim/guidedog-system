@@ -12,13 +12,12 @@ import { MedicalRecordPage } from './MedicalRecordPage';
 import { MedicationCheckPage } from './MedicationCheckPage';
 import { DataTableEnhanced } from './DataTableEnhanced';
 import { LecturePage } from './LecturePage';
-import { UserManagementPage } from './UserManagementPage';
 import { PrivacyPolicyPage } from './PrivacyPolicyPage';
 import { TermsOfServicePage } from './TermsOfServicePage';
 import { getCombinedData, calculateAgeWithMonths } from '../utils/storage';
 import type { CombinedData } from '../types/types';
 
-type MenuItem = 'home' | 'diary' | 'lecture' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'users' | 'privacy' | 'terms';
+type MenuItem = 'home' | 'diary' | 'lecture' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'privacy' | 'terms';
 
 export const MainLayout = () => {
   const { user, logout } = useAuth();
@@ -109,7 +108,6 @@ export const MainLayout = () => {
                     {user?.role === 'admin' && (
                       <>
                         <li><strong>안내견 관리:</strong> 전체 안내견 데이터를 관리합니다</li>
-                        <li><strong>회원 관리:</strong> 시스템 회원을 관리합니다</li>
                       </>
                     )}
                   </ul>
@@ -132,8 +130,6 @@ export const MainLayout = () => {
         return <MedicationCheckPage />;
       case 'admin':
         return <DataTableEnhanced />;
-      case 'users':
-        return <UserManagementPage />;
       case 'privacy':
         return <PrivacyPolicyPage />;
       case 'terms':
@@ -224,7 +220,6 @@ export const MainLayout = () => {
                 {currentPage === 'medical' && '진료 기록'}
                 {currentPage === 'medication' && '약품 체크'}
                 {currentPage === 'admin' && '안내견 관리'}
-                {currentPage === 'users' && '회원 관리'}
                 {currentPage === 'privacy' && '개인정보 처리방침'}
                 {currentPage === 'terms' && '이용약관'}
               </span>
@@ -330,34 +325,19 @@ export const MainLayout = () => {
                 </button>
               </li>
               {user?.role === 'admin' && (
-                <>
-                  <li>
-                    <button
-                      onClick={() => navigateToPage('admin')}
-                      className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
-                        currentPage === 'admin'
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                      aria-current={currentPage === 'admin' ? 'page' : undefined}
-                    >
-                      안내견 관리
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => navigateToPage('users')}
-                      className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
-                        currentPage === 'users'
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                      aria-current={currentPage === 'users' ? 'page' : undefined}
-                    >
-                      회원 관리
-                    </button>
-                  </li>
-                </>
+                <li>
+                  <button
+                    onClick={() => navigateToPage('admin')}
+                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                      currentPage === 'admin'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                    aria-current={currentPage === 'admin' ? 'page' : undefined}
+                  >
+                    안내견 관리
+                  </button>
+                </li>
               )}
             </ul>
           </div>
