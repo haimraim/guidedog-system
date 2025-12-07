@@ -58,6 +58,7 @@ export const MedicalRecordPage = () => {
   const [treatment, setTreatment] = useState('');
   const [cost, setCost] = useState('');
   const [selectedVaccines, setSelectedVaccines] = useState<VaccineType[]>([]);
+  const [notes, setNotes] = useState('');
   const [receiptPhotos, setReceiptPhotos] = useState<string[]>([]);
 
   useEffect(() => {
@@ -128,6 +129,7 @@ export const MedicalRecordPage = () => {
     setTreatment(record.treatment || '');
     setCost(record.cost?.toString() || '');
     setSelectedVaccines(record.vaccines || []);
+    setNotes(record.notes || '');
     setReceiptPhotos(record.receiptPhotos);
     setViewingRecord(null);
     setIsWriting(true);
@@ -170,6 +172,7 @@ export const MedicalRecordPage = () => {
       treatment: category === '일반 진료' ? treatment : undefined,
       cost: category === '일반 진료' && cost ? parseFloat(cost) : undefined,
       vaccines: category === '백신 접종' ? selectedVaccines : undefined,
+      notes: category === '백신 접종' && notes ? notes : undefined,
       receiptPhotos,
       createdAt: isEditing && editingRecord ? editingRecord.createdAt : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -196,6 +199,7 @@ export const MedicalRecordPage = () => {
     setTreatment('');
     setCost('');
     setSelectedVaccines([]);
+    setNotes('');
     setReceiptPhotos([]);
     setIsWriting(false);
     setIsEditing(false);
@@ -413,31 +417,47 @@ export const MedicalRecordPage = () => {
 
             {/* 백신 접종 필드 */}
             {category === '백신 접종' && (
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  접종한 백신 *
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {(['DHPPL', '광견병', '켄넬코프', '코로나'] as VaccineType[]).map(vaccine => (
-                    <label
-                      key={vaccine}
-                      className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
-                        selectedVaccines.includes(vaccine)
-                          ? 'bg-green-50 border-green-500'
-                          : 'border-gray-300 hover:border-green-300'
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedVaccines.includes(vaccine)}
-                        onChange={() => handleVaccineToggle(vaccine)}
-                        className="sr-only"
-                      />
-                      <div className="font-semibold text-center">{vaccine}</div>
-                    </label>
-                  ))}
+              <>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    접종한 백신 *
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {(['DHPPL', '광견병', '켄넬코프', '코로나'] as VaccineType[]).map(vaccine => (
+                      <label
+                        key={vaccine}
+                        className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                          selectedVaccines.includes(vaccine)
+                            ? 'bg-green-50 border-green-500'
+                            : 'border-gray-300 hover:border-green-300'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedVaccines.includes(vaccine)}
+                          onChange={() => handleVaccineToggle(vaccine)}
+                          className="sr-only"
+                        />
+                        <div className="font-semibold text-center">{vaccine}</div>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-              </div>
+
+                {/* 참고사항 */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    참고사항
+                  </label>
+                  <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    rows={4}
+                    placeholder="백신 접종과 관련된 추가 정보를 입력하세요"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                  />
+                </div>
+              </>
             )}
 
             {/* 영수증 사진 */}
@@ -586,20 +606,32 @@ export const MedicalRecordPage = () => {
               </>
             )}
 
-            {viewingRecord.category === '백신 접종' && viewingRecord.vaccines && (
-              <div>
-                <p className="text-sm text-gray-600 mb-2">접종한 백신</p>
-                <div className="flex flex-wrap gap-3">
-                  {viewingRecord.vaccines.map((vaccine) => (
-                    <span
-                      key={vaccine}
-                      className="px-4 py-2 bg-green-100 text-green-800 rounded-lg text-base font-semibold"
-                    >
-                      {vaccine}
-                    </span>
-                  ))}
-                </div>
-              </div>
+            {viewingRecord.category === '백신 접종' && (
+              <>
+                {viewingRecord.vaccines && (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">접종한 백신</p>
+                    <div className="flex flex-wrap gap-3">
+                      {viewingRecord.vaccines.map((vaccine) => (
+                        <span
+                          key={vaccine}
+                          className="px-4 py-2 bg-green-100 text-green-800 rounded-lg text-base font-semibold"
+                        >
+                          {vaccine}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {viewingRecord.notes && (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">참고사항</p>
+                    <p className="text-gray-800 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+                      {viewingRecord.notes}
+                    </p>
+                  </div>
+                )}
+              </>
             )}
 
             {viewingRecord.receiptPhotos.length > 0 && (

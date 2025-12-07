@@ -187,6 +187,7 @@ export interface MedicalRecord {
   cost?: number; // 진료비
   // 백신 접종일 때 사용
   vaccines?: VaccineType[]; // 접종한 백신 목록
+  notes?: string; // 참고사항 (백신 접종 시)
   receiptPhotos: string[]; // 영수증 사진 (Base64 또는 URL)
   createdAt: string; // 작성일시
   updatedAt: string; // 수정일시
