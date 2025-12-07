@@ -287,3 +287,42 @@ export interface ProductOrder {
   createdAt: string; // 신청일시
   updatedAt: string; // 수정일시
 }
+
+/**
+ * 보딩 신청서
+ */
+export interface BoardingForm {
+  id: string; // 고유 ID (UUID)
+  userId: string; // 신청자 ID
+  userName: string; // 신청자 이름
+  dogName: string; // 안내견 이름
+
+  // 보딩 기간
+  startDate: string; // 시작일 (YYYY-MM-DD)
+  endDate: string; // 종료일 (YYYY-MM-DD)
+
+  // 담당자 정보
+  contactName: string; // 담당자 이름
+  contactPhone: string; // 담당자 연락처
+  emergencyContact: string; // 비상 연락처
+
+  // 안내견 건강 상태
+  healthStatus: string; // 건강 상태 (좋음, 보통, 나쁨 등)
+  medications?: string; // 복용 중인 약
+  allergies?: string; // 알레르기 정보
+  specialNeeds?: string; // 특이사항
+
+  // 식사 정보
+  feedingSchedule: string; // 식사 시간 및 횟수
+  foodType: string; // 사료 종류
+  foodAmount: string; // 급여량
+
+  // 기타
+  notes?: string; // 추가 메모
+
+  // 상태
+  status: 'pending' | 'approved' | 'rejected' | 'completed'; // 신청 상태
+
+  createdAt: string; // 신청일시
+  updatedAt: string; // 수정일시
+}
