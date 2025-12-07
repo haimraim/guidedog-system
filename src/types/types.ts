@@ -296,29 +296,53 @@ export interface BoardingForm {
   userId: string; // 신청자 ID
   userName: string; // 신청자 이름
   dogName: string; // 안내견 이름
+  dogBirthDate: string; // 생년월일
+  dogGender: string; // 성별
+  dogCategory: string; // 카테고리 (안내견, 퍼피티칭, 은퇴견, 부모견)
 
   // 보딩 기간
   startDate: string; // 시작일 (YYYY-MM-DD)
   endDate: string; // 종료일 (YYYY-MM-DD)
 
-  // 담당자 정보
-  contactName: string; // 담당자 이름
-  contactPhone: string; // 담당자 연락처
-  emergencyContact: string; // 비상 연락처
-
-  // 안내견 건강 상태
-  healthStatus: string; // 건강 상태 (좋음, 보통, 나쁨 등)
-  medications?: string; // 복용 중인 약
-  allergies?: string; // 알레르기 정보
-  specialNeeds?: string; // 특이사항
-
-  // 식사 정보
-  feedingSchedule: string; // 식사 시간 및 횟수
+  // 사료 정보
   foodType: string; // 사료 종류
-  foodAmount: string; // 급여량
+  feedingSchedule: string; // 급여량과 급여 시기
 
-  // 기타
-  notes?: string; // 추가 메모
+  // 영양제
+  supplements?: string; // 먹이는 영양제 종류와 양, 시기
+
+  // 맡긴 물품 (체크박스)
+  items: string[]; // 견줄, 목줄, 헤드컬러, 하네스, 인식표, 건강수첩, 견옷, 장난감, 이불, 하트가드, 프론트라인, 드론탈플러스
+  itemsEtc?: string; // 기타 물품
+
+  // 최근 목욕일
+  lastBathDate: string; // YYYY-MM-DD
+
+  // 구충 시행
+  dewormingSchedule?: string; // 구충 예정 (예: 하트가드 25년 1월 10일)
+
+  // 백신접종
+  vaccinations: string[]; // DHPPL, 광견병, 코로나, 켄넬코프, 인플루엔자, 없음
+
+  // 보딩 사유
+  boardingReason: string; // 개인 사정, 진료, 수술
+  medicalReason?: string; // 진료 사유 (보딩 사유가 진료/수술인 경우)
+  medicalDate?: string; // 진료/수술일 (YYYY-MM-DD)
+
+  // 안내견 전용 필드
+  aftercareTeacher?: string; // 담당 사후관리 선생님
+  tearsblanket?: string; // 바닥에 이불을 깔아주면 물어뜯나요? (예/아니오)
+  usesDTBelt: string; // 배변 시 DT밸트를 착용하나요? (예/아니오)
+
+  // 퍼피 전용 필드
+  needsNailTrim?: string; // 발톱 정리가 필요한가요? (예/아니오)
+  needsPadTrim?: string; // 패드 털 정리가 필요한가요? (예/아니오)
+
+  // 집으로 돌아갈 때 필요한 물품
+  returnItems?: string;
+
+  // 기타 전달사항
+  notes?: string;
 
   // 상태
   status: 'pending' | 'approved' | 'rejected' | 'completed'; // 신청 상태
