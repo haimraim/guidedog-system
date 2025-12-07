@@ -244,7 +244,7 @@ export const MedicalRecordPage = () => {
   // 백신 접종 현황 테이블 데이터
   const getVaccineTableData = () => {
     const dogs = getDogsByCategory(selectedCategory);
-    const vaccineTypes: VaccineType[] = ['DHPPL', '광견병', '켄넬코프', '코로나'];
+    const vaccineTypes: VaccineType[] = ['DHPPL', '광견병', '켄넬코프', '코로나', '인플루엔자'];
 
     return dogs.map(dog => {
       const dogRecords = records.filter(r =>
@@ -423,7 +423,7 @@ export const MedicalRecordPage = () => {
                     접종한 백신 *
                   </label>
                   <div className="grid grid-cols-2 gap-3">
-                    {(['DHPPL', '광견병', '켄넬코프', '코로나'] as VaccineType[]).map(vaccine => (
+                    {(['DHPPL', '광견병', '켄넬코프', '코로나', '인플루엔자'] as VaccineType[]).map(vaccine => (
                       <label
                         key={vaccine}
                         className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
@@ -797,6 +797,9 @@ export const MedicalRecordPage = () => {
                         </th>
                         <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
                           코로나
+                        </th>
+                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                          인플루엔자
                         </th>
                       </tr>
                     </thead>

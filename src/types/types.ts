@@ -168,7 +168,7 @@ export type MedicalRecordCategory = '일반 진료' | '백신 접종';
 /**
  * 백신 종류
  */
-export type VaccineType = 'DHPPL' | '광견병' | '켄넬코프' | '코로나';
+export type VaccineType = 'DHPPL' | '광견병' | '켄넬코프' | '코로나' | '인플루엔자';
 
 /**
  * 진료 기록
