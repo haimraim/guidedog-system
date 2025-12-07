@@ -263,6 +263,7 @@ export const MedicalRecordPage = () => {
           records: vaccineRecords.map(r => ({
             date: formatDate(r.visitDate),
             hospital: r.hospital,
+            notes: r.notes,
           })),
         };
       });
@@ -817,11 +818,16 @@ export const MedicalRecordPage = () => {
                               }`}
                             >
                               {vaccine.records.length > 0 ? (
-                                <div className="space-y-1">
+                                <div className="space-y-2">
                                   {vaccine.records.map((record, recIdx) => (
                                     <div key={recIdx} className="text-xs">
                                       <div className="font-semibold text-green-600">{record.date}</div>
                                       <div className="text-gray-600">{record.hospital}</div>
+                                      {record.notes && (
+                                        <div className="mt-1 text-gray-700 bg-yellow-50 p-2 rounded border border-yellow-200">
+                                          {record.notes}
+                                        </div>
+                                      )}
                                     </div>
                                   ))}
                                 </div>
