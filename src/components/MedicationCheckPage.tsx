@@ -5,7 +5,8 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import type { MedicationCheck, MedicationType } from '../types/types';
+import { getGuideDogs } from '../utils/storage';
+import type { MedicationCheck, MedicationType, GuideDog } from '../types/types';
 import { generateId } from '../utils/storage';
 
 const STORAGE_KEY = 'guidedog_medication';
@@ -71,6 +72,8 @@ const MEDICATION_INFO = {
   },
 };
 
+type CategoryType = '안내견' | '퍼피' | '은퇴견' | '부모견';
+
 export const MedicationCheckPage = () => {
   const { user } = useAuth();
   const [checks, setChecks] = useState<MedicationCheck[]>([]);
@@ -78,6 +81,11 @@ export const MedicationCheckPage = () => {
   const [selectedMedication, setSelectedMedication] = useState<MedicationType | null>(null);
   const [checkDate, setCheckDate] = useState('');
   const [notes, setNotes] = useState('');
+
+  // 관리자용 상태
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>('안내견');
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
 
   useEffect(() => {
     loadChecks();
@@ -150,7 +158,7 @@ export const MedicationCheckPage = () => {
     });
   };
 
-  // 약품별 이번 달 체크 여부 확인
+  // 약품별 이번 달 체크 여부 확인 (일반 사용자용)
   const getMonthlyStatus = () => {
     const now = new Date();
     const currentYear = now.getFullYear();
@@ -175,7 +183,7 @@ export const MedicationCheckPage = () => {
     });
   };
 
-  // 연간 체크 현황 계산
+  // 연간 체크 현황 계산 (일반 사용자용)
   const getYearlyStatus = () => {
     const now = new Date();
     const currentYear = now.getFullYear();
@@ -214,8 +222,60 @@ export const MedicationCheckPage = () => {
     };
   };
 
-  const monthlyStatus = getMonthlyStatus();
-  const yearlyStatus = getYearlyStatus();
+  // 관리자용: 카테고리별 안내견 목록 가져오기
+  const getDogsByCategory = (category: CategoryType): GuideDog[] => {
+    const allDogs = getGuideDogs();
+
+    switch (category) {
+      case '안내견':
+        return allDogs.filter(dog =>
+          dog.category === '안내견' ||
+          dog.category === '안내견/폐사' ||
+          dog.category === '안내견/일반안내견/기타'
+        );
+      case '퍼피':
+        return allDogs.filter(dog => dog.category === '퍼피티칭');
+      case '은퇴견':
+        return allDogs.filter(dog => dog.category === '은퇴견');
+      case '부모견':
+        return allDogs.filter(dog => dog.category === '부견' || dog.category === '모견');
+      default:
+        return [];
+    }
+  };
+
+  // 관리자용: 월별 약품 체크 현황 테이블 데이터
+  const getAdminMonthlyTable = () => {
+    const dogs = getDogsByCategory(selectedCategory);
+    const medicationTypes: MedicationType[] = ['하트가드', '드론탈플러스', '프론트라인'];
+
+    return dogs.map(dog => {
+      const dogChecks = medicationTypes.map(medType => {
+        const monthChecks = checks.filter(check => {
+          const checkDate = new Date(check.checkDate);
+          return check.dogName === dog.name &&
+                 check.medicationType === medType &&
+                 checkDate.getFullYear() === selectedYear &&
+                 checkDate.getMonth() + 1 === selectedMonth;
+        });
+
+        return {
+          medicationType: medType,
+          checked: monthChecks.length > 0,
+          checkerName: monthChecks[0]?.userName || '-',
+        };
+      });
+
+      return {
+        dogName: dog.name,
+        checks: dogChecks,
+      };
+    });
+  };
+
+  const monthlyStatus = user?.role !== 'admin' ? getMonthlyStatus() : [];
+  const yearlyStatus = user?.role !== 'admin' ? getYearlyStatus() : null;
+  const adminTableData = user?.role === 'admin' ? getAdminMonthlyTable() : [];
 
   // 체크 추가 폼
   if (isAdding) {
@@ -363,23 +423,189 @@ export const MedicationCheckPage = () => {
     );
   }
 
-  // 메인 화면
+  // 관리자 화면
+  if (user?.role === 'admin') {
+    return (
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">약품 체크 관리 (관리자)</h2>
+
+        {/* 필터 섹션 */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">필터</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* 카테고리 선택 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                카테고리
+              </label>
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value as CategoryType)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              >
+                <option value="안내견">안내견</option>
+                <option value="퍼피">퍼피</option>
+                <option value="은퇴견">은퇴견</option>
+                <option value="부모견">부모견</option>
+              </select>
+            </div>
+
+            {/* 년도 선택 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                년도
+              </label>
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              >
+                {[2025, 2024, 2023, 2022].map(year => (
+                  <option key={year} value={year}>{year}년</option>
+                ))}
+              </select>
+            </div>
+
+            {/* 월 선택 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                월
+              </label>
+              <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              >
+                {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+                  <option key={month} value={month}>{month}월</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* 월별 체크 현황 테이블 */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">
+            {selectedCategory} - {selectedYear}년 {selectedMonth}월 약품 체크 현황
+          </h3>
+          {adminTableData.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              해당 카테고리에 안내견이 없습니다.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
+                      견명
+                    </th>
+                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                      하트가드
+                    </th>
+                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                      드론탈플러스
+                    </th>
+                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                      프론트라인
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {adminTableData.map((row) => (
+                    <tr key={row.dogName} className="hover:bg-gray-50">
+                      <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">
+                        {row.dogName}
+                      </td>
+                      {row.checks.map((check, idx) => (
+                        <td
+                          key={idx}
+                          className={`border border-gray-300 px-4 py-3 text-center ${
+                            check.checked ? 'bg-green-50' : 'bg-red-50'
+                          }`}
+                        >
+                          {check.checked ? (
+                            <div>
+                              <div className="text-green-600 font-semibold">✓</div>
+                              <div className="text-xs text-gray-600 mt-1">{check.checkerName}</div>
+                            </div>
+                          ) : (
+                            <div className="text-red-500 font-semibold">✗</div>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <div className="mt-4 flex items-center space-x-6 text-sm text-gray-600">
+            <div className="flex items-center space-x-2">
+              <span className="text-green-600 font-semibold">✓</span>
+              <span>체크 완료 (체크한 사람 이름 표시)</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-red-500 font-semibold">✗</span>
+              <span>체크 안 함</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 약품별 안내 */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">약품별 안내</h3>
+          <div className="space-y-4">
+            {(Object.keys(MEDICATION_INFO) as MedicationType[]).map((type) => {
+              const info = MEDICATION_INFO[type];
+              return (
+                <details key={type} className="border border-gray-200 rounded-lg">
+                  <summary className="cursor-pointer p-4 font-semibold text-gray-800 hover:bg-gray-50">
+                    {info.name}
+                  </summary>
+                  <div className="p-4 border-t border-gray-200 bg-gray-50">
+                    <div className="space-y-2 text-sm text-gray-700">
+                      <div><strong>형태:</strong> {info.form}</div>
+                      <div><strong>일정:</strong> {info.schedule}</div>
+                      <div><strong>용량:</strong> {info.dosage}</div>
+                      <div className="pt-2">
+                        <strong>복용/도포 방법:</strong>
+                        <ul className="list-disc list-inside mt-1 space-y-1">
+                          {info.instructions.map((instruction, index) => (
+                            <li key={index}>{instruction}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="pt-2 text-red-600 font-semibold">
+                        ※ {info.warning}
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 일반 사용자 메인 화면
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">약품 체크 관리</h2>
-        {user?.role !== 'admin' && (
-          <button
-            onClick={() => setIsAdding(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-          >
-            기록 작성
-          </button>
-        )}
+        <button
+          onClick={() => setIsAdding(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+        >
+          기록 작성
+        </button>
       </div>
 
       {/* 미완료 약품 알림 */}
-      {user?.role !== 'admin' && monthlyStatus.filter(s => !s.checked).length > 0 && (
+      {monthlyStatus.filter(s => !s.checked).length > 0 && (
         <div className="bg-red-50 border-2 border-red-400 rounded-lg p-6 mb-6">
           <div className="flex items-start space-x-3">
             <span className="text-red-500 text-2xl">⚠️</span>
@@ -402,114 +628,81 @@ export const MedicationCheckPage = () => {
         </div>
       )}
 
-      {/* 이번 달 체크 현황 */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">
-          이번 달 체크 현황 ({new Date().getMonth() + 1}월)
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {monthlyStatus.map(({ type, checked, lastCheck }) => (
-            <div
-              key={type}
-              className={`p-4 rounded-lg border-2 ${
-                checked
-                  ? 'bg-green-50 border-green-500'
-                  : 'bg-red-50 border-red-300'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-gray-800">{type}</span>
-                {checked ? (
-                  <span className="text-green-600 text-2xl">✓</span>
-                ) : (
-                  <span className="text-red-500 text-2xl">✗</span>
-                )}
-              </div>
-              <div className="text-sm text-gray-600">
-                {checked ? (
-                  <>체크 완료: {formatDate(lastCheck!)}</>
-                ) : (
-                  <>아직 체크하지 않음</>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* 연간 체크 현황 표 */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">
-          {new Date().getFullYear()}년 연간 체크 현황
-        </h3>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
-                  약품명
-                </th>
-                {yearlyStatus.months.map(month => (
-                  <th
-                    key={month}
-                    className={`border border-gray-300 px-3 py-3 text-center font-semibold ${
-                      month === new Date().getMonth() + 1
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'text-gray-800'
-                    }`}
-                  >
-                    {month}월
+      {yearlyStatus && (
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">
+            {new Date().getFullYear()}년 연간 체크 현황
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
+                    약품명
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {yearlyStatus.medications.map(({ type, monthlyData }) => (
-                <tr key={type} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">
-                    {type}
-                  </td>
-                  {monthlyData.map(({ month, checked, count }) => (
-                    <td
+                  {yearlyStatus.months.map(month => (
+                    <th
                       key={month}
-                      className={`border border-gray-300 px-3 py-3 text-center ${
+                      className={`border border-gray-300 px-3 py-3 text-center font-semibold ${
                         month === new Date().getMonth() + 1
-                          ? 'bg-blue-50'
-                          : ''
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'text-gray-800'
                       }`}
                     >
-                      {checked ? (
-                        <div className="flex flex-col items-center">
-                          <span className="text-green-600 text-sm font-semibold">완료</span>
-                          {count > 1 && (
-                            <span className="text-xs text-gray-500">({count}회)</span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-red-500 text-sm font-semibold">미완료</span>
-                      )}
-                    </td>
+                      {month}월
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {yearlyStatus.medications.map(({ type, monthlyData }) => (
+                  <tr key={type} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">
+                      {type}
+                    </td>
+                    {monthlyData.map(({ month, checked, count }) => (
+                      <td
+                        key={month}
+                        className={`border border-gray-300 px-3 py-3 text-center ${
+                          month === new Date().getMonth() + 1
+                            ? 'bg-blue-50'
+                            : ''
+                        }`}
+                      >
+                        {checked ? (
+                          <div className="flex flex-col items-center">
+                            <span className="text-green-600 text-sm font-semibold">완료</span>
+                            {count > 1 && (
+                              <span className="text-xs text-gray-500">({count}회)</span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-red-500 text-sm font-semibold">미완료</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-4 flex items-center space-x-6 text-sm text-gray-600">
+            <div className="flex items-center space-x-2">
+              <span className="text-green-600 font-semibold">완료</span>
+              <span>- 체크 완료</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-red-500 font-semibold">미완료</span>
+              <span>- 체크 안 함</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-blue-100 border border-blue-300 rounded"></div>
+              <span>이번 달</span>
+            </div>
+          </div>
         </div>
-        <div className="mt-4 flex items-center space-x-6 text-sm text-gray-600">
-          <div className="flex items-center space-x-2">
-            <span className="text-green-600 font-semibold">완료</span>
-            <span>- 체크 완료</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-red-500 font-semibold">미완료</span>
-            <span>- 체크 안 함</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-blue-100 border border-blue-300 rounded"></div>
-            <span>이번 달</span>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* 약품별 안내 */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -552,14 +745,12 @@ export const MedicationCheckPage = () => {
         {checks.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
             <p>체크 기록이 없습니다.</p>
-            {user?.role !== 'admin' && (
-              <button
-                onClick={() => setIsAdding(true)}
-                className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
-              >
-                첫 체크 기록하기
-              </button>
-            )}
+            <button
+              onClick={() => setIsAdding(true)}
+              className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+            >
+              첫 체크 기록하기
+            </button>
           </div>
         ) : (
           <div className="overflow-x-auto">
