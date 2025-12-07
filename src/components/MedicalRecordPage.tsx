@@ -5,7 +5,8 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import type { MedicalRecord, MedicalRecordCategory, VaccineType } from '../types/types';
+import { getGuideDogs } from '../utils/storage';
+import type { MedicalRecord, MedicalRecordCategory, VaccineType, GuideDog } from '../types/types';
 import { generateId } from '../utils/storage';
 
 const STORAGE_KEY = 'guidedog_medical';
@@ -22,7 +23,7 @@ const saveMedicalRecord = (record: MedicalRecord): void => {
   if (existingIndex >= 0) {
     records[existingIndex] = { ...record, updatedAt: new Date().toISOString() };
   } else {
-    records.unshift(record); // 최신 기록이 위로
+    records.unshift(record);
   }
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
@@ -33,6 +34,9 @@ const deleteMedicalRecord = (id: string): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 };
 
+type AdminView = 'general' | 'vaccine';
+type CategoryFilter = '안내견' | '퍼피' | '은퇴견' | '부모견';
+
 export const MedicalRecordPage = () => {
   const { user } = useAuth();
   const [records, setRecords] = useState<MedicalRecord[]>([]);
@@ -40,6 +44,11 @@ export const MedicalRecordPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingRecord, setEditingRecord] = useState<MedicalRecord | null>(null);
   const [viewingRecord, setViewingRecord] = useState<MedicalRecord | null>(null);
+
+  // 관리자 전용 상태
+  const [adminView, setAdminView] = useState<AdminView>('general');
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('안내견');
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   // 폼 필드
   const [category, setCategory] = useState<MedicalRecordCategory>('일반 진료');
@@ -58,13 +67,11 @@ export const MedicalRecordPage = () => {
   const loadRecords = () => {
     const allRecords = getMedicalRecords();
 
-    // 관리자는 모든 기록 표시
     if (user?.role === 'admin') {
       setRecords(allRecords);
       return;
     }
 
-    // 일반 담당자는 자신이 작성한 기록만 표시
     const filteredRecords = allRecords.filter(r => r.userId === user?.id);
     setRecords(filteredRecords);
   };
@@ -94,6 +101,23 @@ export const MedicalRecordPage = () => {
     );
   };
 
+  const setTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    setVisitDate(`${year}-${month}-${day}`);
+  };
+
+  const setYesterdayDate = () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const year = yesterday.getFullYear();
+    const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+    const day = String(yesterday.getDate()).padStart(2, '0');
+    setVisitDate(`${year}-${month}-${day}`);
+  };
+
   const handleEdit = (record: MedicalRecord) => {
     setEditingRecord(record);
     setIsEditing(true);
@@ -106,6 +130,7 @@ export const MedicalRecordPage = () => {
     setSelectedVaccines(record.vaccines || []);
     setReceiptPhotos(record.receiptPhotos);
     setViewingRecord(null);
+    setIsWriting(true);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -190,6 +215,286 @@ export const MedicalRecordPage = () => {
     return amount.toLocaleString('ko-KR') + '원';
   };
 
+  // 카테고리별 안내견 목록 가져오기
+  const getDogsByCategory = (category: CategoryFilter): GuideDog[] => {
+    const allDogs = getGuideDogs();
+
+    switch (category) {
+      case '안내견':
+        return allDogs.filter(dog =>
+          dog.category === '안내견' ||
+          dog.category === '안내견/폐사' ||
+          dog.category === '안내견/일반안내견/기타'
+        );
+      case '퍼피':
+        return allDogs.filter(dog => dog.category === '퍼피티칭');
+      case '은퇴견':
+        return allDogs.filter(dog => dog.category === '은퇴견');
+      case '부모견':
+        return allDogs.filter(dog => dog.category === '부견' || dog.category === '모견');
+      default:
+        return [];
+    }
+  };
+
+  // 백신 접종 현황 테이블 데이터
+  const getVaccineTableData = () => {
+    const dogs = getDogsByCategory(selectedCategory);
+    const vaccineTypes: VaccineType[] = ['DHPPL', '광견병', '켄넬코프', '코로나'];
+
+    return dogs.map(dog => {
+      const dogRecords = records.filter(r =>
+        r.dogName === dog.name &&
+        r.category === '백신 접종' &&
+        new Date(r.visitDate).getFullYear() === selectedYear
+      );
+
+      const vaccineData = vaccineTypes.map(vaccineType => {
+        const vaccineRecords = dogRecords.filter(r =>
+          r.vaccines?.includes(vaccineType)
+        );
+
+        return {
+          vaccineType,
+          records: vaccineRecords.map(r => ({
+            date: formatDate(r.visitDate),
+            hospital: r.hospital,
+          })),
+        };
+      });
+
+      return {
+        dogName: dog.name,
+        vaccines: vaccineData,
+      };
+    });
+  };
+
+  // 기록 작성 폼
+  if (isWriting) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            {isEditing ? '진료 기록 수정' : '진료 기록 작성'}
+          </h2>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* 카테고리 선택 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                카테고리 *
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                <label className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                  category === '일반 진료'
+                    ? 'bg-blue-50 border-blue-500'
+                    : 'border-gray-300 hover:border-blue-300'
+                }`}>
+                  <input
+                    type="radio"
+                    name="category"
+                    value="일반 진료"
+                    checked={category === '일반 진료'}
+                    onChange={(e) => setCategory(e.target.value as MedicalRecordCategory)}
+                    className="sr-only"
+                  />
+                  <div className="font-semibold text-center">일반 진료</div>
+                </label>
+                <label className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                  category === '백신 접종'
+                    ? 'bg-green-50 border-green-500'
+                    : 'border-gray-300 hover:border-green-300'
+                }`}>
+                  <input
+                    type="radio"
+                    name="category"
+                    value="백신 접종"
+                    checked={category === '백신 접종'}
+                    onChange={(e) => setCategory(e.target.value as MedicalRecordCategory)}
+                    className="sr-only"
+                  />
+                  <div className="font-semibold text-center">백신 접종</div>
+                </label>
+              </div>
+            </div>
+
+            {/* 날짜 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {category === '일반 진료' ? '진료 날짜' : '접종 날짜'} *
+              </label>
+              {category === '백신 접종' && (
+                <div className="grid grid-cols-2 gap-4 mb-3">
+                  <button
+                    type="button"
+                    onClick={setTodayDate}
+                    className="px-4 py-3 bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold rounded-lg transition-colors border-2 border-blue-300"
+                  >
+                    오늘
+                  </button>
+                  <button
+                    type="button"
+                    onClick={setYesterdayDate}
+                    className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-lg transition-colors border-2 border-gray-300"
+                  >
+                    어제
+                  </button>
+                </div>
+              )}
+              <input
+                type="date"
+                value={visitDate}
+                onChange={(e) => setVisitDate(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                required
+              />
+            </div>
+
+            {/* 병원명 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                병원명 *
+              </label>
+              <input
+                type="text"
+                value={hospital}
+                onChange={(e) => setHospital(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                placeholder="병원 이름을 입력하세요"
+                required
+              />
+            </div>
+
+            {/* 일반 진료 필드 */}
+            {category === '일반 진료' && (
+              <>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    진단 내용 *
+                  </label>
+                  <textarea
+                    value={diagnosis}
+                    onChange={(e) => setDiagnosis(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    rows={4}
+                    placeholder="진단 내용을 입력하세요"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    치료 내용 *
+                  </label>
+                  <textarea
+                    value={treatment}
+                    onChange={(e) => setTreatment(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    rows={4}
+                    placeholder="치료 내용을 입력하세요"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    진료비 *
+                  </label>
+                  <input
+                    type="number"
+                    value={cost}
+                    onChange={(e) => setCost(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="금액을 입력하세요"
+                    required
+                  />
+                </div>
+              </>
+            )}
+
+            {/* 백신 접종 필드 */}
+            {category === '백신 접종' && (
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  접종한 백신 *
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {(['DHPPL', '광견병', '켄넬코프', '코로나'] as VaccineType[]).map(vaccine => (
+                    <label
+                      key={vaccine}
+                      className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                        selectedVaccines.includes(vaccine)
+                          ? 'bg-green-50 border-green-500'
+                          : 'border-gray-300 hover:border-green-300'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedVaccines.includes(vaccine)}
+                        onChange={() => handleVaccineToggle(vaccine)}
+                        className="sr-only"
+                      />
+                      <div className="font-semibold text-center">{vaccine}</div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 영수증 사진 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                영수증 사진
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handlePhotoUpload}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              />
+              {receiptPhotos.length > 0 && (
+                <div className="mt-4 grid grid-cols-3 gap-4">
+                  {receiptPhotos.map((photo, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={photo}
+                        alt={`영수증 ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhoto(index)}
+                        className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex space-x-4">
+              <button
+                type="submit"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                {isEditing ? '수정하기' : '저장하기'}
+              </button>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                취소
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   // 기록 상세보기
   if (viewingRecord) {
     return (
@@ -270,7 +575,6 @@ export const MedicalRecordPage = () => {
                     </p>
                   </div>
                 )}
-
                 {viewingRecord.treatment && (
                   <div>
                     <p className="text-sm text-gray-600 mb-2">치료 내용</p>
@@ -307,359 +611,270 @@ export const MedicalRecordPage = () => {
                       key={index}
                       src={photo}
                       alt={`영수증 ${index + 1}`}
-                      className="w-full rounded-lg border border-gray-200"
+                      className="w-full rounded-lg shadow-md cursor-pointer hover:opacity-90"
+                      onClick={() => window.open(photo, '_blank')}
                     />
                   ))}
                 </div>
               </div>
             )}
-
-            <div className="text-sm text-gray-500 pt-4 border-t">
-              <p>작성자: {viewingRecord.userName}</p>
-              <p>작성일: {formatDate(viewingRecord.createdAt)}</p>
-            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  // 기록 작성/수정 폼
-  if (isWriting || isEditing) {
-    const vaccineTypes: VaccineType[] = ['DHPPL', '광견병', '켄넬코프', '코로나'];
+  // 관리자 화면
+  if (user?.role === 'admin') {
+    const vaccineTableData = adminView === 'vaccine' ? getVaccineTableData() : [];
 
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            {isEditing ? '진료 기록 수정' : '진료 기록 작성'}
-          </h2>
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">진료 기록 관리 (관리자)</h2>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* 카테고리 선택 */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                카테고리 *
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <label
-                  className={`flex items-center justify-center space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-colors ${
-                    category === '일반 진료'
-                      ? 'bg-blue-50 border-blue-500'
-                      : 'border-gray-300 hover:border-blue-300'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="category"
-                    checked={category === '일반 진료'}
-                    onChange={() => setCategory('일반 진료')}
-                    className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                  />
-                  <span className="text-base font-semibold text-gray-800">일반 진료</span>
-                </label>
-                <label
-                  className={`flex items-center justify-center space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-colors ${
-                    category === '백신 접종'
-                      ? 'bg-green-50 border-green-500'
-                      : 'border-gray-300 hover:border-green-300'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="category"
-                    checked={category === '백신 접종'}
-                    onChange={() => setCategory('백신 접종')}
-                    className="w-5 h-5 text-green-600 focus:ring-2 focus:ring-green-500"
-                  />
-                  <span className="text-base font-semibold text-gray-800">백신 접종</span>
-                </label>
+        {/* 하위 메뉴 */}
+        <div className="bg-white rounded-lg shadow-md mb-6">
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => setAdminView('general')}
+              className={`flex-1 px-6 py-4 font-semibold transition-colors ${
+                adminView === 'general'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              일반 진료
+            </button>
+            <button
+              onClick={() => setAdminView('vaccine')}
+              className={`flex-1 px-6 py-4 font-semibold transition-colors ${
+                adminView === 'vaccine'
+                  ? 'bg-green-600 text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              백신 접종
+            </button>
+          </div>
+        </div>
+
+        {/* 일반 진료 뷰 */}
+        {adminView === 'general' && (
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">일반 진료 기록 목록</h3>
+            {records.filter(r => r.category === '일반 진료').length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                진료 기록이 없습니다.
               </div>
-            </div>
-
-            {/* 공통 필드 */}
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label
-                  htmlFor="visitDate"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  {category === '일반 진료' ? '진료 날짜' : '접종 날짜'} *
-                </label>
-                <input
-                  type="date"
-                  id="visitDate"
-                  value={visitDate}
-                  onChange={(e) => setVisitDate(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="hospital"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
-                >
-                  병원명 *
-                </label>
-                <input
-                  type="text"
-                  id="hospital"
-                  value={hospital}
-                  onChange={(e) => setHospital(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  placeholder="병원 이름을 입력하세요"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* 일반 진료 필드 */}
-            {category === '일반 진료' && (
-              <>
-                <div>
-                  <label
-                    htmlFor="diagnosis"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
-                  >
-                    진단 내용 *
-                  </label>
-                  <textarea
-                    id="diagnosis"
-                    value={diagnosis}
-                    onChange={(e) => setDiagnosis(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    rows={4}
-                    placeholder="진단받은 내용을 입력하세요"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="treatment"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
-                  >
-                    치료 내용 *
-                  </label>
-                  <textarea
-                    id="treatment"
-                    value={treatment}
-                    onChange={(e) => setTreatment(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    rows={4}
-                    placeholder="받은 치료 내용을 입력하세요"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="cost"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
-                  >
-                    진료비 *
-                  </label>
-                  <input
-                    type="number"
-                    id="cost"
-                    value={cost}
-                    onChange={(e) => setCost(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    placeholder="진료비를 입력하세요"
-                    min="0"
-                    step="1"
-                    required
-                  />
-                </div>
-              </>
-            )}
-
-            {/* 백신 접종 필드 */}
-            {category === '백신 접종' && (
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  접종한 백신 * (복수 선택 가능)
-                </label>
-                <div className="grid grid-cols-2 gap-4">
-                  {vaccineTypes.map((vaccine) => (
-                    <label
-                      key={vaccine}
-                      className={`flex items-center space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-colors ${
-                        selectedVaccines.includes(vaccine)
-                          ? 'bg-green-50 border-green-500'
-                          : 'border-gray-300 hover:border-green-300'
-                      }`}
+            ) : (
+              <div className="space-y-4">
+                {records
+                  .filter(r => r.category === '일반 진료')
+                  .map(record => (
+                    <div
+                      key={record.id}
+                      className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 transition-colors cursor-pointer"
+                      onClick={() => setViewingRecord(record)}
                     >
-                      <input
-                        type="checkbox"
-                        checked={selectedVaccines.includes(vaccine)}
-                        onChange={() => handleVaccineToggle(vaccine)}
-                        className="w-5 h-5 text-green-600 rounded focus:ring-2 focus:ring-green-500"
-                      />
-                      <span className="text-base font-semibold text-gray-800">{vaccine}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 영수증 사진 */}
-            <div>
-              <label
-                htmlFor="photos"
-                className="block text-sm font-semibold text-gray-700 mb-2"
-              >
-                영수증 사진
-              </label>
-              <input
-                type="file"
-                id="photos"
-                accept="image/*"
-                multiple
-                onChange={handlePhotoUpload}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              />
-              <p className="text-sm text-gray-500 mt-1">
-                여러 장의 사진을 업로드할 수 있습니다
-              </p>
-
-              {receiptPhotos.length > 0 && (
-                <div className="mt-4 grid grid-cols-3 gap-4">
-                  {receiptPhotos.map((photo, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={photo}
-                        alt={`영수증 ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg border border-gray-200"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemovePhoto(index)}
-                        className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700"
-                      >
-                        ×
-                      </button>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="text-lg font-bold text-gray-800">
+                            {record.dogName} - {record.userName}
+                          </h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {formatDate(record.visitDate)} | {record.hospital}
+                          </p>
+                        </div>
+                        {record.cost !== undefined && (
+                          <span className="text-lg font-semibold text-blue-600">
+                            {formatCurrency(record.cost)}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 백신 접종 뷰 */}
+        {adminView === 'vaccine' && (
+          <>
+            {/* 필터 섹션 */}
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-4">필터</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    카테고리
+                  </label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value as CategoryFilter)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  >
+                    <option value="안내견">안내견</option>
+                    <option value="퍼피">퍼피</option>
+                    <option value="은퇴견">은퇴견</option>
+                    <option value="부모견">부모견</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    년도
+                  </label>
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  >
+                    {[2025, 2024, 2023, 2022, 2021].map(year => (
+                      <option key={year} value={year}>{year}년</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* 백신 접종 현황 테이블 */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                {selectedCategory} - {selectedYear}년 백신 접종 현황
+              </h3>
+              {vaccineTableData.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  해당 카테고리에 안내견이 없습니다.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
+                          견명
+                        </th>
+                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                          DHPPL
+                        </th>
+                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                          광견병
+                        </th>
+                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                          켄넬코프
+                        </th>
+                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                          코로나
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {vaccineTableData.map((row) => (
+                        <tr key={row.dogName} className="hover:bg-gray-50">
+                          <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">
+                            {row.dogName}
+                          </td>
+                          {row.vaccines.map((vaccine, idx) => (
+                            <td
+                              key={idx}
+                              className={`border border-gray-300 px-4 py-3 text-center ${
+                                vaccine.records.length > 0 ? 'bg-green-50' : 'bg-gray-50'
+                              }`}
+                            >
+                              {vaccine.records.length > 0 ? (
+                                <div className="space-y-1">
+                                  {vaccine.records.map((record, recIdx) => (
+                                    <div key={recIdx} className="text-xs">
+                                      <div className="font-semibold text-green-600">{record.date}</div>
+                                      <div className="text-gray-600">{record.hospital}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-gray-400">-</span>
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
-
-            <div className="flex space-x-4">
-              <button
-                type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-              >
-                작성 완료
-              </button>
-              <button
-                type="button"
-                onClick={resetForm}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-              >
-                취소
-              </button>
-            </div>
-          </form>
-        </div>
+          </>
+        )}
       </div>
     );
   }
 
-  // 목록 보기
+  // 일반 사용자 메인 화면
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">진료 기록</h2>
-        {user?.role !== 'admin' && (
-          <button
-            onClick={() => setIsWriting(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-          >
-            기록 작성
-          </button>
-        )}
+        <button
+          onClick={() => setIsWriting(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+        >
+          기록 작성
+        </button>
       </div>
 
-      {records.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-500">작성된 기록이 없습니다.</p>
-          {user?.role !== 'admin' && (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">나의 진료 기록</h3>
+        {records.length === 0 ? (
+          <div className="text-center py-12 text-gray-500">
+            <p>진료 기록이 없습니다.</p>
             <button
               onClick={() => setIsWriting(true)}
               className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
             >
               첫 기록 작성하기
             </button>
-          )}
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {records.map((record) => (
-            <div
-              key={record.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <button
-                    onClick={() => setViewingRecord(record)}
-                    className="text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
-                  >
-                    <div className="text-lg font-semibold text-gray-800 mb-2">
-                      <span className={`inline-block px-2 py-1 rounded text-sm mr-2 ${
-                        record.category === '일반 진료'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-green-100 text-green-800'
-                      }`}>
-                        {record.category}
-                      </span>
-                      <span className="text-blue-600 hover:text-blue-800 underline">
-                        {record.hospital}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {record.dogName} | {formatDate(record.visitDate)}
-                    </p>
-
-                    {record.category === '백신 접종' && record.vaccines && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {record.vaccines.map((vaccine) => (
-                          <span
-                            key={vaccine}
-                            className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold"
-                          >
-                            {vaccine}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {record.category === '일반 진료' && record.diagnosis && (
-                      <p className="text-gray-700 line-clamp-2 mt-2">
-                        {record.diagnosis}
-                      </p>
-                    )}
-
-                    {record.receiptPhotos.length > 0 && (
-                      <p className="text-sm text-gray-500 mt-2">
-                        영수증 사진 {record.receiptPhotos.length}장
-                      </p>
-                    )}
-                  </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {records.map(record => (
+              <div
+                key={record.id}
+                className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 transition-colors cursor-pointer"
+                onClick={() => setViewingRecord(record)}
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                    record.category === '일반 진료'
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-green-100 text-green-800'
+                  }`}>
+                    {record.category}
+                  </span>
+                  {record.category === '일반 진료' && record.cost !== undefined && (
+                    <span className="text-lg font-semibold text-blue-600">
+                      {formatCurrency(record.cost)}
+                    </span>
+                  )}
                 </div>
-                {record.category === '일반 진료' && record.cost !== undefined && (
-                  <p className="text-lg font-semibold text-blue-600 ml-4">
-                    {formatCurrency(record.cost)}
-                  </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  {formatDate(record.visitDate)} | {record.hospital}
+                </p>
+                {record.category === '백신 접종' && record.vaccines && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {record.vaccines.map(vaccine => (
+                      <span
+                        key={vaccine}
+                        className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-semibold"
+                      >
+                        {vaccine}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
