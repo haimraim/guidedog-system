@@ -147,19 +147,6 @@ export const LoginPage = ({ onShowRegister }: LoginPageProps) => {
                 </p>
               </div>
             )}
-
-            {/* 로그인 안내 */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">
-                로그인 안내
-              </h3>
-              <ul className="text-sm text-gray-600 space-y-2">
-                <li>담당자: 견명.담당자성명 (예: 해달.유석종)</li>
-                <li>퍼피티처, 훈련사, 파트너, 홈케어자 모두 로그인 가능</li>
-                <li>관리자: guidedog</li>
-                <li>비밀번호: 8922</li>
-              </ul>
-            </div>
           </div>
 
           {/* 안내견학교 정보 */}
