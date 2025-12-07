@@ -66,6 +66,13 @@ export const DiaryPage = () => {
   const [outingNotes, setOutingNotes] = useState('');
   const [additionalNotes, setAdditionalNotes] = useState('');
 
+  // 아코디언 섹션 상태 (기본적으로 모두 열림)
+  const [isFeedingOpen, setIsFeedingOpen] = useState(true);
+  const [isDt1Open, setIsDt1Open] = useState(true);
+  const [isDt2Open, setIsDt2Open] = useState(true);
+  const [isOutingOpen, setIsOutingOpen] = useState(true);
+  const [isAdditionalOpen, setIsAdditionalOpen] = useState(true);
+
   useEffect(() => {
     loadPosts();
   }, []);
@@ -365,9 +372,24 @@ export const DiaryPage = () => {
 
               {/* 급식 */}
               <div className="border-t pt-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">급식</h3>
+                <button
+                  type="button"
+                  onClick={() => setIsFeedingOpen(!isFeedingOpen)}
+                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                >
+                  <span>급식</span>
+                  <svg
+                    className={`w-6 h-6 transform transition-transform ${isFeedingOpen ? 'rotate-90' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
 
-                <div className="space-y-4">
+                {isFeedingOpen && (
+                  <div className="space-y-4">
                   <div>
                     <label className="flex items-center mb-2">
                       <input
@@ -428,13 +450,29 @@ export const DiaryPage = () => {
                     />
                   </div>
                 </div>
+                )}
               </div>
 
               {/* 배변 - DT1 (소변) */}
               <div className="border-t pt-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">배변 - DT1 (소변)</h3>
+                <button
+                  type="button"
+                  onClick={() => setIsDt1Open(!isDt1Open)}
+                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                >
+                  <span>배변 - DT1 (소변)</span>
+                  <svg
+                    className={`w-6 h-6 transform transition-transform ${isDt1Open ? 'rotate-90' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
 
-                <div className="space-y-4">
+                {isDt1Open && (
+                  <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       시간
@@ -499,13 +537,29 @@ export const DiaryPage = () => {
                     />
                   </div>
                 </div>
+                )}
               </div>
 
               {/* 배변 - DT2 (대변) */}
               <div className="border-t pt-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">배변 - DT2 (대변)</h3>
+                <button
+                  type="button"
+                  onClick={() => setIsDt2Open(!isDt2Open)}
+                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                >
+                  <span>배변 - DT2 (대변)</span>
+                  <svg
+                    className={`w-6 h-6 transform transition-transform ${isDt2Open ? 'rotate-90' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
 
-                <div className="space-y-4">
+                {isDt2Open && (
+                  <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       시간
@@ -570,13 +624,29 @@ export const DiaryPage = () => {
                     />
                   </div>
                 </div>
+                )}
               </div>
 
               {/* 외출 */}
               <div className="border-t pt-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">외출</h3>
+                <button
+                  type="button"
+                  onClick={() => setIsOutingOpen(!isOutingOpen)}
+                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                >
+                  <span>외출</span>
+                  <svg
+                    className={`w-6 h-6 transform transition-transform ${isOutingOpen ? 'rotate-90' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
 
-                <div className="space-y-4">
+                {isOutingOpen && (
+                  <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       장소
@@ -616,18 +686,36 @@ export const DiaryPage = () => {
                     />
                   </div>
                 </div>
+                )}
               </div>
 
               {/* 그 밖에 오늘 하고 싶은 말 */}
               <div className="border-t pt-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">그 밖에 오늘 하고 싶은 말</h3>
-                <textarea
-                  value={additionalNotes}
-                  onChange={(e) => setAdditionalNotes(e.target.value)}
-                  rows={5}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
-                  placeholder="자유롭게 작성하세요"
-                />
+                <button
+                  type="button"
+                  onClick={() => setIsAdditionalOpen(!isAdditionalOpen)}
+                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                >
+                  <span>그 밖에 오늘 하고 싶은 말</span>
+                  <svg
+                    className={`w-6 h-6 transform transition-transform ${isAdditionalOpen ? 'rotate-90' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                {isAdditionalOpen && (
+                  <textarea
+                    value={additionalNotes}
+                    onChange={(e) => setAdditionalNotes(e.target.value)}
+                    rows={5}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                    placeholder="자유롭게 작성하세요"
+                  />
+                )}
               </div>
 
               <div className="flex space-x-4">
