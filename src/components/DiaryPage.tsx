@@ -5,8 +5,8 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import type { DiaryPost } from '../types/types';
-import { generateId } from '../utils/storage';
+import type { DiaryPost, DogCategory } from '../types/types';
+import { generateId, getGuideDogs } from '../utils/storage';
 
 const STORAGE_KEY = 'guidedog_diary';
 
@@ -73,6 +73,12 @@ export const DiaryPage = () => {
   const [isOutingOpen, setIsOutingOpen] = useState(true);
   const [isAdditionalOpen, setIsAdditionalOpen] = useState(true);
 
+  // 관리자 필터 상태
+  const [adminCategory, setAdminCategory] = useState<DogCategory | 'all'>('퍼피티칭');
+  const [periodFilter, setPeriodFilter] = useState<'today' | '3days' | 'week' | 'month' | '3months' | 'custom' | 'all'>('week');
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
+
   useEffect(() => {
     loadPosts();
   }, []);
@@ -121,6 +127,57 @@ export const DiaryPage = () => {
       if (post.dogName) uniqueDogs.add(post.dogName);
     });
     return Array.from(uniqueDogs).sort();
+  };
+
+  // 관리자: 카테고리별 개 목록 가져오기
+  const getDogsByAdminCategory = () => {
+    const allDogs = getGuideDogs();
+    if (adminCategory === 'all') return allDogs;
+    return allDogs.filter(dog => dog.category === adminCategory);
+  };
+
+  // 관리자: 기간 필터링
+  const getDateRange = (): { start: Date; end: Date } => {
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    switch (periodFilter) {
+      case 'today':
+        return { start, end };
+      case '3days':
+        start.setDate(start.getDate() - 2);
+        return { start, end };
+      case 'week':
+        start.setDate(start.getDate() - 6);
+        return { start, end };
+      case 'month':
+        start.setMonth(start.getMonth() - 1);
+        return { start, end };
+      case '3months':
+        start.setMonth(start.getMonth() - 3);
+        return { start, end };
+      case 'custom':
+        if (customStartDate && customEndDate) {
+          return {
+            start: new Date(customStartDate),
+            end: new Date(customEndDate + 'T23:59:59'),
+          };
+        }
+        return { start, end };
+      case 'all':
+        return { start: new Date(0), end };
+      default:
+        return { start, end };
+    }
+  };
+
+  // 관리자: 특정 개의 특정 날짜 다이어리 찾기
+  const getDiaryForDogAndDate = (dogName: string, date: string): DiaryPost | null => {
+    return allPosts.find(
+      post => post.dogName === dogName && post.diaryDate === date
+    ) || null;
   };
 
   // 날짜 설정 함수 (퍼피티칭용)
@@ -312,17 +369,121 @@ export const DiaryPage = () => {
           <div className="flex items-center text-sm text-gray-600 mb-6 space-x-4">
             <span>작성자: {viewingPost.userName}</span>
             {viewingPost.dogName && <span>안내견: {viewingPost.dogName}</span>}
+            {viewingPost.diaryDate && <span>날짜: {viewingPost.diaryDate}</span>}
             <span>작성일: {formatDate(viewingPost.createdAt)}</span>
             {viewingPost.createdAt !== viewingPost.updatedAt && (
               <span>(수정됨)</span>
             )}
           </div>
 
-          <div className="prose max-w-none">
-            <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-              {viewingPost.content}
-            </p>
-          </div>
+          {/* 퍼피티칭 다이어리 상세보기 */}
+          {viewingPost.diaryDate ? (
+            <div className="space-y-6">
+              {/* 급식 */}
+              {(viewingPost.foodType || viewingPost.feedingTime || viewingPost.feedingAmount || viewingPost.feedingNotes) && (
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">급식</h3>
+                  <div className="space-y-2 text-gray-700">
+                    {viewingPost.foodType && (
+                      <p><span className="font-semibold">사료 종류:</span> {viewingPost.foodType}</p>
+                    )}
+                    {viewingPost.feedingTime && (
+                      <p><span className="font-semibold">급식 시간:</span> {viewingPost.feedingTime}</p>
+                    )}
+                    {viewingPost.feedingAmount && (
+                      <p><span className="font-semibold">급식량:</span> {viewingPost.feedingAmount}g</p>
+                    )}
+                    {viewingPost.feedingNotes && (
+                      <p><span className="font-semibold">추가 내용:</span> {viewingPost.feedingNotes}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* DT1 (소변) */}
+              {(viewingPost.dt1Time || viewingPost.dt1Place || viewingPost.dt1Success || viewingPost.dt1Accident || viewingPost.dt1Notes) && (
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">배변 - DT1 (소변)</h3>
+                  <div className="space-y-2 text-gray-700">
+                    {viewingPost.dt1Time && (
+                      <p><span className="font-semibold">시간:</span> {viewingPost.dt1Time}</p>
+                    )}
+                    {viewingPost.dt1Place && (
+                      <p><span className="font-semibold">장소:</span> {viewingPost.dt1Place}</p>
+                    )}
+                    {viewingPost.dt1Success && (
+                      <p><span className="font-semibold">성공 정도:</span> {viewingPost.dt1Success}</p>
+                    )}
+                    {viewingPost.dt1Accident && (
+                      <p><span className="font-semibold">실수 여부:</span> {viewingPost.dt1Accident}</p>
+                    )}
+                    {viewingPost.dt1Notes && (
+                      <p><span className="font-semibold">관련 사항:</span> {viewingPost.dt1Notes}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* DT2 (대변) */}
+              {(viewingPost.dt2Time || viewingPost.dt2Place || viewingPost.dt2Success || viewingPost.dt2Accident || viewingPost.dt2Notes) && (
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">배변 - DT2 (대변)</h3>
+                  <div className="space-y-2 text-gray-700">
+                    {viewingPost.dt2Time && (
+                      <p><span className="font-semibold">시간:</span> {viewingPost.dt2Time}</p>
+                    )}
+                    {viewingPost.dt2Place && (
+                      <p><span className="font-semibold">장소:</span> {viewingPost.dt2Place}</p>
+                    )}
+                    {viewingPost.dt2Success && (
+                      <p><span className="font-semibold">성공 정도:</span> {viewingPost.dt2Success}</p>
+                    )}
+                    {viewingPost.dt2Accident && (
+                      <p><span className="font-semibold">실수 여부:</span> {viewingPost.dt2Accident}</p>
+                    )}
+                    {viewingPost.dt2Notes && (
+                      <p><span className="font-semibold">관련 사항:</span> {viewingPost.dt2Notes}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* 외출 */}
+              {(viewingPost.outingPlace || viewingPost.outingDuration || viewingPost.outingNotes) && (
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">외출</h3>
+                  <div className="space-y-2 text-gray-700">
+                    {viewingPost.outingPlace && (
+                      <p><span className="font-semibold">장소:</span> {viewingPost.outingPlace}</p>
+                    )}
+                    {viewingPost.outingDuration && (
+                      <p><span className="font-semibold">외출 시간:</span> {viewingPost.outingDuration}</p>
+                    )}
+                    {viewingPost.outingNotes && (
+                      <p><span className="font-semibold">특이사항:</span> {viewingPost.outingNotes}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* 그 밖에 오늘 하고 싶은 말 */}
+              {viewingPost.additionalNotes && (
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">그 밖에 오늘 하고 싶은 말</h3>
+                  <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+                    {viewingPost.additionalNotes}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            /* 일반 다이어리 */
+            <div className="prose max-w-none">
+              <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                {viewingPost.content}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -806,56 +967,172 @@ export const DiaryPage = () => {
   }
 
   // 목록 보기
+  // 관리자 뷰
+  if (user?.role === 'admin') {
+    const dogs = getDogsByAdminCategory();
+    const { start, end } = getDateRange();
+
+    // 기간 내 날짜 목록 생성
+    const dates: string[] = [];
+    const currentDate = new Date(start);
+    while (currentDate <= end) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      dates.push(dateStr);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return (
+      <div className="max-w-full mx-auto px-4">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">다이어리 관리</h2>
+
+        {/* 필터 섹션 */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 카테고리 선택 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                카테고리
+              </label>
+              <select
+                value={adminCategory}
+                onChange={(e) => setAdminCategory(e.target.value as DogCategory | 'all')}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              >
+                <option value="퍼피티칭">퍼피티칭</option>
+                <option value="안내견">안내견</option>
+                <option value="은퇴견">은퇴견</option>
+                <option value="부모견">부모견</option>
+                <option value="all">전체</option>
+              </select>
+            </div>
+
+            {/* 기간 선택 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                기간
+              </label>
+              <select
+                value={periodFilter}
+                onChange={(e) => setPeriodFilter(e.target.value as any)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              >
+                <option value="today">오늘</option>
+                <option value="3days">3일 이전</option>
+                <option value="week">일주일</option>
+                <option value="month">1개월</option>
+                <option value="3months">3개월</option>
+                <option value="custom">기간 설정</option>
+                <option value="all">전체</option>
+              </select>
+            </div>
+
+            {/* 사용자 정의 기간 */}
+            {periodFilter === 'custom' && (
+              <>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    시작일
+                  </label>
+                  <input
+                    type="date"
+                    value={customStartDate}
+                    onChange={(e) => setCustomStartDate(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    종료일
+                  </label>
+                  <input
+                    type="date"
+                    value={customEndDate}
+                    onChange={(e) => setCustomEndDate(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* 다이어리 목록 */}
+        {dogs.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-md p-12 text-center">
+            <p className="text-gray-500">선택한 카테고리에 해당하는 개가 없습니다.</p>
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-800 border-b sticky left-0 bg-gray-100 z-10">
+                      견명
+                    </th>
+                    {dates.slice().reverse().map(date => (
+                      <th key={date} className="px-4 py-3 text-center text-sm font-semibold text-gray-800 border-b whitespace-nowrap min-w-[120px]">
+                        {new Date(date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {dogs.map(dog => (
+                    <tr key={dog.id} className="hover:bg-gray-50 border-b">
+                      <td className="px-4 py-3 font-semibold text-gray-800 sticky left-0 bg-white z-10">
+                        {dog.name}
+                      </td>
+                      {dates.slice().reverse().map(date => {
+                        const diary = getDiaryForDogAndDate(dog.name, date);
+                        return (
+                          <td key={date} className="px-4 py-3 text-center">
+                            {diary ? (
+                              <button
+                                onClick={() => setViewingPost(diary)}
+                                className="text-blue-600 hover:text-blue-800 font-semibold"
+                              >
+                                ✓
+                              </button>
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // 일반 사용자 뷰
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">다이어리</h2>
-        {user?.role !== 'admin' && (
-          <button
-            onClick={() => setIsWriting(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-          >
-            글쓰기
-          </button>
-        )}
+        <button
+          onClick={() => setIsWriting(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+        >
+          글쓰기
+        </button>
       </div>
-
-      {/* 관리자용 필터 */}
-      {user?.role === 'admin' && getDogNames().length > 0 && (
-        <div className="mb-6 bg-white rounded-lg shadow-md p-4">
-          <label htmlFor="dogFilter" className="block text-sm font-semibold text-gray-700 mb-2">
-            안내견별 보기
-          </label>
-          <select
-            id="dogFilter"
-            value={selectedDog}
-            onChange={(e) => setSelectedDog(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-          >
-            <option value="all">전체 ({allPosts.length})</option>
-            {getDogNames().map(dogName => {
-              const count = allPosts.filter(p => p.dogName === dogName).length;
-              return (
-                <option key={dogName} value={dogName}>
-                  {dogName} ({count})
-                </option>
-              );
-            })}
-          </select>
-        </div>
-      )}
 
       {posts.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
           <p className="text-gray-500">작성된 다이어리가 없습니다.</p>
-          {user?.role !== 'admin' && (
-            <button
-              onClick={() => setIsWriting(true)}
-              className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
-            >
-              첫 다이어리 작성하기
-            </button>
-          )}
+          <button
+            onClick={() => setIsWriting(true)}
+            className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+          >
+            첫 다이어리 작성하기
+          </button>
         </div>
       ) : (
         <div className="space-y-4">
