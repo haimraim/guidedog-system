@@ -59,6 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           if (userDoc.exists()) {
             const userData = userDoc.data() as User;
             setUser(userData);
+            localStorage.setItem('guidedog_user', JSON.stringify(userData));
           } else {
             // Firestore에 사용자 데이터가 없으면 기본값 설정
             console.warn('Firestore에 사용자 데이터가 없습니다. 기본값으로 설정합니다.');
@@ -68,6 +69,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
               name: firebaseUser.displayName || '사용자',
             };
             setUser(defaultUser);
+            localStorage.setItem('guidedog_user', JSON.stringify(defaultUser));
           }
         } catch (error) {
           console.error('사용자 데이터 로드 실패:', error);
@@ -78,9 +80,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             name: firebaseUser.displayName || '사용자',
           };
           setUser(defaultUser);
+          localStorage.setItem('guidedog_user', JSON.stringify(defaultUser));
         }
       } else {
-        setUser(null);
+        // Firebase 로그아웃 시 로컬 스토리지도 확인
+        const savedUser = localStorage.getItem('guidedog_user');
+        if (savedUser) {
+          // 로컬 로그인 사용자가 있으면 유지
+          try {
+            const parsedUser = JSON.parse(savedUser);
+            setUser(parsedUser);
+          } catch {
+            setUser(null);
+            localStorage.removeItem('guidedog_user');
+          }
+        } else {
+          setUser(null);
+        }
       }
 
       setLoading(false);
@@ -155,7 +171,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         category: foundUser.category,
       };
       setUser(userSession);
-      sessionStorage.setItem('guidedog_user', JSON.stringify(userSession));
+      localStorage.setItem('guidedog_user', JSON.stringify(userSession));
       return true;
     }
 
@@ -172,7 +188,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         name: '관리자',
       };
       setUser(adminUser);
-      sessionStorage.setItem('guidedog_user', JSON.stringify(adminUser));
+      localStorage.setItem('guidedog_user', JSON.stringify(adminUser));
       return true;
     }
 
@@ -195,7 +211,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             category: '퍼피티칭',
           };
           setUser(puppyTeacherUser);
-          sessionStorage.setItem('guidedog_user', JSON.stringify(puppyTeacherUser));
+          localStorage.setItem('guidedog_user', JSON.stringify(puppyTeacherUser));
           return true;
         }
       }
@@ -212,7 +228,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             category: '훈련견',
           };
           setUser(trainerUser);
-          sessionStorage.setItem('guidedog_user', JSON.stringify(trainerUser));
+          localStorage.setItem('guidedog_user', JSON.stringify(trainerUser));
           return true;
         }
       }
@@ -237,7 +253,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 category: dog.category,
               };
               setUser(partnerUser);
-              sessionStorage.setItem('guidedog_user', JSON.stringify(partnerUser));
+              localStorage.setItem('guidedog_user', JSON.stringify(partnerUser));
               return true;
             }
           }
@@ -256,7 +272,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             category: '은퇴견',
           };
           setUser(retiredHomeCareUser);
-          sessionStorage.setItem('guidedog_user', JSON.stringify(retiredHomeCareUser));
+          localStorage.setItem('guidedog_user', JSON.stringify(retiredHomeCareUser));
           return true;
         }
       }
@@ -273,7 +289,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             category: dog.category,
           };
           setUser(parentCaregiverUser);
-          sessionStorage.setItem('guidedog_user', JSON.stringify(parentCaregiverUser));
+          localStorage.setItem('guidedog_user', JSON.stringify(parentCaregiverUser));
           return true;
         }
       }
@@ -287,7 +303,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       await signOut(auth);
       setUser(null);
       setFirebaseUser(null);
-      sessionStorage.removeItem('guidedog_user');
+      localStorage.removeItem('guidedog_user');
     } catch (error) {
       console.error('로그아웃 실패:', error);
     }
