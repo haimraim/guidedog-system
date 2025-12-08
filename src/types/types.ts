@@ -161,24 +161,55 @@ export interface DiaryPost {
   updatedAt: string; // 수정일시
   // 퍼피티칭 전용 필드
   diaryDate?: string; // 다이어리 날짜 (YYYY-MM-DD)
-  foodType?: string; // 사료 종류
-  feedingTime?: string; // 급식 시간
-  feedingAmount?: string; // 급식량 (그램)
-  feedingNotes?: string; // 급식 관련 추가 내용
-  dt1Time?: string; // DT1(소변) 시간
-  dt1Place?: string; // DT1 장소
-  dt1Success?: string; // DT1 성공 정도
-  dt1Accident?: string; // DT1 실수 여부
-  dt1Notes?: string; // DT1 관련 추가 내용
-  dt2Time?: string; // DT2(대변) 시간
-  dt2Place?: string; // DT2 장소
-  dt2Success?: string; // DT2 성공 정도
-  dt2Accident?: string; // DT2 실수 여부
-  dt2Notes?: string; // DT2 관련 추가 내용
-  outingPlace?: string; // 외출 장소
-  outingDuration?: string; // 외출 시간 (시간/분)
-  outingNotes?: string; // 외출 관련 특이사항
+  // 급식 정보 (배열)
+  feedings?: Array<{
+    foodType?: string; // 사료 종류
+    time?: string; // 급식 시간
+    amount?: string; // 급식량 (그램)
+    notes?: string; // 추가 내용
+  }>;
+  // DT1(소변) 정보 (배열)
+  dt1Records?: Array<{
+    time?: string; // 시간
+    place?: string; // 장소
+    success?: string; // 성공 정도
+    accident?: string; // 실수 여부
+    notes?: string; // 관련 사항
+  }>;
+  // DT2(대변) 정보 (배열)
+  dt2Records?: Array<{
+    time?: string; // 시간
+    place?: string; // 장소
+    success?: string; // 성공 정도
+    accident?: string; // 실수 여부
+    notes?: string; // 관련 사항
+  }>;
+  // 외출 정보 (배열)
+  outings?: Array<{
+    place?: string; // 장소
+    duration?: string; // 외출 시간
+    notes?: string; // 특이사항
+  }>;
   additionalNotes?: string; // 그 밖에 오늘 하고 싶은 말
+
+  // 하위 호환성을 위한 기존 필드 (deprecated)
+  foodType?: string;
+  feedingTime?: string;
+  feedingAmount?: string;
+  feedingNotes?: string;
+  dt1Time?: string;
+  dt1Place?: string;
+  dt1Success?: string;
+  dt1Accident?: string;
+  dt1Notes?: string;
+  dt2Time?: string;
+  dt2Place?: string;
+  dt2Success?: string;
+  dt2Accident?: string;
+  dt2Notes?: string;
+  outingPlace?: string;
+  outingDuration?: string;
+  outingNotes?: string;
 }
 
 /**

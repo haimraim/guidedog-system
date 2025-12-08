@@ -44,26 +44,12 @@ export const DiaryPage = () => {
   const [viewingPost, setViewingPost] = useState<DiaryPost | null>(null);
   const [selectedDog, setSelectedDog] = useState<string>('all');
 
-  // 퍼피티칭 전용 필드
+  // 퍼피티칭 전용 필드 (배열 기반)
   const [diaryDate, setDiaryDate] = useState('');
-  const [foodType, setFoodType] = useState('');
-  const [usePreviousFoodType, setUsePreviousFoodType] = useState(false);
-  const [feedingTime, setFeedingTime] = useState('');
-  const [feedingAmount, setFeedingAmount] = useState('');
-  const [feedingNotes, setFeedingNotes] = useState('');
-  const [dt1Time, setDt1Time] = useState('');
-  const [dt1Place, setDt1Place] = useState('');
-  const [dt1Success, setDt1Success] = useState('');
-  const [dt1Accident, setDt1Accident] = useState('');
-  const [dt1Notes, setDt1Notes] = useState('');
-  const [dt2Time, setDt2Time] = useState('');
-  const [dt2Place, setDt2Place] = useState('');
-  const [dt2Success, setDt2Success] = useState('');
-  const [dt2Accident, setDt2Accident] = useState('');
-  const [dt2Notes, setDt2Notes] = useState('');
-  const [outingPlace, setOutingPlace] = useState('');
-  const [outingDuration, setOutingDuration] = useState('');
-  const [outingNotes, setOutingNotes] = useState('');
+  const [feedings, setFeedings] = useState([{ foodType: '', time: '', amount: '', notes: '' }]);
+  const [dt1Records, setDt1Records] = useState([{ time: '', place: '', success: '', accident: '', notes: '' }]);
+  const [dt2Records, setDt2Records] = useState([{ time: '', place: '', success: '', accident: '', notes: '' }]);
+  const [outings, setOutings] = useState([{ place: '', duration: '', notes: '' }]);
   const [additionalNotes, setAdditionalNotes] = useState('');
 
   // 아코디언 섹션 상태 (기본적으로 모두 열림)
@@ -303,26 +289,13 @@ export const DiaryPage = () => {
       content: user?.role === 'puppyTeacher' ? '퍼피티칭 일지' : content.trim(),
       createdAt: editingPost?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      // 퍼피티칭 전용 필드
+      // 퍼피티칭 전용 필드 (배열 기반)
       ...(user?.role === 'puppyTeacher' && {
         diaryDate,
-        foodType: foodType || undefined,
-        feedingTime: feedingTime || undefined,
-        feedingAmount: feedingAmount || undefined,
-        feedingNotes: feedingNotes || undefined,
-        dt1Time: dt1Time || undefined,
-        dt1Place: dt1Place || undefined,
-        dt1Success: dt1Success || undefined,
-        dt1Accident: dt1Accident || undefined,
-        dt1Notes: dt1Notes || undefined,
-        dt2Time: dt2Time || undefined,
-        dt2Place: dt2Place || undefined,
-        dt2Success: dt2Success || undefined,
-        dt2Accident: dt2Accident || undefined,
-        dt2Notes: dt2Notes || undefined,
-        outingPlace: outingPlace || undefined,
-        outingDuration: outingDuration || undefined,
-        outingNotes: outingNotes || undefined,
+        feedings: feedings.filter(f => f.time || f.foodType || f.amount || f.notes),
+        dt1Records: dt1Records.filter(d => d.time || d.place || d.success || d.accident || d.notes),
+        dt2Records: dt2Records.filter(d => d.time || d.place || d.success || d.accident || d.notes),
+        outings: outings.filter(o => o.place || o.duration || o.notes),
         additionalNotes: additionalNotes || undefined,
       }),
     };
@@ -337,26 +310,56 @@ export const DiaryPage = () => {
     setTitle(post.title);
     setContent(post.content);
 
-    // 퍼피티칭 데이터 로드
+    // 퍼피티칭 데이터 로드 (배열 기반)
     if (post.diaryDate) {
       setDiaryDate(post.diaryDate);
-      setFoodType(post.foodType || '');
-      setFeedingTime(post.feedingTime || '');
-      setFeedingAmount(post.feedingAmount || '');
-      setFeedingNotes(post.feedingNotes || '');
-      setDt1Time(post.dt1Time || '');
-      setDt1Place(post.dt1Place || '');
-      setDt1Success(post.dt1Success || '');
-      setDt1Accident(post.dt1Accident || '');
-      setDt1Notes(post.dt1Notes || '');
-      setDt2Time(post.dt2Time || '');
-      setDt2Place(post.dt2Place || '');
-      setDt2Success(post.dt2Success || '');
-      setDt2Accident(post.dt2Accident || '');
-      setDt2Notes(post.dt2Notes || '');
-      setOutingPlace(post.outingPlace || '');
-      setOutingDuration(post.outingDuration || '');
-      setOutingNotes(post.outingNotes || '');
+
+      // 새 형식(배열)이 있으면 사용, 없으면 기존 형식에서 변환
+      if (post.feedings && post.feedings.length > 0) {
+        setFeedings(post.feedings);
+      } else if (post.feedingTime || post.foodType) {
+        setFeedings([{
+          foodType: post.foodType || '',
+          time: post.feedingTime || '',
+          amount: post.feedingAmount || '',
+          notes: post.feedingNotes || ''
+        }]);
+      }
+
+      if (post.dt1Records && post.dt1Records.length > 0) {
+        setDt1Records(post.dt1Records);
+      } else if (post.dt1Time) {
+        setDt1Records([{
+          time: post.dt1Time || '',
+          place: post.dt1Place || '',
+          success: post.dt1Success || '',
+          accident: post.dt1Accident || '',
+          notes: post.dt1Notes || ''
+        }]);
+      }
+
+      if (post.dt2Records && post.dt2Records.length > 0) {
+        setDt2Records(post.dt2Records);
+      } else if (post.dt2Time) {
+        setDt2Records([{
+          time: post.dt2Time || '',
+          place: post.dt2Place || '',
+          success: post.dt2Success || '',
+          accident: post.dt2Accident || '',
+          notes: post.dt2Notes || ''
+        }]);
+      }
+
+      if (post.outings && post.outings.length > 0) {
+        setOutings(post.outings);
+      } else if (post.outingPlace) {
+        setOutings([{
+          place: post.outingPlace || '',
+          duration: post.outingDuration || '',
+          notes: post.outingNotes || ''
+        }]);
+      }
+
       setAdditionalNotes(post.additionalNotes || '');
     }
 
@@ -378,26 +381,12 @@ export const DiaryPage = () => {
     setIsWriting(false);
     setEditingPost(null);
 
-    // 퍼피티칭 필드 초기화
+    // 퍼피티칭 필드 초기화 (배열 기반)
     setDiaryDate('');
-    setFoodType('');
-    setUsePreviousFoodType(false);
-    setFeedingTime('');
-    setFeedingAmount('');
-    setFeedingNotes('');
-    setDt1Time('');
-    setDt1Place('');
-    setDt1Success('');
-    setDt1Accident('');
-    setDt1Notes('');
-    setDt2Time('');
-    setDt2Place('');
-    setDt2Success('');
-    setDt2Accident('');
-    setDt2Notes('');
-    setOutingPlace('');
-    setOutingDuration('');
-    setOutingNotes('');
+    setFeedings([{ foodType: '', time: '', amount: '', notes: '' }]);
+    setDt1Records([{ time: '', place: '', success: '', accident: '', notes: '' }]);
+    setDt2Records([{ time: '', place: '', success: '', accident: '', notes: '' }]);
+    setOutings([{ place: '', duration: '', notes: '' }]);
     setAdditionalNotes('');
   };
 
@@ -547,89 +536,146 @@ export const DiaryPage = () => {
           {viewingPost.diaryDate ? (
             <div className="space-y-6">
               {/* 급식 */}
-              {(viewingPost.foodType || viewingPost.feedingTime || viewingPost.feedingAmount || viewingPost.feedingNotes) && (
+              {((viewingPost.feedings && viewingPost.feedings.length > 0) || viewingPost.feedingTime) && (
                 <div className="border-t pt-4">
                   <h3 className="text-lg font-bold text-gray-800 mb-3">급식</h3>
-                  <div className="space-y-2 text-gray-700">
-                    {viewingPost.foodType && (
-                      <p><span className="font-semibold">사료 종류:</span> {viewingPost.foodType}</p>
-                    )}
-                    {viewingPost.feedingTime && (
-                      <p><span className="font-semibold">급식 시간:</span> {viewingPost.feedingTime}</p>
-                    )}
-                    {viewingPost.feedingAmount && (
-                      <p><span className="font-semibold">급식량:</span> {viewingPost.feedingAmount}g</p>
-                    )}
-                    {viewingPost.feedingNotes && (
-                      <p><span className="font-semibold">추가 내용:</span> {viewingPost.feedingNotes}</p>
-                    )}
-                  </div>
+                  {viewingPost.feedings && viewingPost.feedings.length > 0 ? (
+                    <div className="space-y-4">
+                      {viewingPost.feedings.map((feeding, index) => (
+                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-gray-800 mb-2">급식 #{index + 1}</h4>
+                          <div className="space-y-1 text-gray-700">
+                            {feeding.time && <p><span className="font-semibold">시간:</span> {feeding.time}</p>}
+                            {feeding.foodType && <p><span className="font-semibold">사료 종류:</span> {feeding.foodType}</p>}
+                            {feeding.amount && <p><span className="font-semibold">급식량:</span> {feeding.amount}g</p>}
+                            {feeding.notes && <p><span className="font-semibold">추가 내용:</span> {feeding.notes}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2 text-gray-700">
+                      {viewingPost.foodType && <p><span className="font-semibold">사료 종류:</span> {viewingPost.foodType}</p>}
+                      {viewingPost.feedingTime && <p><span className="font-semibold">급식 시간:</span> {viewingPost.feedingTime}</p>}
+                      {viewingPost.feedingAmount && <p><span className="font-semibold">급식량:</span> {viewingPost.feedingAmount}g</p>}
+                      {viewingPost.feedingNotes && <p><span className="font-semibold">추가 내용:</span> {viewingPost.feedingNotes}</p>}
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* DT1 (소변) */}
-              {(viewingPost.dt1Time || viewingPost.dt1Place || viewingPost.dt1Success || viewingPost.dt1Accident || viewingPost.dt1Notes) && (
+              {((viewingPost.dt1Records && viewingPost.dt1Records.length > 0) || viewingPost.dt1Time || viewingPost.dt1Place || viewingPost.dt1Success || viewingPost.dt1Accident || viewingPost.dt1Notes) && (
                 <div className="border-t pt-4">
                   <h3 className="text-lg font-bold text-gray-800 mb-3">배변 - DT1 (소변)</h3>
-                  <div className="space-y-2 text-gray-700">
-                    {viewingPost.dt1Time && (
-                      <p><span className="font-semibold">시간:</span> {viewingPost.dt1Time}</p>
-                    )}
-                    {viewingPost.dt1Place && (
-                      <p><span className="font-semibold">장소:</span> {viewingPost.dt1Place}</p>
-                    )}
-                    {viewingPost.dt1Success && (
-                      <p><span className="font-semibold">성공 정도:</span> {viewingPost.dt1Success}</p>
-                    )}
-                    {viewingPost.dt1Accident && (
-                      <p><span className="font-semibold">실수 여부:</span> {viewingPost.dt1Accident}</p>
-                    )}
-                    {viewingPost.dt1Notes && (
-                      <p><span className="font-semibold">관련 사항:</span> {viewingPost.dt1Notes}</p>
-                    )}
-                  </div>
+                  {viewingPost.dt1Records && viewingPost.dt1Records.length > 0 ? (
+                    <div className="space-y-4">
+                      {viewingPost.dt1Records.map((dt1, index) => (
+                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-gray-800 mb-2">DT1 #{index + 1}</h4>
+                          <div className="space-y-1 text-gray-700">
+                            {dt1.time && <p><span className="font-semibold">시간:</span> {dt1.time}</p>}
+                            {dt1.place && <p><span className="font-semibold">장소:</span> {dt1.place}</p>}
+                            {dt1.success && <p><span className="font-semibold">성공 정도:</span> {dt1.success}</p>}
+                            {dt1.accident && <p><span className="font-semibold">실수 여부:</span> {dt1.accident}</p>}
+                            {dt1.notes && <p><span className="font-semibold">관련 사항:</span> {dt1.notes}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2 text-gray-700">
+                      {viewingPost.dt1Time && (
+                        <p><span className="font-semibold">시간:</span> {viewingPost.dt1Time}</p>
+                      )}
+                      {viewingPost.dt1Place && (
+                        <p><span className="font-semibold">장소:</span> {viewingPost.dt1Place}</p>
+                      )}
+                      {viewingPost.dt1Success && (
+                        <p><span className="font-semibold">성공 정도:</span> {viewingPost.dt1Success}</p>
+                      )}
+                      {viewingPost.dt1Accident && (
+                        <p><span className="font-semibold">실수 여부:</span> {viewingPost.dt1Accident}</p>
+                      )}
+                      {viewingPost.dt1Notes && (
+                        <p><span className="font-semibold">관련 사항:</span> {viewingPost.dt1Notes}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* DT2 (대변) */}
-              {(viewingPost.dt2Time || viewingPost.dt2Place || viewingPost.dt2Success || viewingPost.dt2Accident || viewingPost.dt2Notes) && (
+              {((viewingPost.dt2Records && viewingPost.dt2Records.length > 0) || viewingPost.dt2Time || viewingPost.dt2Place || viewingPost.dt2Success || viewingPost.dt2Accident || viewingPost.dt2Notes) && (
                 <div className="border-t pt-4">
                   <h3 className="text-lg font-bold text-gray-800 mb-3">배변 - DT2 (대변)</h3>
-                  <div className="space-y-2 text-gray-700">
-                    {viewingPost.dt2Time && (
-                      <p><span className="font-semibold">시간:</span> {viewingPost.dt2Time}</p>
-                    )}
-                    {viewingPost.dt2Place && (
-                      <p><span className="font-semibold">장소:</span> {viewingPost.dt2Place}</p>
-                    )}
-                    {viewingPost.dt2Success && (
-                      <p><span className="font-semibold">성공 정도:</span> {viewingPost.dt2Success}</p>
-                    )}
-                    {viewingPost.dt2Accident && (
-                      <p><span className="font-semibold">실수 여부:</span> {viewingPost.dt2Accident}</p>
-                    )}
-                    {viewingPost.dt2Notes && (
-                      <p><span className="font-semibold">관련 사항:</span> {viewingPost.dt2Notes}</p>
-                    )}
-                  </div>
+                  {viewingPost.dt2Records && viewingPost.dt2Records.length > 0 ? (
+                    <div className="space-y-4">
+                      {viewingPost.dt2Records.map((dt2, index) => (
+                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-gray-800 mb-2">DT2 #{index + 1}</h4>
+                          <div className="space-y-1 text-gray-700">
+                            {dt2.time && <p><span className="font-semibold">시간:</span> {dt2.time}</p>}
+                            {dt2.place && <p><span className="font-semibold">장소:</span> {dt2.place}</p>}
+                            {dt2.success && <p><span className="font-semibold">성공 정도:</span> {dt2.success}</p>}
+                            {dt2.accident && <p><span className="font-semibold">실수 여부:</span> {dt2.accident}</p>}
+                            {dt2.notes && <p><span className="font-semibold">관련 사항:</span> {dt2.notes}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2 text-gray-700">
+                      {viewingPost.dt2Time && (
+                        <p><span className="font-semibold">시간:</span> {viewingPost.dt2Time}</p>
+                      )}
+                      {viewingPost.dt2Place && (
+                        <p><span className="font-semibold">장소:</span> {viewingPost.dt2Place}</p>
+                      )}
+                      {viewingPost.dt2Success && (
+                        <p><span className="font-semibold">성공 정도:</span> {viewingPost.dt2Success}</p>
+                      )}
+                      {viewingPost.dt2Accident && (
+                        <p><span className="font-semibold">실수 여부:</span> {viewingPost.dt2Accident}</p>
+                      )}
+                      {viewingPost.dt2Notes && (
+                        <p><span className="font-semibold">관련 사항:</span> {viewingPost.dt2Notes}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* 외출 */}
-              {(viewingPost.outingPlace || viewingPost.outingDuration || viewingPost.outingNotes) && (
+              {((viewingPost.outings && viewingPost.outings.length > 0) || viewingPost.outingPlace || viewingPost.outingDuration || viewingPost.outingNotes) && (
                 <div className="border-t pt-4">
                   <h3 className="text-lg font-bold text-gray-800 mb-3">외출</h3>
-                  <div className="space-y-2 text-gray-700">
-                    {viewingPost.outingPlace && (
-                      <p><span className="font-semibold">장소:</span> {viewingPost.outingPlace}</p>
-                    )}
-                    {viewingPost.outingDuration && (
-                      <p><span className="font-semibold">외출 시간:</span> {viewingPost.outingDuration}</p>
-                    )}
-                    {viewingPost.outingNotes && (
-                      <p><span className="font-semibold">특이사항:</span> {viewingPost.outingNotes}</p>
-                    )}
-                  </div>
+                  {viewingPost.outings && viewingPost.outings.length > 0 ? (
+                    <div className="space-y-4">
+                      {viewingPost.outings.map((outing, index) => (
+                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-gray-800 mb-2">외출 #{index + 1}</h4>
+                          <div className="space-y-1 text-gray-700">
+                            {outing.place && <p><span className="font-semibold">장소:</span> {outing.place}</p>}
+                            {outing.duration && <p><span className="font-semibold">외출 시간:</span> {outing.duration}</p>}
+                            {outing.notes && <p><span className="font-semibold">특이사항:</span> {outing.notes}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2 text-gray-700">
+                      {viewingPost.outingPlace && (
+                        <p><span className="font-semibold">장소:</span> {viewingPost.outingPlace}</p>
+                      )}
+                      {viewingPost.outingDuration && (
+                        <p><span className="font-semibold">외출 시간:</span> {viewingPost.outingDuration}</p>
+                      )}
+                      {viewingPost.outingNotes && (
+                        <p><span className="font-semibold">특이사항:</span> {viewingPost.outingNotes}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -717,67 +763,98 @@ export const DiaryPage = () => {
                 </button>
 
                 {isFeedingOpen && (
-                  <div className="space-y-4">
-                  <div>
-                    <label className="flex items-center mb-2">
-                      <input
-                        type="checkbox"
-                        checked={usePreviousFoodType}
-                        onChange={(e) => setUsePreviousFoodType(e.target.checked)}
-                        className="mr-2"
-                      />
-                      <span className="text-sm text-gray-700">이전과 동일한 사료 사용</span>
-                    </label>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      사료 종류
-                    </label>
-                    <input
-                      type="text"
-                      value={foodType}
-                      onChange={(e) => setFoodType(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="사료 종류를 입력하세요"
-                    />
-                  </div>
+                  <div className="space-y-6">
+                    {feedings.map((feeding, index) => (
+                      <div key={index} className="border rounded-lg p-4 bg-gray-50 space-y-4">
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-semibold text-gray-700">급식 #{index + 1}</h4>
+                          {feedings.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setFeedings(feedings.filter((_, i) => i !== index))}
+                              className="text-red-600 hover:text-red-800 text-sm"
+                            >
+                              삭제
+                            </button>
+                          )}
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      급식 시간
-                    </label>
-                    <input
-                      type="time"
-                      value={feedingTime}
-                      onChange={(e) => setFeedingTime(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    />
-                  </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            급식 시간
+                          </label>
+                          <input
+                            type="time"
+                            value={feeding.time}
+                            onChange={(e) => {
+                              const newFeedings = [...feedings];
+                              newFeedings[index].time = e.target.value;
+                              setFeedings(newFeedings);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                          />
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      급식량 (그램)
-                    </label>
-                    <input
-                      type="number"
-                      value={feedingAmount}
-                      onChange={(e) => setFeedingAmount(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="그램 단위로 입력"
-                    />
-                  </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            사료 종류
+                          </label>
+                          <input
+                            type="text"
+                            value={feeding.foodType}
+                            onChange={(e) => {
+                              const newFeedings = [...feedings];
+                              newFeedings[index].foodType = e.target.value;
+                              setFeedings(newFeedings);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="사료 종류"
+                          />
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      추가 내용
-                    </label>
-                    <textarea
-                      value={feedingNotes}
-                      onChange={(e) => setFeedingNotes(e.target.value)}
-                      rows={3}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
-                      placeholder="급식 관련 추가 내용"
-                    />
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            급식량 (그램)
+                          </label>
+                          <input
+                            type="number"
+                            value={feeding.amount}
+                            onChange={(e) => {
+                              const newFeedings = [...feedings];
+                              newFeedings[index].amount = e.target.value;
+                              setFeedings(newFeedings);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="그램"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            추가 내용
+                          </label>
+                          <textarea
+                            value={feeding.notes}
+                            onChange={(e) => {
+                              const newFeedings = [...feedings];
+                              newFeedings[index].notes = e.target.value;
+                              setFeedings(newFeedings);
+                            }}
+                            rows={2}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                            placeholder="추가 내용"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setFeedings([...feedings, { foodType: '', time: '', amount: '', notes: '' }])}
+                      className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      + 급식 시간 추가
+                    </button>
                   </div>
-                </div>
                 )}
               </div>
 
@@ -800,71 +877,105 @@ export const DiaryPage = () => {
                 </button>
 
                 {isDt1Open && (
-                  <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      시간
-                    </label>
-                    <input
-                      type="time"
-                      value={dt1Time}
-                      onChange={(e) => setDt1Time(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    />
-                  </div>
+                  <div className="space-y-6">
+                    {dt1Records.map((record, index) => (
+                      <div key={index} className="border rounded-lg p-4 bg-gray-50 space-y-4">
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-semibold text-gray-700">DT1 #{index + 1}</h4>
+                          {dt1Records.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setDt1Records(dt1Records.filter((_, i) => i !== index))}
+                              className="text-red-600 hover:text-red-800 text-sm"
+                            >
+                              삭제
+                            </button>
+                          )}
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      장소
-                    </label>
-                    <input
-                      type="text"
-                      value={dt1Place}
-                      onChange={(e) => setDt1Place(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="배변 장소"
-                    />
-                  </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">시간</label>
+                          <input
+                            type="time"
+                            value={record.time}
+                            onChange={(e) => {
+                              const newRecords = [...dt1Records];
+                              newRecords[index].time = e.target.value;
+                              setDt1Records(newRecords);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                          />
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      기회를 줄 때 얼마나 잘 해주었는지
-                    </label>
-                    <input
-                      type="text"
-                      value={dt1Success}
-                      onChange={(e) => setDt1Success(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="예: 잘함, 보통, 실패 등"
-                    />
-                  </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">장소</label>
+                          <input
+                            type="text"
+                            value={record.place}
+                            onChange={(e) => {
+                              const newRecords = [...dt1Records];
+                              newRecords[index].place = e.target.value;
+                              setDt1Records(newRecords);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="배변 장소"
+                          />
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      실수 여부
-                    </label>
-                    <input
-                      type="text"
-                      value={dt1Accident}
-                      onChange={(e) => setDt1Accident(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="예: 없음, 1회 등"
-                    />
-                  </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">성공 정도</label>
+                          <input
+                            type="text"
+                            value={record.success}
+                            onChange={(e) => {
+                              const newRecords = [...dt1Records];
+                              newRecords[index].success = e.target.value;
+                              setDt1Records(newRecords);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="예: 잘함, 보통"
+                          />
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      관련 사항 추가
-                    </label>
-                    <textarea
-                      value={dt1Notes}
-                      onChange={(e) => setDt1Notes(e.target.value)}
-                      rows={3}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
-                      placeholder="DT1 관련 추가 내용"
-                    />
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">실수 여부</label>
+                          <input
+                            type="text"
+                            value={record.accident}
+                            onChange={(e) => {
+                              const newRecords = [...dt1Records];
+                              newRecords[index].accident = e.target.value;
+                              setDt1Records(newRecords);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="예: 없음, 1회"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">관련 사항</label>
+                          <textarea
+                            value={record.notes}
+                            onChange={(e) => {
+                              const newRecords = [...dt1Records];
+                              newRecords[index].notes = e.target.value;
+                              setDt1Records(newRecords);
+                            }}
+                            rows={2}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                            placeholder="추가 내용"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setDt1Records([...dt1Records, { time: '', place: '', success: '', accident: '', notes: '' }])}
+                      className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      + DT1 시간 추가
+                    </button>
                   </div>
-                </div>
                 )}
               </div>
 
@@ -887,71 +998,105 @@ export const DiaryPage = () => {
                 </button>
 
                 {isDt2Open && (
-                  <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      시간
-                    </label>
-                    <input
-                      type="time"
-                      value={dt2Time}
-                      onChange={(e) => setDt2Time(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    />
-                  </div>
+                  <div className="space-y-6">
+                    {dt2Records.map((record, index) => (
+                      <div key={index} className="border rounded-lg p-4 bg-gray-50 space-y-4">
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-semibold text-gray-700">DT2 #{index + 1}</h4>
+                          {dt2Records.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setDt2Records(dt2Records.filter((_, i) => i !== index))}
+                              className="text-red-600 hover:text-red-800 text-sm"
+                            >
+                              삭제
+                            </button>
+                          )}
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      장소
-                    </label>
-                    <input
-                      type="text"
-                      value={dt2Place}
-                      onChange={(e) => setDt2Place(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="배변 장소"
-                    />
-                  </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">시간</label>
+                          <input
+                            type="time"
+                            value={record.time}
+                            onChange={(e) => {
+                              const newRecords = [...dt2Records];
+                              newRecords[index].time = e.target.value;
+                              setDt2Records(newRecords);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                          />
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      기회를 줄 때 얼마나 잘 해주었는지
-                    </label>
-                    <input
-                      type="text"
-                      value={dt2Success}
-                      onChange={(e) => setDt2Success(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="예: 잘함, 보통, 실패 등"
-                    />
-                  </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">장소</label>
+                          <input
+                            type="text"
+                            value={record.place}
+                            onChange={(e) => {
+                              const newRecords = [...dt2Records];
+                              newRecords[index].place = e.target.value;
+                              setDt2Records(newRecords);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="배변 장소"
+                          />
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      실수 여부
-                    </label>
-                    <input
-                      type="text"
-                      value={dt2Accident}
-                      onChange={(e) => setDt2Accident(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="예: 없음, 1회 등"
-                    />
-                  </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">성공 정도</label>
+                          <input
+                            type="text"
+                            value={record.success}
+                            onChange={(e) => {
+                              const newRecords = [...dt2Records];
+                              newRecords[index].success = e.target.value;
+                              setDt2Records(newRecords);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="예: 잘함, 보통"
+                          />
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      관련 사항 추가
-                    </label>
-                    <textarea
-                      value={dt2Notes}
-                      onChange={(e) => setDt2Notes(e.target.value)}
-                      rows={3}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
-                      placeholder="DT2 관련 추가 내용"
-                    />
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">실수 여부</label>
+                          <input
+                            type="text"
+                            value={record.accident}
+                            onChange={(e) => {
+                              const newRecords = [...dt2Records];
+                              newRecords[index].accident = e.target.value;
+                              setDt2Records(newRecords);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="예: 없음, 1회"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">관련 사항</label>
+                          <textarea
+                            value={record.notes}
+                            onChange={(e) => {
+                              const newRecords = [...dt2Records];
+                              newRecords[index].notes = e.target.value;
+                              setDt2Records(newRecords);
+                            }}
+                            rows={2}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                            placeholder="추가 내용"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setDt2Records([...dt2Records, { time: '', place: '', success: '', accident: '', notes: '' }])}
+                      className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      + DT2 시간 추가
+                    </button>
                   </div>
-                </div>
                 )}
               </div>
 
@@ -974,46 +1119,76 @@ export const DiaryPage = () => {
                 </button>
 
                 {isOutingOpen && (
-                  <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      장소
-                    </label>
-                    <input
-                      type="text"
-                      value={outingPlace}
-                      onChange={(e) => setOutingPlace(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="어디로 나갔는지"
-                    />
-                  </div>
+                  <div className="space-y-6">
+                    {outings.map((outing, index) => (
+                      <div key={index} className="border rounded-lg p-4 bg-gray-50 space-y-4">
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-semibold text-gray-700">외출 #{index + 1}</h4>
+                          {outings.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setOutings(outings.filter((_, i) => i !== index))}
+                              className="text-red-600 hover:text-red-800 text-sm"
+                            >
+                              삭제
+                            </button>
+                          )}
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      외출 시간
-                    </label>
-                    <input
-                      type="text"
-                      value={outingDuration}
-                      onChange={(e) => setOutingDuration(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      placeholder="예: 2시간 30분"
-                    />
-                  </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">장소</label>
+                          <input
+                            type="text"
+                            value={outing.place}
+                            onChange={(e) => {
+                              const newOutings = [...outings];
+                              newOutings[index].place = e.target.value;
+                              setOutings(newOutings);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="어디로 나갔는지"
+                          />
+                        </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      특이사항
-                    </label>
-                    <textarea
-                      value={outingNotes}
-                      onChange={(e) => setOutingNotes(e.target.value)}
-                      rows={3}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
-                      placeholder="외출 중 특이사항"
-                    />
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">외출 시간</label>
+                          <input
+                            type="text"
+                            value={outing.duration}
+                            onChange={(e) => {
+                              const newOutings = [...outings];
+                              newOutings[index].duration = e.target.value;
+                              setOutings(newOutings);
+                            }}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            placeholder="예: 2시간 30분"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">특이사항</label>
+                          <textarea
+                            value={outing.notes}
+                            onChange={(e) => {
+                              const newOutings = [...outings];
+                              newOutings[index].notes = e.target.value;
+                              setOutings(newOutings);
+                            }}
+                            rows={2}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                            placeholder="특이사항"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setOutings([...outings, { place: '', duration: '', notes: '' }])}
+                      className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      + 외출 시간 추가
+                    </button>
                   </div>
-                </div>
                 )}
               </div>
 
