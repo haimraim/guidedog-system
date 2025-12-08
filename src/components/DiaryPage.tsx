@@ -157,7 +157,7 @@ export const DiaryPage = () => {
         if (category === '퍼피티칭') {
           return post.diaryDate !== undefined;
         }
-        // 다른 카테고리는 dogCategory 필드로 확인
+        // 다른 카테고리는 dogCategory 필드로 확인 (dogCategory가 명시적으로 있는 경우만)
         return post.dogCategory === category;
       });
 
@@ -229,7 +229,13 @@ export const DiaryPage = () => {
       // 안내견/은퇴견/부모견: dogCategory로 필터링하고 createdAt 날짜로 매칭
       return allPosts.find(post => {
         if (post.dogName !== dogName) return false;
-        if (post.dogCategory !== adminCategory) return false;
+
+        // 퍼피티칭 기록(diaryDate 있음)은 제외
+        if (post.diaryDate) return false;
+
+        // dogCategory가 있으면 정확히 매칭, 없으면 (기존 다이어리) 현재 카테고리로 간주
+        if (post.dogCategory && post.dogCategory !== adminCategory) return false;
+
         const createdDate = new Date(post.createdAt).toISOString().split('T')[0];
         return createdDate === date;
       }) || null;
