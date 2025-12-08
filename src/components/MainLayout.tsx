@@ -12,12 +12,13 @@ import { MedicalRecordPage } from './MedicalRecordPage';
 import { MedicationCheckPage } from './MedicationCheckPage';
 import { DataTableEnhanced } from './DataTableEnhanced';
 import { LecturePage } from './LecturePage';
+import { SchoolOfGuideDogPage } from './SchoolOfGuideDogPage';
 import { PrivacyPolicyPage } from './PrivacyPolicyPage';
 import { TermsOfServicePage } from './TermsOfServicePage';
 import { getCombinedData, calculateAgeWithMonths } from '../utils/storage';
 import type { CombinedData } from '../types/types';
 
-type MenuItem = 'home' | 'diary' | 'lecture' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'privacy' | 'terms';
+type MenuItem = 'home' | 'diary' | 'lecture' | 'schoolofguidedog' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'privacy' | 'terms';
 
 export const MainLayout = () => {
   const { user, logout } = useAuth();
@@ -112,6 +113,7 @@ export const MainLayout = () => {
                   <ul className="space-y-2 text-gray-700">
                     <li><strong>다이어리:</strong> 안내견과의 생활 경험을 기록합니다</li>
                     <li><strong>강의실:</strong> 교육 자료 및 영상을 열람합니다</li>
+                    <li><strong>스쿨오브안내견 🐾:</strong> 삼성화재 유튜브 교육 영상을 시청합니다</li>
                     <li><strong>보딩 폼:</strong> 안내견 위탁 신청서를 작성합니다</li>
                     <li><strong>물품 신청:</strong> 필요한 물품을 신청합니다</li>
                     <li><strong>진료 기록:</strong> 안내견의 진료 내역을 관리합니다</li>
@@ -131,6 +133,8 @@ export const MainLayout = () => {
         return <DiaryPage />;
       case 'lecture':
         return <LecturePage />;
+      case 'schoolofguidedog':
+        return <SchoolOfGuideDogPage />;
       case 'boarding':
         return <BoardingFormPage onNavigateHome={() => setCurrentPage('home')} />;
       case 'products':
@@ -226,6 +230,7 @@ export const MainLayout = () => {
               <span className="text-lg font-bold text-gray-800">
                 {currentPage === 'diary' && '다이어리'}
                 {currentPage === 'lecture' && '강의실'}
+                {currentPage === 'schoolofguidedog' && '스쿨오브안내견 🐾'}
                 {currentPage === 'boarding' && '보딩 폼 작성'}
                 {currentPage === 'products' && (user?.role === 'admin' ? '물품 확인' : '물품 신청')}
                 {currentPage === 'medical' && '진료 기록'}
@@ -281,6 +286,19 @@ export const MainLayout = () => {
                   aria-current={currentPage === 'lecture' ? 'page' : undefined}
                 >
                   강의실
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigateToPage('schoolofguidedog')}
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                    currentPage === 'schoolofguidedog'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  aria-current={currentPage === 'schoolofguidedog' ? 'page' : undefined}
+                >
+                  스쿨오브안내견 🐾
                 </button>
               </li>
               <li>
