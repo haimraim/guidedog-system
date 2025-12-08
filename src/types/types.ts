@@ -342,6 +342,20 @@ export interface ProductOrder {
 }
 
 /**
+ * 보딩 코멘트
+ */
+export interface BoardingComment {
+  id: string; // 고유 ID (UUID)
+  boardingFormId: string; // 보딩 신청서 ID
+  userId: string; // 작성자 ID
+  userName: string; // 작성자 이름
+  content: string; // 코멘트 내용
+  isRead: boolean; // 신청자가 읽었는지 여부
+  createdAt: string; // 작성일시
+  updatedAt: string; // 수정일시
+}
+
+/**
  * 보딩 신청서
  */
 export interface BoardingForm {
@@ -396,6 +410,9 @@ export interface BoardingForm {
 
   // 기타 전달사항
   notes?: string;
+
+  // 코멘트
+  comments?: BoardingComment[]; // 관리자 코멘트 목록
 
   // 상태
   status: 'pending' | 'approved' | 'rejected' | 'completed'; // 신청 상태

@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { getGuideDogs } from '../utils/storage';
-import type { BoardingForm, GuideDog } from '../types/types';
+import type { BoardingForm, GuideDog, BoardingComment } from '../types/types';
 import { generateId } from '../utils/storage';
 
 const STORAGE_KEY = 'guidedog_boarding';
@@ -32,6 +32,43 @@ const saveBoardingForm = (form: BoardingForm): void => {
 const deleteBoardingForm = (id: string): void => {
   const forms = getBoardingForms().filter(f => f.id !== id);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(forms));
+};
+
+// 코멘트 추가
+const addComment = (formId: string, comment: BoardingComment): void => {
+  const forms = getBoardingForms();
+  const formIndex = forms.findIndex(f => f.id === formId);
+
+  if (formIndex >= 0) {
+    if (!forms[formIndex].comments) {
+      forms[formIndex].comments = [];
+    }
+    forms[formIndex].comments!.unshift(comment);
+    forms[formIndex].updatedAt = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(forms));
+  }
+};
+
+// 코멘트 읽음 처리
+const markCommentsAsRead = (formId: string, userId: string): void => {
+  const forms = getBoardingForms();
+  const formIndex = forms.findIndex(f => f.id === formId);
+
+  if (formIndex >= 0 && forms[formIndex].comments) {
+    forms[formIndex].comments!.forEach(comment => {
+      // 신청자가 보는 경우, 관리자가 작성한 코멘트를 읽음 처리
+      if (comment.userId !== userId) {
+        comment.isRead = true;
+      }
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(forms));
+  }
+};
+
+// 읽지 않은 코멘트 개수
+const getUnreadCommentCount = (form: BoardingForm, userId: string): number => {
+  if (!form.comments) return 0;
+  return form.comments.filter(c => c.userId !== userId && !c.isRead).length;
 };
 
 // 사료 종류 옵션
@@ -80,6 +117,8 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
   const [isAdding, setIsAdding] = useState(false);
   const [editingForm, setEditingForm] = useState<BoardingForm | null>(null);
   const [dogInfo, setDogInfo] = useState<GuideDog | null>(null);
+  const [viewingForm, setViewingForm] = useState<BoardingForm | null>(null);
+  const [newComment, setNewComment] = useState('');
 
   // 폼 입력 상태
   const [startDate, setStartDate] = useState('');
@@ -283,6 +322,49 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     setReturnItems('');
     setNotes('');
     setIsAdding(false);
+  };
+
+  // 상세 보기 열기
+  const handleViewDetails = (form: BoardingForm) => {
+    setViewingForm(form);
+    // 사용자가 자신의 신청서를 볼 때 코멘트 읽음 처리
+    if (user && form.userId === user.id) {
+      markCommentsAsRead(form.id, user.id);
+      loadForms(); // 읽음 처리 후 목록 새로고침
+    }
+  };
+
+  // 상세 보기 닫기
+  const handleCloseDetails = () => {
+    setViewingForm(null);
+    setNewComment('');
+  };
+
+  // 코멘트 작성
+  const handleAddComment = () => {
+    if (!newComment.trim() || !viewingForm || !user) return;
+
+    const comment: BoardingComment = {
+      id: generateId(),
+      boardingFormId: viewingForm.id,
+      userId: user.id,
+      userName: user.name,
+      content: newComment,
+      isRead: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    addComment(viewingForm.id, comment);
+    setNewComment('');
+    loadForms();
+
+    // 상세 보기 업데이트
+    const updatedForms = getBoardingForms();
+    const updatedForm = updatedForms.find(f => f.id === viewingForm.id);
+    if (updatedForm) {
+      setViewingForm(updatedForm);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -947,6 +1029,17 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                 </div>
 
                 <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleViewDetails(form)}
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors relative"
+                  >
+                    상세보기
+                    {user && getUnreadCommentCount(form, user.id) > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                        {getUnreadCommentCount(form, user.id)}
+                      </span>
+                    )}
+                  </button>
                   {user?.role === 'admin' && (
                     <>
                       {form.status === 'pending' && (
@@ -997,6 +1090,238 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
           </div>
         )}
       </div>
+
+      {/* 상세 보기 모달 */}
+      {viewingForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-800">보딩 신청서 상세보기</h2>
+              <button
+                onClick={handleCloseDetails}
+                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* 기본 정보 */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-800 mb-3">기본 정보</h3>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <span className="font-semibold text-gray-700">견명:</span> {viewingForm.dogName}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-700">생년월일:</span> {formatDate(viewingForm.dogBirthDate)}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-700">성별:</span> {viewingForm.dogGender}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-700">카테고리:</span> {viewingForm.dogCategory}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-700">신청자:</span> {viewingForm.userName}
+                  </div>
+                  <div>
+                    <span className={`font-semibold px-3 py-1 rounded-full text-sm border ${getStatusColor(viewingForm.status)}`}>
+                      {getStatusText(viewingForm.status)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 보딩 기간 */}
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-800 mb-3">보딩 기간</h3>
+                <div className="text-sm">
+                  {formatDate(viewingForm.startDate)} ~ {formatDate(viewingForm.endDate)}
+                </div>
+              </div>
+
+              {/* 사료 정보 */}
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-800 mb-3">사료 정보</h3>
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <span className="font-semibold text-gray-700">사료 종류:</span> {viewingForm.foodType}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-700">급여량과 급여 시기:</span>
+                    <div className="whitespace-pre-wrap mt-1">{viewingForm.feedingSchedule}</div>
+                  </div>
+                  {viewingForm.supplements && (
+                    <div>
+                      <span className="font-semibold text-gray-700">영양제:</span>
+                      <div className="whitespace-pre-wrap mt-1">{viewingForm.supplements}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 맡긴 물품 */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-800 mb-3">학교에 같이 맡긴 물품</h3>
+                <div className="text-sm">
+                  {viewingForm.items.join(', ')}
+                  {viewingForm.itemsEtc && `, ${viewingForm.itemsEtc}`}
+                </div>
+              </div>
+
+              {/* 건강 정보 */}
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-800 mb-3">건강 정보</h3>
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <span className="font-semibold text-gray-700">최근 목욕일:</span> {formatDate(viewingForm.lastBathDate)}
+                  </div>
+                  {viewingForm.dewormingSchedule && (
+                    <div>
+                      <span className="font-semibold text-gray-700">구충 시행:</span> {viewingForm.dewormingSchedule}
+                    </div>
+                  )}
+                  <div>
+                    <span className="font-semibold text-gray-700">백신접종:</span> {viewingForm.vaccinations.join(', ')}
+                  </div>
+                </div>
+              </div>
+
+              {/* 보딩 사유 */}
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-800 mb-3">보딩 사유</h3>
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <span className="font-semibold text-gray-700">사유:</span> {viewingForm.boardingReason}
+                  </div>
+                  {viewingForm.medicalReason && (
+                    <div>
+                      <span className="font-semibold text-gray-700">{viewingForm.boardingReason} 사유:</span> {viewingForm.medicalReason}
+                    </div>
+                  )}
+                  {viewingForm.medicalDate && (
+                    <div>
+                      <span className="font-semibold text-gray-700">{viewingForm.boardingReason}일:</span> {formatDate(viewingForm.medicalDate)}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 추가 정보 */}
+              {(viewingForm.aftercareTeacher || viewingForm.tearsblanket || viewingForm.needsNailTrim || viewingForm.needsPadTrim || viewingForm.returnItems || viewingForm.notes) && (
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-800 mb-3">추가 정보</h3>
+                  <div className="space-y-2 text-sm">
+                    {viewingForm.aftercareTeacher && (
+                      <div>
+                        <span className="font-semibold text-gray-700">담당 사후관리 선생님:</span> {viewingForm.aftercareTeacher}
+                      </div>
+                    )}
+                    {viewingForm.tearsblanket && (
+                      <div>
+                        <span className="font-semibold text-gray-700">이불 물어뜯음:</span> {viewingForm.tearsblanket}
+                      </div>
+                    )}
+                    <div>
+                      <span className="font-semibold text-gray-700">DT벨트 착용:</span> {viewingForm.usesDTBelt}
+                    </div>
+                    {viewingForm.needsNailTrim && (
+                      <div>
+                        <span className="font-semibold text-gray-700">발톱 정리:</span> {viewingForm.needsNailTrim}
+                      </div>
+                    )}
+                    {viewingForm.needsPadTrim && (
+                      <div>
+                        <span className="font-semibold text-gray-700">패드 털 정리:</span> {viewingForm.needsPadTrim}
+                      </div>
+                    )}
+                    {viewingForm.returnItems && (
+                      <div>
+                        <span className="font-semibold text-gray-700">집으로 돌아갈 때 필요한 물품:</span>
+                        <div className="whitespace-pre-wrap mt-1">{viewingForm.returnItems}</div>
+                      </div>
+                    )}
+                    {viewingForm.notes && (
+                      <div>
+                        <span className="font-semibold text-gray-700">기타 전달사항:</span>
+                        <div className="whitespace-pre-wrap mt-1">{viewingForm.notes}</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* 코멘트 섹션 */}
+              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-800 mb-3">관리자 코멘트</h3>
+
+                {/* 코멘트 목록 */}
+                <div className="space-y-3 mb-4">
+                  {(!viewingForm.comments || viewingForm.comments.length === 0) && (
+                    <p className="text-sm text-gray-500">아직 코멘트가 없습니다.</p>
+                  )}
+                  {viewingForm.comments && viewingForm.comments.map((comment) => (
+                    <div
+                      key={comment.id}
+                      className={`p-3 rounded-lg ${
+                        !comment.isRead && comment.userId !== user?.id
+                          ? 'bg-yellow-100 border border-yellow-300'
+                          : 'bg-white border border-gray-200'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-semibold text-sm text-gray-800">{comment.userName}</span>
+                          {!comment.isRead && comment.userId !== user?.id && (
+                            <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">새 코멘트</span>
+                          )}
+                        </div>
+                        <span className="text-xs text-gray-500">
+                          {new Date(comment.createdAt).toLocaleString('ko-KR')}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-700 whitespace-pre-wrap">{comment.content}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 코멘트 작성 (관리자만) */}
+                {user?.role === 'admin' && (
+                  <div className="mt-4">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      새 코멘트 작성
+                    </label>
+                    <textarea
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      placeholder="보딩 중 발생한 내용이나 특이사항을 작성하세요..."
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                      rows={3}
+                    />
+                    <button
+                      onClick={handleAddComment}
+                      disabled={!newComment.trim()}
+                      className="mt-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors"
+                    >
+                      코멘트 추가
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6">
+              <button
+                onClick={handleCloseDetails}
+                className="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
