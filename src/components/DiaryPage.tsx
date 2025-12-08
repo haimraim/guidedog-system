@@ -78,8 +78,9 @@ export const DiaryPage = () => {
   const [periodFilter, setPeriodFilter] = useState<'today' | '3days' | 'week' | 'month' | '3months' | 'custom' | 'all'>('week');
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
-  const [showPuppyRecords, setShowPuppyRecords] = useState(false);
-  const [selectedDogForPuppy, setSelectedDogForPuppy] = useState<string | null>(null);
+  const [showOtherRecords, setShowOtherRecords] = useState(false);
+  const [selectedDogForOther, setSelectedDogForOther] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<DogCategory | null>(null);
 
   useEffect(() => {
     loadPosts();
@@ -136,6 +137,32 @@ export const DiaryPage = () => {
     const allDogs = getGuideDogs();
     if (adminCategory === 'all') return allDogs;
     return allDogs.filter(dog => dog.category === adminCategory);
+  };
+
+  // 관리자: 특정 개가 다른 카테고리에 기록이 있는지 확인
+  const getAvailableCategories = (dogName: string): DogCategory[] => {
+    const categories: DogCategory[] = [];
+    const dogPosts = allPosts.filter(post => post.dogName === dogName);
+
+    // 퍼피티칭 기록 확인 (diaryDate 필드가 있는 다이어리)
+    const hasPuppyRecords = dogPosts.some(post => post.diaryDate);
+    if (hasPuppyRecords && adminCategory !== '퍼피티칭') {
+      categories.push('퍼피티칭');
+    }
+
+    // 일반 다이어리 기록 확인 (diaryDate 필드가 없는 다이어리)
+    const hasGeneralRecords = dogPosts.some(post => !post.diaryDate);
+    if (hasGeneralRecords) {
+      // 현재 선택된 카테고리가 아닌 다른 카테고리들 추가
+      const otherCategories: DogCategory[] = ['안내견', '은퇴견', '부모견'];
+      otherCategories.forEach(cat => {
+        if (cat !== adminCategory && adminCategory !== 'all') {
+          categories.push(cat);
+        }
+      });
+    }
+
+    return categories;
   };
 
   // 관리자: 기간 필터링
@@ -344,13 +371,25 @@ export const DiaryPage = () => {
     });
   };
 
-  // 퍼피티칭 기록 모달
-  if (showPuppyRecords && selectedDogForPuppy) {
-    const puppyPosts = allPosts.filter(
-      post => post.dogName === selectedDogForPuppy && post.diaryDate
-    ).sort((a, b) => {
-      if (!a.diaryDate || !b.diaryDate) return 0;
-      return new Date(b.diaryDate).getTime() - new Date(a.diaryDate).getTime();
+  // 다른 카테고리 기록 모달
+  if (showOtherRecords && selectedDogForOther && selectedCategory) {
+    const categoryPosts = allPosts.filter(post => {
+      if (post.dogName !== selectedDogForOther) return false;
+
+      // 퍼피티칭 기록
+      if (selectedCategory === '퍼피티칭') {
+        return post.diaryDate !== undefined;
+      }
+
+      // 일반 다이어리 (안내견/은퇴견/부모견)
+      return post.diaryDate === undefined;
+    }).sort((a, b) => {
+      // 퍼피티칭은 diaryDate로 정렬
+      if (selectedCategory === '퍼피티칭' && a.diaryDate && b.diaryDate) {
+        return new Date(b.diaryDate).getTime() - new Date(a.diaryDate).getTime();
+      }
+      // 일반 다이어리는 createdAt으로 정렬
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 
     return (
@@ -358,12 +397,13 @@ export const DiaryPage = () => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800">
-              {selectedDogForPuppy} - 퍼피티칭 기록
+              {selectedDogForOther} - {selectedCategory} 기록
             </h2>
             <button
               onClick={() => {
-                setShowPuppyRecords(false);
-                setSelectedDogForPuppy(null);
+                setShowOtherRecords(false);
+                setSelectedDogForOther(null);
+                setSelectedCategory(null);
               }}
               className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
             >
@@ -371,13 +411,13 @@ export const DiaryPage = () => {
             </button>
           </div>
 
-          {puppyPosts.length === 0 ? (
+          {categoryPosts.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">퍼피티칭 기록이 없습니다.</p>
+              <p className="text-gray-500">{selectedCategory} 기록이 없습니다.</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {puppyPosts.map((post) => (
+              {categoryPosts.map((post) => (
                 <div
                   key={post.id}
                   className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
@@ -394,8 +434,10 @@ export const DiaryPage = () => {
                     </span>
                   </div>
                   <div className="mt-2 text-sm text-gray-600">
-                    {post.diaryDate && (
+                    {post.diaryDate ? (
                       <span>날짜: {post.diaryDate}</span>
+                    ) : (
+                      <span>작성일: {formatDate(post.createdAt)}</span>
                     )}
                   </div>
                 </div>
@@ -416,12 +458,12 @@ export const DiaryPage = () => {
             <button
               onClick={() => {
                 setViewingPost(null);
-                // 퍼피티칭 기록 모달에서 왔으면 다시 모달로 돌아가기
-                if (showPuppyRecords && selectedDogForPuppy) {
-                  // 모달 상태 유지
-                } else {
-                  setShowPuppyRecords(false);
-                  setSelectedDogForPuppy(null);
+                // 다른 카테고리 기록 모달에서 왔으면 다시 모달로 돌아가기
+                if (!showOtherRecords || !selectedDogForOther || !selectedCategory) {
+                  // 모달이 아니면 모달 상태 초기화
+                  setShowOtherRecords(false);
+                  setSelectedDogForOther(null);
+                  setSelectedCategory(null);
                 }
               }}
               className="text-blue-600 hover:text-blue-800 font-semibold"
@@ -1162,43 +1204,52 @@ export const DiaryPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {dogs.map(dog => (
-                    <tr key={dog.id} className="hover:bg-gray-50 border-b">
-                      <td className="px-4 py-3 sticky left-0 bg-white z-10">
-                        <div className="flex flex-col gap-2">
-                          <span className="font-semibold text-gray-800">{dog.name}</span>
-                          {adminCategory !== '퍼피티칭' && (
-                            <button
-                              onClick={() => {
-                                setSelectedDogForPuppy(dog.name);
-                                setShowPuppyRecords(true);
-                              }}
-                              className="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded transition-colors"
-                            >
-                              퍼피티칭 기록 보기
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                      {dates.slice().reverse().map(date => {
-                        const diary = getDiaryForDogAndDate(dog.name, date);
-                        return (
-                          <td key={date} className="px-4 py-3 text-center">
-                            {diary ? (
-                              <button
-                                onClick={() => setViewingPost(diary)}
-                                className="text-blue-600 hover:text-blue-800 font-semibold"
-                              >
-                                ✓
-                              </button>
-                            ) : (
-                              <span className="text-gray-400">-</span>
+                  {dogs.map(dog => {
+                    const availableCategories = getAvailableCategories(dog.name);
+                    return (
+                      <tr key={dog.id} className="hover:bg-gray-50 border-b">
+                        <td className="px-4 py-3 sticky left-0 bg-white z-10">
+                          <div className="flex flex-col gap-2">
+                            <span className="font-semibold text-gray-800">{dog.name}</span>
+                            {availableCategories.length > 0 && (
+                              <div className="flex flex-col gap-1">
+                                {availableCategories.map(category => (
+                                  <button
+                                    key={category}
+                                    onClick={() => {
+                                      setSelectedDogForOther(dog.name);
+                                      setSelectedCategory(category);
+                                      setShowOtherRecords(true);
+                                    }}
+                                    className="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded transition-colors"
+                                  >
+                                    {category} 기록 보기
+                                  </button>
+                                ))}
+                              </div>
                             )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
+                          </div>
+                        </td>
+                        {dates.slice().reverse().map(date => {
+                          const diary = getDiaryForDogAndDate(dog.name, date);
+                          return (
+                            <td key={date} className="px-4 py-3 text-center">
+                              {diary ? (
+                                <button
+                                  onClick={() => setViewingPost(diary)}
+                                  className="text-blue-600 hover:text-blue-800 font-semibold"
+                                >
+                                  ✓
+                                </button>
+                              ) : (
+                                <span className="text-gray-400">-</span>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
