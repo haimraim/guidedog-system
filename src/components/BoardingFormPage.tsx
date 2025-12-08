@@ -996,10 +996,20 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                 className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 transition-colors"
               >
                 <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h4 className="text-lg font-bold text-gray-800 mb-1">
-                      {form.dogName} ({form.dogCategory}) - {form.userName}
-                    </h4>
+                  <div className="flex-1">
+                    {/* 신청자가 자신의 신청서를 수정할 수 있도록 제목을 링크로 표시 */}
+                    {form.userId === user?.id && form.status === 'pending' ? (
+                      <button
+                        onClick={() => handleEdit(form)}
+                        className="text-lg font-bold text-blue-600 hover:text-blue-800 hover:underline mb-1 text-left"
+                      >
+                        {form.dogName} ({form.dogCategory}) - {form.userName}
+                      </button>
+                    ) : (
+                      <h4 className="text-lg font-bold text-gray-800 mb-1">
+                        {form.dogName} ({form.dogCategory}) - {form.userName}
+                      </h4>
+                    )}
                     <p className="text-sm text-gray-600">
                       {formatDate(form.startDate)} ~ {formatDate(form.endDate)}
                     </p>
@@ -1085,6 +1095,50 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                     </>
                   )}
                 </div>
+
+                {/* 코멘트 섹션 - 목록에서 바로 확인 */}
+                {form.comments && form.comments.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h5 className="font-semibold text-gray-800 flex items-center">
+                        💬 관리자 코멘트
+                        {user && getUnreadCommentCount(form, user.id) > 0 && (
+                          <span className="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                            {getUnreadCommentCount(form, user.id)}개의 새 코멘트
+                          </span>
+                        )}
+                      </h5>
+                    </div>
+                    <div className="space-y-2">
+                      {form.comments.slice(0, 3).map((comment) => (
+                        <div
+                          key={comment.id}
+                          className={`p-3 rounded-lg text-sm ${
+                            !comment.isRead && comment.userId !== user?.id
+                              ? 'bg-yellow-50 border border-yellow-300'
+                              : 'bg-gray-50 border border-gray-200'
+                          }`}
+                        >
+                          <div className="flex justify-between items-start mb-1">
+                            <span className="font-semibold text-gray-800">{comment.userName}</span>
+                            <span className="text-xs text-gray-500">
+                              {new Date(comment.createdAt).toLocaleDateString('ko-KR')}
+                            </span>
+                          </div>
+                          <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
+                        </div>
+                      ))}
+                      {form.comments.length > 3 && (
+                        <button
+                          onClick={() => handleViewDetails(form)}
+                          className="text-sm text-indigo-600 hover:text-indigo-800 font-semibold"
+                        >
+                          + {form.comments.length - 3}개 더 보기
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
