@@ -122,7 +122,11 @@ export const DiaryPage = () => {
 
     // 퍼피티칭 기록 확인 (현재 카테고리가 퍼피티칭이 아닐 때만)
     if (adminCategory !== '퍼피티칭') {
-      const hasPuppyRecords = dogPosts.some(post => post.diaryDate !== undefined);
+      const hasPuppyRecords = dogPosts.some(post => {
+        // 퍼피티칭 전용 필드가 있거나 dogCategory가 퍼피티칭인 경우
+        return post.feedings || post.dt1Records || post.dt2Records ||
+               post.outings || post.dogCategory === '퍼피티칭';
+      });
       if (hasPuppyRecords) {
         categories.push('퍼피티칭');
       }
@@ -1475,9 +1479,10 @@ export const DiaryPage = () => {
                               {diary ? (
                                 <button
                                   onClick={() => setViewingPost(diary)}
-                                  className="text-blue-600 hover:text-blue-800 font-semibold"
+                                  className="text-blue-600 hover:text-blue-800 font-semibold underline"
+                                  aria-label={`${dog.name} ${date} 다이어리: ${diary.title}`}
                                 >
-                                  ✓
+                                  {diary.title}
                                 </button>
                               ) : (
                                 <span className="text-gray-400">-</span>
