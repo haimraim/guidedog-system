@@ -60,8 +60,8 @@ export const DiaryPage = () => {
   const [isAdditionalOpen, setIsAdditionalOpen] = useState(true);
 
   // 관리자 필터 상태
-  const [adminCategory, setAdminCategory] = useState<DogCategory | 'all'>('all');
-  const [periodFilter, setPeriodFilter] = useState<'today' | '3days' | 'week' | 'month' | '3months' | 'custom' | 'all'>('all');
+  const [adminCategory, setAdminCategory] = useState<DogCategory | 'all'>('퍼피티칭');
+  const [periodFilter, setPeriodFilter] = useState<'today' | '3days' | 'week' | 'month' | '3months' | 'custom' | 'all'>('week');
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
   const [showOtherRecords, setShowOtherRecords] = useState(false);
