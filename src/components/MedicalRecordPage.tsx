@@ -693,42 +693,105 @@ export const MedicalRecordPage = () => {
 
         {/* 일반 진료 뷰 */}
         {adminView === 'general' && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">일반 진료 기록 목록</h3>
-            {records.filter(r => r.category === '일반 진료').length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                진료 기록이 없습니다.
+          <>
+            {/* 필터 섹션 */}
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-4">필터</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    카테고리
+                  </label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value as CategoryFilter)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  >
+                    <option value="안내견">안내견</option>
+                    <option value="퍼피">퍼피</option>
+                    <option value="은퇴견">은퇴견</option>
+                    <option value="부모견">부모견</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    년도
+                  </label>
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  >
+                    {[2025, 2024, 2023, 2022, 2021].map(year => (
+                      <option key={year} value={year}>{year}년</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {records
-                  .filter(r => r.category === '일반 진료')
-                  .map(record => (
-                    <div
-                      key={record.id}
-                      className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 transition-colors cursor-pointer"
-                      onClick={() => setViewingRecord(record)}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="text-lg font-bold text-gray-800">
-                            {record.dogName} - {record.userName}
-                          </h4>
-                          <p className="text-sm text-gray-600 mt-1">
-                            {formatDate(record.visitDate)} | {record.hospital}
-                          </p>
+            </div>
+
+            {/* 일반 진료 목록 */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                {selectedCategory} - {selectedYear}년 일반 진료 기록
+              </h3>
+              {(() => {
+                const dogs = getGuideDogs().filter(dog => {
+                  const dogCategoryMap: { [key in CategoryFilter]: string } = {
+                    '안내견': '안내견',
+                    '퍼피': '퍼피티칭',
+                    '은퇴견': '은퇴견',
+                    '부모견': '부모견',
+                  };
+                  return dog.category === dogCategoryMap[selectedCategory];
+                });
+
+                const filteredRecords = records.filter(r => {
+                  if (r.category !== '일반 진료') return false;
+                  const recordYear = new Date(r.visitDate).getFullYear();
+                  if (recordYear !== selectedYear) return false;
+                  return dogs.some(dog => dog.name === r.dogName);
+                });
+
+                // 날짜순 정렬 (최신순)
+                const sortedRecords = filteredRecords.sort((a, b) =>
+                  new Date(b.visitDate).getTime() - new Date(a.visitDate).getTime()
+                );
+
+                return sortedRecords.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">
+                    진료 기록이 없습니다.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {sortedRecords.map(record => (
+                      <div
+                        key={record.id}
+                        className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 transition-colors cursor-pointer"
+                        onClick={() => setViewingRecord(record)}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="text-lg font-bold text-gray-800">
+                              {record.dogName} - {record.userName}
+                            </h4>
+                            <p className="text-sm text-gray-600 mt-1">
+                              {formatDate(record.visitDate)} | {record.hospital}
+                            </p>
+                          </div>
+                          {record.cost !== undefined && (
+                            <span className="text-lg font-semibold text-blue-600">
+                              {formatCurrency(record.cost)}
+                            </span>
+                          )}
                         </div>
-                        {record.cost !== undefined && (
-                          <span className="text-lg font-semibold text-blue-600">
-                            {formatCurrency(record.cost)}
-                          </span>
-                        )}
                       </div>
-                    </div>
-                  ))}
-              </div>
-            )}
-          </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+          </>
         )}
 
         {/* 백신 접종 뷰 */}
