@@ -287,22 +287,32 @@ export const LecturePage = () => {
     return colors[cat] || 'bg-gray-100 text-gray-800 border-gray-300';
   };
 
-  // YouTube URL을 embed URL로 변환
+  // YouTube URL을 embed URL로 변환 (컨트롤 포함)
   const getYouTubeEmbedUrl = (url: string): string => {
     if (!url) return '';
 
+    let videoId = '';
+
     // 이미 embed URL인 경우
     if (url.includes('youtube.com/embed/')) {
-      return url;
+      const embedMatch = url.match(/youtube\.com\/embed\/([^?&]+)/);
+      if (embedMatch && embedMatch[1]) {
+        videoId = embedMatch[1];
+      } else {
+        return url;
+      }
+    } else {
+      // 일반 YouTube URL 변환
+      const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+      if (videoIdMatch && videoIdMatch[1]) {
+        videoId = videoIdMatch[1];
+      } else {
+        return url;
+      }
     }
 
-    // 일반 YouTube URL 변환
-    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
-    if (videoIdMatch && videoIdMatch[1]) {
-      return `https://www.youtube.com/embed/${videoIdMatch[1]}`;
-    }
-
-    return url;
+    // 컨트롤과 접근성 기능을 포함한 URL 반환
+    return `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&showinfo=1&fs=1&cc_load_policy=1`;
   };
 
   // 강의 상세보기
@@ -364,13 +374,19 @@ export const LecturePage = () => {
               {/* YouTube 영상 */}
               {viewingLecture.youtubeUrl && (
                 <div className="mb-4">
-                  <iframe
-                    src={getYouTubeEmbedUrl(viewingLecture.youtubeUrl)}
-                    className="w-full aspect-video rounded-lg shadow-md"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    title={`${viewingLecture.title} - YouTube 영상`}
-                  />
+                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                    <iframe
+                      src={getYouTubeEmbedUrl(viewingLecture.youtubeUrl)}
+                      className="absolute top-0 left-0 w-full h-full rounded-lg shadow-md border-2 border-gray-200"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title={`${viewingLecture.title} - YouTube 영상`}
+                      aria-label={`${viewingLecture.title} 유튜브 영상 플레이어`}
+                    />
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">
+                    유튜브 영상 플레이어 - 키보드 단축키: 스페이스바(재생/일시정지), ↑↓(볼륨), ←→(10초 이동)
+                  </p>
                 </div>
               )}
 
