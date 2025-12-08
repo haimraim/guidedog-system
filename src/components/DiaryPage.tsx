@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import type { DiaryPost, DogCategory } from '../types/types';
-import { generateId, getGuideDogs, getActivities, getPartners } from '../utils/storage';
+import { generateId, getGuideDogs } from '../utils/storage';
 
 const STORAGE_KEY = 'guidedog_diary';
 
@@ -210,26 +210,13 @@ export const DiaryPage = () => {
     } else {
       // 안내견/은퇴견/부모견: dogCategory로 필터링하고 createdAt 날짜로 매칭
       return allPosts.find(post => {
-        // dogName이 있으면 일치 확인, 없으면 통과 (파트너가 작성한 경우 Activity로 추적)
-        if (post.dogName && post.dogName !== dogName) return false;
+        if (post.dogName !== dogName) return false;
 
         // 퍼피티칭 기록(diaryDate 있음)은 제외
         if (post.diaryDate) return false;
 
         // dogCategory가 있으면 정확히 매칭, 없으면 (기존 다이어리) 현재 카테고리로 간주
         if (post.dogCategory && post.dogCategory !== adminCategory) return false;
-
-        // dogName이 없는 경우 userId로 파트너 찾아서 매칭 확인
-        if (!post.dogName && post.userId) {
-          const activities = getActivities();
-          const partnerId = post.userId.replace('partner_', '');
-          const activity = activities.find(a => a.partnerId === partnerId);
-          if (activity) {
-            const dogs = getGuideDogs();
-            const dog = dogs.find(d => d.id === activity.guideDogId);
-            if (dog && dog.name !== dogName) return false;
-          }
-        }
 
         // 로컬 시간대로 날짜 비교
         const createdDate = new Date(post.createdAt);
@@ -278,37 +265,15 @@ export const DiaryPage = () => {
     }
 
     // 개의 현재 카테고리 정보 가져오기
-    let dogName = user?.dogName;
-    let dogCategory: DogCategory | undefined = undefined;
-
-    // 파트너인 경우 Activity에서 안내견 찾기
-    if (user?.role === 'partner') {
-      const activities = getActivities();
-      const partners = getPartners();
-
-      // 파트너 ID 찾기 (user.id가 partner_{partnerId} 형식일 수 있음)
-      const partnerId = user.id.replace('partner_', '');
-      const activity = activities.find(a => a.partnerId === partnerId);
-
-      if (activity) {
-        const dogs = getGuideDogs();
-        const dog = dogs.find(d => d.id === activity.guideDogId);
-        if (dog) {
-          dogName = dog.name;
-          dogCategory = dog.category;
-        }
-      }
-    } else if (dogName) {
-      // 퍼피티처 등 다른 역할
-      const dog = getGuideDogs().find(d => d.name === dogName);
-      dogCategory = dog?.category;
-    }
+    const dogCategory = user?.dogName
+      ? getGuideDogs().find(dog => dog.name === user.dogName)?.category
+      : undefined;
 
     const post: DiaryPost = {
       id: editingPost?.id || generateId(),
       userId: user!.id,
       userName: user!.name,
-      dogName: dogName,
+      dogName: user?.dogName,
       dogCategory: dogCategory,
       title: user?.role === 'puppyTeacher' ? `${diaryDate} 일지` : title.trim(),
       content: user?.role === 'puppyTeacher' ? '퍼피티칭 일지' : content.trim(),
