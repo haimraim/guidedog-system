@@ -117,7 +117,7 @@ export const SchoolOfGuideDogPage = () => {
 
           <div className="relative w-full mb-4" style={{ paddingBottom: '56.25%' }}>
             <iframe
-              src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&controls=1&modestbranding=1&rel=0&fs=1`}
+              src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&controls=1&modestbranding=1&rel=0&fs=1&cc_load_policy=1&iv_load_policy=3`}
               className="absolute top-0 left-0 w-full h-full rounded-lg shadow-md"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -125,6 +125,10 @@ export const SchoolOfGuideDogPage = () => {
               aria-label={`${selectedVideo.title} 유튜브 영상 플레이어`}
             />
           </div>
+
+          <p className="text-sm text-gray-600 mb-4">
+            키보드 단축키: 스페이스바(재생/일시정지), ↑↓(볼륨), ←→(10초 이동)
+          </p>
 
           {selectedVideo.description && (
             <div className="mt-6">
