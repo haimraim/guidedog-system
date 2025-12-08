@@ -34,6 +34,10 @@ const deleteBoardingForm = (id: string): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(forms));
 };
 
+const deleteAllBoardingForms = (): void => {
+  localStorage.removeItem(STORAGE_KEY);
+};
+
 // 코멘트 추가
 const addComment = (formId: string, comment: BoardingComment): void => {
   const forms = getBoardingForms();
@@ -364,6 +368,17 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     const updatedForm = updatedForms.find(f => f.id === viewingForm.id);
     if (updatedForm) {
       setViewingForm(updatedForm);
+    }
+  };
+
+  // 모든 보딩 데이터 삭제
+  const handleDeleteAllData = () => {
+    if (confirm('⚠️ 정말로 모든 보딩 신청 데이터를 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다!')) {
+      if (confirm('⚠️⚠️ 다시 한번 확인합니다.\n\n모든 보딩 신청서와 코멘트가 영구적으로 삭제됩니다.\n\n정말 삭제하시겠습니까?')) {
+        deleteAllBoardingForms();
+        loadForms();
+        alert('✅ 모든 보딩 데이터가 삭제되었습니다.');
+      }
     }
   };
 
@@ -917,14 +932,24 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
         <h2 className="text-2xl font-bold text-gray-800">
           보딩 신청 관리{user?.role === 'admin' && ' (관리자)'}
         </h2>
-        {user?.role !== 'admin' && (
-          <button
-            onClick={() => setIsAdding(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-          >
-            신청서 작성
-          </button>
-        )}
+        <div className="flex space-x-3">
+          {user?.role === 'admin' && (
+            <button
+              onClick={handleDeleteAllData}
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            >
+              모든 데이터 초기화
+            </button>
+          )}
+          {user?.role !== 'admin' && (
+            <button
+              onClick={() => setIsAdding(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            >
+              신청서 작성
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 관리자 필터 및 정렬 */}
@@ -1061,28 +1086,43 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                     )}
                   </button>
 
-                  {/* 관리자: waiting 상태일 때 보딩 시작 버튼 */}
-                  {user?.role === 'admin' && form.status === 'waiting' && (
-                    <button
-                      onClick={() => handleStatusChange(form.id, 'boarding')}
-                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-colors"
-                    >
-                      보딩 시작
-                    </button>
-                  )}
-
-                  {/* 관리자: boarding 상태일 때 보딩 종료 버튼 */}
-                  {user?.role === 'admin' && form.status === 'boarding' && (
-                    <button
-                      onClick={() => handleStatusChange(form.id, 'completed')}
-                      className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition-colors"
-                    >
-                      보딩 종료
-                    </button>
+                  {/* 관리자: 상태 변경 버튼 */}
+                  {user?.role === 'admin' && (
+                    <>
+                      {form.status === 'waiting' && (
+                        <button
+                          onClick={() => handleStatusChange(form.id, 'boarding')}
+                          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                        >
+                          보딩 시작
+                        </button>
+                      )}
+                      {form.status === 'boarding' && (
+                        <button
+                          onClick={() => handleStatusChange(form.id, 'completed')}
+                          className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                        >
+                          보딩 종료
+                        </button>
+                      )}
+                      {/* 관리자: 모든 신청서 수정/삭제 가능 */}
+                      <button
+                        onClick={() => handleEdit(form)}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={() => handleDelete(form.id)}
+                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                      >
+                        삭제
+                      </button>
+                    </>
                   )}
 
                   {/* 신청자: waiting 상태일 때만 수정/삭제 가능 */}
-                  {form.userId === user?.id && form.status === 'waiting' && (
+                  {user?.role !== 'admin' && form.userId === user?.id && form.status === 'waiting' && (
                     <>
                       <button
                         onClick={() => handleEdit(form)}
