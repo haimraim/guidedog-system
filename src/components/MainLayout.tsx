@@ -116,7 +116,7 @@ export const MainLayout = () => {
                     <li><strong>물품 신청:</strong> 필요한 물품을 신청합니다</li>
                     <li><strong>진료 기록:</strong> 안내견의 진료 내역을 관리합니다</li>
                     <li><strong>약품 체크:</strong> 매월 약품 복용/도포 여부를 체크합니다</li>
-                    {user?.role === 'admin' && (
+                    {(user?.role === 'admin' || user?.role === 'moderator') && (
                       <>
                         <li><strong>안내견 관리:</strong> 전체 안내견 데이터를 관리합니다</li>
                       </>
@@ -161,7 +161,7 @@ export const MainLayout = () => {
             <div>
               <h1 className="text-2xl font-bold">안내견 관리 시스템</h1>
               <p className="text-sm text-blue-100 mt-1">
-                {user?.role === 'admin' ? '관리자' : user?.name}님 환영합니다
+                {user?.role === 'admin' ? '관리자' : user?.role === 'moderator' ? '준관리자' : user?.name}님 환영합니다
                 {user?.dogName && ` (${user.dogName})`}
               </p>
             </div>
@@ -351,7 +351,7 @@ export const MainLayout = () => {
                   약품 체크
                 </button>
               </li>
-              {user?.role === 'admin' && (
+              {(user?.role === 'admin' || user?.role === 'moderator') && (
                 <li>
                   <button
                     onClick={() => navigateToPage('admin')}
