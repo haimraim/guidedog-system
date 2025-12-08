@@ -287,7 +287,13 @@ export const LecturePage = () => {
     return colors[cat] || 'bg-gray-100 text-gray-800 border-gray-300';
   };
 
-  // YouTube URL을 embed URL로 변환 (컨트롤 포함)
+  // URL이 유튜브 링크인지 확인
+  const isYouTubeUrl = (url: string): boolean => {
+    if (!url) return false;
+    return url.includes('youtube.com') || url.includes('youtu.be');
+  };
+
+  // YouTube URL을 embed URL로 변환 (최소한의 UI)
   const getYouTubeEmbedUrl = (url: string): string => {
     if (!url) return '';
 
@@ -311,8 +317,8 @@ export const LecturePage = () => {
       }
     }
 
-    // 컨트롤과 접근성 기능을 포함한 URL 반환
-    return `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&showinfo=1&fs=1&cc_load_policy=1`;
+    // 깔끔한 플레이어: modestbranding으로 유튜브 로고 최소화, rel=0으로 관련 영상 숨김
+    return `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&fs=1&cc_load_policy=1&iv_load_policy=3`;
   };
 
   // 강의 상세보기
@@ -371,13 +377,13 @@ export const LecturePage = () => {
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">강의 영상</h3>
 
-              {/* YouTube 영상 */}
-              {viewingLecture.youtubeUrl && (
+              {/* YouTube 영상 (유튜브 URL인 경우만) */}
+              {viewingLecture.youtubeUrl && isYouTubeUrl(viewingLecture.youtubeUrl) && (
                 <div className="mb-4">
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                     <iframe
                       src={getYouTubeEmbedUrl(viewingLecture.youtubeUrl)}
-                      className="absolute top-0 left-0 w-full h-full rounded-lg shadow-md border-2 border-gray-200"
+                      className="absolute top-0 left-0 w-full h-full rounded-lg shadow-md"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                       title={`${viewingLecture.title} - YouTube 영상`}
@@ -385,7 +391,29 @@ export const LecturePage = () => {
                     />
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    유튜브 영상 플레이어 - 키보드 단축키: 스페이스바(재생/일시정지), ↑↓(볼륨), ←→(10초 이동)
+                    키보드 단축키: 스페이스바(재생/일시정지), ↑↓(볼륨), ←→(10초 이동)
+                  </p>
+                </div>
+              )}
+
+              {/* NAS 영상 또는 직접 URL (Video.js) */}
+              {viewingLecture.youtubeUrl && !isYouTubeUrl(viewingLecture.youtubeUrl) && (
+                <div data-vjs-player className="mb-4">
+                  <video
+                    ref={videoRef}
+                    className="video-js vjs-big-play-centered"
+                    onContextMenu={(e) => e.preventDefault()}
+                    aria-label={`${viewingLecture.title} 강의 영상`}
+                  >
+                    <source src={viewingLecture.youtubeUrl} type="video/mp4" />
+                    <source src={viewingLecture.youtubeUrl} type="video/webm" />
+                    <source src={viewingLecture.youtubeUrl} type="video/ogg" />
+                    <p className="vjs-no-js">
+                      JavaScript를 활성화하거나 HTML5 비디오를 지원하는 브라우저를 사용해주세요.
+                    </p>
+                  </video>
+                  <p className="text-sm text-gray-600 mt-2">
+                    키보드 단축키: 스페이스바(재생/일시정지), M(음소거), F(전체화면), ←→(10초 이동)
                   </p>
                 </div>
               )}
@@ -406,6 +434,9 @@ export const LecturePage = () => {
                       JavaScript를 활성화하거나 HTML5 비디오를 지원하는 브라우저를 사용해주세요.
                     </p>
                   </video>
+                  <p className="text-sm text-gray-600 mt-2">
+                    키보드 단축키: 스페이스바(재생/일시정지), M(음소거), F(전체화면), ←→(10초 이동)
+                  </p>
                 </div>
               )}
             </div>
@@ -505,7 +536,7 @@ export const LecturePage = () => {
                 htmlFor="youtubeUrl"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                유튜브 링크
+                영상 링크 (유튜브 또는 NAS)
               </label>
               <input
                 type="url"
@@ -513,11 +544,12 @@ export const LecturePage = () => {
                 value={youtubeUrl}
                 onChange={(e) => setYoutubeUrl(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                placeholder="https://www.youtube.com/watch?v=..."
-                aria-label="유튜브 영상 링크"
+                placeholder="https://www.youtube.com/watch?v=... 또는 https://dogjong.synology.me/..."
+                aria-label="영상 링크 (유튜브 또는 NAS)"
               />
               <p className="text-sm text-gray-500 mt-1">
-                유튜브 영상 링크를 입력하면 영상이 임베드됩니다.
+                <strong>유튜브 링크</strong>: 유튜브 영상 URL을 입력 (예: https://www.youtube.com/watch?v=...)<br/>
+                <strong>NAS 영상</strong>: NAS 영상 직접 URL을 입력 (예: https://dogjong.synology.me/common/video.mp4)
               </p>
             </div>
 
