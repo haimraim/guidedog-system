@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import type { DiaryPost, DogCategory } from '../types/types';
-import { generateId, getGuideDogs } from '../utils/storage';
+import { generateId, getGuideDogs, getActivities, getPartners } from '../utils/storage';
 
 const STORAGE_KEY = 'guidedog_diary';
 
@@ -265,15 +265,37 @@ export const DiaryPage = () => {
     }
 
     // 개의 현재 카테고리 정보 가져오기
-    const dogCategory = user?.dogName
-      ? getGuideDogs().find(dog => dog.name === user.dogName)?.category
-      : undefined;
+    let dogName = user?.dogName;
+    let dogCategory: DogCategory | undefined = undefined;
+
+    // 파트너인 경우 Activity에서 안내견 찾기
+    if (user?.role === 'partner') {
+      const activities = getActivities();
+      const partners = getPartners();
+
+      // 파트너 ID 찾기 (user.id가 partner_{partnerId} 형식일 수 있음)
+      const partnerId = user.id.replace('partner_', '');
+      const activity = activities.find(a => a.partnerId === partnerId);
+
+      if (activity) {
+        const dogs = getGuideDogs();
+        const dog = dogs.find(d => d.id === activity.guideDogId);
+        if (dog) {
+          dogName = dog.name;
+          dogCategory = dog.category;
+        }
+      }
+    } else if (dogName) {
+      // 퍼피티처 등 다른 역할
+      const dog = getGuideDogs().find(d => d.name === dogName);
+      dogCategory = dog?.category;
+    }
 
     const post: DiaryPost = {
       id: editingPost?.id || generateId(),
       userId: user!.id,
       userName: user!.name,
-      dogName: user?.dogName,
+      dogName: dogName,
       dogCategory: dogCategory,
       title: user?.role === 'puppyTeacher' ? `${diaryDate} 일지` : title.trim(),
       content: user?.role === 'puppyTeacher' ? '퍼피티칭 일지' : content.trim(),
