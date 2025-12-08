@@ -212,6 +212,16 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
       return;
     }
 
+    // 날짜 유효성 검증
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      if (start > end) {
+        alert('⚠️ 보딩 시작일이 종료일보다 늦을 수 없습니다.\n\n시작일과 종료일을 다시 확인해주세요.');
+        return;
+      }
+    }
+
     const finalFoodType = foodType === '기타' ? foodTypeOther : foodType;
 
     const form: BoardingForm = {
@@ -248,9 +258,31 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     };
 
     saveBoardingForm(form);
+
+    // 신청 내용 상세 확인 메시지 (시각장애인 접근성)
+    const confirmMessage = `
+✅ ${editingForm ? '보딩 신청서가 수정되었습니다' : '보딩 신청서가 접수되었습니다'}
+
+📋 신청 내용:
+• 견명: ${form.dogName}
+• 카테고리: ${form.dogCategory}
+• 보딩 기간: ${formatDateShort(form.startDate)} ~ ${formatDateShort(form.endDate)}
+• 사료: ${form.foodType}
+• 급여 시기: ${form.feedingSchedule}
+${form.supplements ? `• 영양제: ${form.supplements}` : ''}
+• 맡긴 물품: ${form.items.join(', ')}${form.itemsEtc ? `, ${form.itemsEtc}` : ''}
+• 최근 목욕일: ${formatDateShort(form.lastBathDate)}
+• 백신접종: ${form.vaccinations.join(', ')}
+• 보딩 사유: ${form.boardingReason}
+${form.medicalReason ? `• ${form.boardingReason} 사유: ${form.medicalReason}` : ''}
+${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
+
+신청 상태: 대기
+    `.trim();
+
+    alert(confirmMessage);
     resetForm();
     loadForms();
-    alert(editingForm ? '수정되었습니다.' : '신청되었습니다.');
   };
 
   const handleEdit = (form: BoardingForm) => {
@@ -395,6 +427,24 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     return `${year}년 ${month}월 ${day}일`;
   };
 
+  // 날짜 헬퍼 함수들
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  const getTomorrowDate = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  };
+
+  const getDayAfterTomorrowDate = () => {
+    const dayAfter = new Date();
+    dayAfter.setDate(dayAfter.getDate() + 2);
+    return dayAfter.toISOString().split('T')[0];
+  };
+
   const getStatusText = (status: BoardingForm['status']) => {
     switch (status) {
       case 'waiting': return '대기';
@@ -509,6 +559,29 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                     required
                   />
+                  <div className="flex space-x-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setStartDate(getTodayDate())}
+                      className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
+                    >
+                      오늘
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setStartDate(getTomorrowDate())}
+                      className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
+                    >
+                      내일
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setStartDate(getDayAfterTomorrowDate())}
+                      className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
+                    >
+                      모레
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -521,6 +594,29 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                     required
                   />
+                  <div className="flex space-x-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setEndDate(getTodayDate())}
+                      className="px-3 py-1 text-sm bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors"
+                    >
+                      오늘
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEndDate(getTomorrowDate())}
+                      className="px-3 py-1 text-sm bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors"
+                    >
+                      내일
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEndDate(getDayAfterTomorrowDate())}
+                      className="px-3 py-1 text-sm bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors"
+                    >
+                      모레
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
