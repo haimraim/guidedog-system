@@ -108,6 +108,7 @@ export const LecturePage = () => {
       // Video.js 플레이어 초기화
       const player = videojs(videoRef.current, {
         controls: true,
+        autoplay: true,
         fluid: true,
         preload: 'metadata',
         controlBar: {
@@ -318,7 +319,7 @@ export const LecturePage = () => {
     }
 
     // 깔끔한 플레이어: modestbranding으로 유튜브 로고 최소화, rel=0으로 관련 영상 숨김
-    return `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&fs=1&cc_load_policy=1&iv_load_policy=3`;
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&modestbranding=1&rel=0&fs=1&cc_load_policy=1&iv_load_policy=3`;
   };
 
   // 강의 상세보기

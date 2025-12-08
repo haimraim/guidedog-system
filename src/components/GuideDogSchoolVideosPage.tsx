@@ -105,6 +105,7 @@ export const GuideDogSchoolVideosPage = () => {
     if (viewingVideo && videoRef.current && !playerRef.current) {
       const player = videojs(videoRef.current, {
         controls: true,
+        autoplay: true,
         fluid: true,
         preload: 'metadata',
         controlBar: {
@@ -255,7 +256,7 @@ export const GuideDogSchoolVideosPage = () => {
       }
     }
 
-    return `https://www.youtube.com/embed/${videoId}?controls=1&modestbranding=1&rel=0&fs=1&cc_load_policy=1&iv_load_policy=3`;
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&modestbranding=1&rel=0&fs=1&cc_load_policy=1&iv_load_policy=3`;
   };
 
   // 영상 상세보기
