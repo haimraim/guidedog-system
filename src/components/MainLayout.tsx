@@ -25,11 +25,18 @@ export const MainLayout = () => {
   const [currentPage, setCurrentPage] = useState<MenuItem>('home');
   const [myDogInfo, setMyDogInfo] = useState<CombinedData | null>(null);
 
-  // 초기 로드 시 항상 홈으로 시작
+  // 초기 로드 시 URL에서 페이지 복원
   useEffect(() => {
-    // 로그인 직후에는 항상 홈으로 설정
-    setCurrentPage('home');
-    window.history.replaceState({ page: 'home' }, '', '?page=home');
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageParam = urlParams.get('page') as MenuItem;
+
+    if (pageParam && ['home', 'diary', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'privacy', 'terms'].includes(pageParam)) {
+      setCurrentPage(pageParam);
+      window.history.replaceState({ page: pageParam }, '', `?page=${pageParam}`);
+    } else {
+      setCurrentPage('home');
+      window.history.replaceState({ page: 'home' }, '', '?page=home');
+    }
   }, []);
 
   // 브라우저 뒤로가기/앞으로가기 이벤트 처리
