@@ -415,7 +415,7 @@ export interface BoardingForm {
   comments?: BoardingComment[]; // 관리자 코멘트 목록
 
   // 상태
-  status: 'pending' | 'approved' | 'rejected' | 'completed'; // 신청 상태
+  status: 'waiting' | 'boarding' | 'completed'; // 신청 상태 (대기, 보딩중, 보딩종료)
 
   createdAt: string; // 신청일시
   updatedAt: string; // 수정일시

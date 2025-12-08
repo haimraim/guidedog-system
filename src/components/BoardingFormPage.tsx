@@ -238,7 +238,7 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
       needsPadTrim: dogInfo.category === '퍼피티칭' ? needsPadTrim : undefined,
       returnItems: returnItems || undefined,
       notes: notes || undefined,
-      status: editingForm?.status || 'pending',
+      status: editingForm?.status || 'waiting',
       createdAt: editingForm?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -372,20 +372,26 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     return date.toLocaleDateString('ko-KR');
   };
 
+  const formatDateShort = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = String(date.getFullYear()).slice(2); // 25
+    const month = date.getMonth() + 1; // 1-12
+    const day = date.getDate(); // 1-31
+    return `${year}년 ${month}월 ${day}일`;
+  };
+
   const getStatusText = (status: BoardingForm['status']) => {
     switch (status) {
-      case 'pending': return '대기중';
-      case 'approved': return '승인됨';
-      case 'rejected': return '거부됨';
-      case 'completed': return '완료됨';
+      case 'waiting': return '대기';
+      case 'boarding': return '보딩중';
+      case 'completed': return '보딩종료';
     }
   };
 
   const getStatusColor = (status: BoardingForm['status']) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'approved': return 'bg-green-100 text-green-800 border-green-300';
-      case 'rejected': return 'bg-red-100 text-red-800 border-red-300';
+      case 'waiting': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case 'boarding': return 'bg-green-100 text-green-800 border-green-300';
       case 'completed': return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   };
@@ -936,10 +942,9 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               >
                 <option value="all">전체</option>
-                <option value="pending">대기중</option>
-                <option value="approved">승인됨</option>
-                <option value="rejected">거부됨</option>
-                <option value="completed">완료됨</option>
+                <option value="waiting">대기</option>
+                <option value="boarding">보딩중</option>
+                <option value="completed">보딩종료</option>
               </select>
             </div>
             <div>
@@ -998,20 +1003,20 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
                     {/* 신청자가 자신의 신청서를 수정할 수 있도록 제목을 링크로 표시 */}
-                    {form.userId === user?.id && form.status === 'pending' ? (
+                    {form.userId === user?.id && form.status === 'waiting' ? (
                       <button
                         onClick={() => handleEdit(form)}
                         className="text-lg font-bold text-blue-600 hover:text-blue-800 hover:underline mb-1 text-left"
                       >
-                        {form.dogName} ({form.dogCategory}) - {form.userName}
+                        시작일 {formatDateShort(form.startDate)} ~ 종료일: {formatDateShort(form.endDate)}
                       </button>
                     ) : (
                       <h4 className="text-lg font-bold text-gray-800 mb-1">
-                        {form.dogName} ({form.dogCategory}) - {form.userName}
+                        시작일 {formatDateShort(form.startDate)} ~ 종료일: {formatDateShort(form.endDate)}
                       </h4>
                     )}
                     <p className="text-sm text-gray-600">
-                      {formatDate(form.startDate)} ~ {formatDate(form.endDate)}
+                      {form.dogName} ({form.dogCategory}) - {form.userName}
                     </p>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${getStatusColor(form.status)}`}>
@@ -1050,36 +1055,16 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                       </span>
                     )}
                   </button>
-                  {user?.role === 'admin' && (
+
+                  {/* 신청자: waiting 상태일 때 보딩 시작 버튼 */}
+                  {form.userId === user?.id && form.status === 'waiting' && (
                     <>
-                      {form.status === 'pending' && (
-                        <>
-                          <button
-                            onClick={() => handleStatusChange(form.id, 'approved')}
-                            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-colors"
-                          >
-                            승인
-                          </button>
-                          <button
-                            onClick={() => handleStatusChange(form.id, 'rejected')}
-                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition-colors"
-                          >
-                            거부
-                          </button>
-                        </>
-                      )}
-                      {form.status === 'approved' && (
-                        <button
-                          onClick={() => handleStatusChange(form.id, 'completed')}
-                          className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition-colors"
-                        >
-                          완료 처리
-                        </button>
-                      )}
-                    </>
-                  )}
-                  {form.userId === user?.id && form.status === 'pending' && (
-                    <>
+                      <button
+                        onClick={() => handleStatusChange(form.id, 'boarding')}
+                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                      >
+                        보딩 시작
+                      </button>
                       <button
                         onClick={() => handleEdit(form)}
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
@@ -1093,6 +1078,16 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                         삭제
                       </button>
                     </>
+                  )}
+
+                  {/* 관리자: boarding 상태일 때 보딩 종료 버튼 */}
+                  {user?.role === 'admin' && form.status === 'boarding' && (
+                    <button
+                      onClick={() => handleStatusChange(form.id, 'completed')}
+                      className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                    >
+                      보딩 종료
+                    </button>
                   )}
                 </div>
 
