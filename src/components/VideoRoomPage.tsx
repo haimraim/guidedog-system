@@ -27,19 +27,14 @@ export const VideoRoomPage = () => {
             <button
               onClick={() => setCurrentSubmenu('schoolvideos')}
               className="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-2 border-blue-300 rounded-xl p-8 text-left transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2"
-              aria-label="안내견학교 자체 제작 영상 보기"
+              aria-label="안내견학교 행사 영상 보기"
             >
               <div className="flex items-center mb-4">
                 <span className="text-5xl mr-4">🎬</span>
                 <h3 className="text-2xl font-bold text-blue-800">
-                  안내견학교 영상
+                  안내견학교 행사 영상
                 </h3>
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                안내견학교에서 직접 제작한 교육 영상입니다.
-                <br />
-                실제 훈련 과정과 안내견 생활을 확인하세요.
-              </p>
             </button>
 
             {/* 스쿨오브안내견 */}
@@ -66,7 +61,7 @@ export const VideoRoomPage = () => {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-3">💡 이용 안내</h3>
           <ul className="text-sm text-gray-700 space-y-2">
-            <li>• <strong>안내견학교 영상:</strong> 안내견학교 자체 제작 영상을 시청할 수 있습니다</li>
+            <li>• <strong>안내견학교 행사 영상:</strong> 안내견학교 행사 영상을 시청할 수 있습니다</li>
             <li>• <strong>스쿨오브안내견:</strong> 삼성화재 유튜브 채널의 교육 영상을 시청할 수 있습니다</li>
             <li>• 모든 영상은 키보드로 조작 가능합니다 (스페이스바, 화살표 등)</li>
           </ul>

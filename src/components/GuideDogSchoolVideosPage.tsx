@@ -1,6 +1,6 @@
 /**
- * 안내견학교 영상 페이지
- * 안내견학교에서 직접 제작한 영상 관리 및 시청
+ * 안내견학교 행사 영상 페이지
+ * 안내견학교 행사 영상 관리 및 시청
  * 강의실과 유사하지만 카테고리 없이 단일 목록으로 구성
  */
 
@@ -514,7 +514,7 @@ export const GuideDogSchoolVideosPage = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">안내견학교 영상 🎬</h2>
+        <h2 className="text-2xl font-bold text-gray-800">안내견학교 행사 영상 🎬</h2>
         {user?.role === 'admin' && (
           <button
             onClick={() => setIsWriting(true)}
