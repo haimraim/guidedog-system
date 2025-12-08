@@ -1002,18 +1002,23 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
-                    {/* 신청자가 자신의 신청서를 수정할 수 있도록 제목을 링크로 표시 */}
+                    {/* 모든 제목을 클릭 가능한 링크로 표시 (접근성 개선) */}
                     {form.userId === user?.id && form.status === 'waiting' ? (
                       <button
                         onClick={() => handleEdit(form)}
                         className="text-lg font-bold text-blue-600 hover:text-blue-800 hover:underline mb-1 text-left"
+                        aria-label={`${form.dogName} 보딩 신청서 수정하기. 시작일 ${formatDateShort(form.startDate)}, 종료일 ${formatDateShort(form.endDate)}`}
                       >
                         시작일 {formatDateShort(form.startDate)} ~ 종료일: {formatDateShort(form.endDate)}
                       </button>
                     ) : (
-                      <h4 className="text-lg font-bold text-gray-800 mb-1">
+                      <button
+                        onClick={() => handleViewDetails(form)}
+                        className="text-lg font-bold text-blue-600 hover:text-blue-800 hover:underline mb-1 text-left"
+                        aria-label={`${form.dogName} 보딩 신청서 상세보기. 시작일 ${formatDateShort(form.startDate)}, 종료일 ${formatDateShort(form.endDate)}`}
+                      >
                         시작일 {formatDateShort(form.startDate)} ~ 종료일: {formatDateShort(form.endDate)}
-                      </h4>
+                      </button>
                     )}
                     <p className="text-sm text-gray-600">
                       {form.dogName} ({form.dogCategory}) - {form.userName}
