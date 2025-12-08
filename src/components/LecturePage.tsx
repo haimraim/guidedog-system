@@ -639,22 +639,20 @@ export const LecturePage = () => {
           )}
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {lectures.map((lecture) => (
-            <div
+            <button
               key={lecture.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+              onClick={() => setViewingLecture(lecture)}
+              className="w-full text-left bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label={`${lecture.title} 강의 재생. 카테고리: ${lecture.category}`}
             >
               <div className="flex items-start justify-between mb-2">
-                <button
-                  onClick={() => setViewingLecture(lecture)}
-                  className="text-xl font-bold text-blue-600 hover:text-blue-800 underline flex-1 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
-                  aria-label={`${lecture.title} 강의 보기. 카테고리: ${lecture.category}`}
-                >
+                <h3 className="text-lg font-bold text-blue-600 hover:text-blue-800 flex-1">
                   {lecture.title}
-                </button>
+                </h3>
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold border ${getCategoryBadge(lecture.category)}`}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold border ${getCategoryBadge(lecture.category)} ml-2`}
                   aria-label={`카테고리: ${lecture.category}`}
                 >
                   {lecture.category}
@@ -663,7 +661,7 @@ export const LecturePage = () => {
               <p className="text-sm text-gray-600">
                 {formatDate(lecture.createdAt)}
               </p>
-            </div>
+            </button>
           ))}
         </div>
       )}

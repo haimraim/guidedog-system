@@ -540,25 +540,21 @@ export const GuideDogSchoolVideosPage = () => {
           )}
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {videos.map((video) => (
-            <div
+            <button
               key={video.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+              onClick={() => setViewingVideo(video)}
+              className="w-full text-left bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label={`${video.title} 영상 재생`}
             >
-              <div className="flex items-start justify-between mb-2">
-                <button
-                  onClick={() => setViewingVideo(video)}
-                  className="text-xl font-bold text-blue-600 hover:text-blue-800 underline flex-1 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
-                  aria-label={`${video.title} 영상 보기`}
-                >
-                  {video.title}
-                </button>
-              </div>
+              <h3 className="text-lg font-bold text-blue-600 hover:text-blue-800 mb-2">
+                {video.title}
+              </h3>
               <p className="text-sm text-gray-600">
                 {formatDate(video.createdAt)}
               </p>
-            </div>
+            </button>
           ))}
         </div>
       )}
