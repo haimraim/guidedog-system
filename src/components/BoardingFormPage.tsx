@@ -1056,15 +1056,29 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                     )}
                   </button>
 
-                  {/* 신청자: waiting 상태일 때 보딩 시작 버튼 */}
+                  {/* 관리자: waiting 상태일 때 보딩 시작 버튼 */}
+                  {user?.role === 'admin' && form.status === 'waiting' && (
+                    <button
+                      onClick={() => handleStatusChange(form.id, 'boarding')}
+                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                    >
+                      보딩 시작
+                    </button>
+                  )}
+
+                  {/* 관리자: boarding 상태일 때 보딩 종료 버튼 */}
+                  {user?.role === 'admin' && form.status === 'boarding' && (
+                    <button
+                      onClick={() => handleStatusChange(form.id, 'completed')}
+                      className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                    >
+                      보딩 종료
+                    </button>
+                  )}
+
+                  {/* 신청자: waiting 상태일 때만 수정/삭제 가능 */}
                   {form.userId === user?.id && form.status === 'waiting' && (
                     <>
-                      <button
-                        onClick={() => handleStatusChange(form.id, 'boarding')}
-                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-colors"
-                      >
-                        보딩 시작
-                      </button>
                       <button
                         onClick={() => handleEdit(form)}
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
@@ -1078,16 +1092,6 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
                         삭제
                       </button>
                     </>
-                  )}
-
-                  {/* 관리자: boarding 상태일 때 보딩 종료 버튼 */}
-                  {user?.role === 'admin' && form.status === 'boarding' && (
-                    <button
-                      onClick={() => handleStatusChange(form.id, 'completed')}
-                      className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition-colors"
-                    >
-                      보딩 종료
-                    </button>
                   )}
                 </div>
 
