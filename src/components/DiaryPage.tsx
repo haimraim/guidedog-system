@@ -78,6 +78,8 @@ export const DiaryPage = () => {
   const [periodFilter, setPeriodFilter] = useState<'today' | '3days' | 'week' | 'month' | '3months' | 'custom' | 'all'>('week');
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
+  const [showPuppyRecords, setShowPuppyRecords] = useState(false);
+  const [selectedDogForPuppy, setSelectedDogForPuppy] = useState<string | null>(null);
 
   useEffect(() => {
     loadPosts();
@@ -175,9 +177,19 @@ export const DiaryPage = () => {
 
   // 관리자: 특정 개의 특정 날짜 다이어리 찾기
   const getDiaryForDogAndDate = (dogName: string, date: string): DiaryPost | null => {
-    return allPosts.find(
-      post => post.dogName === dogName && post.diaryDate === date
-    ) || null;
+    if (adminCategory === '퍼피티칭') {
+      // 퍼피티칭: diaryDate 필드가 있는 다이어리만 표시
+      return allPosts.find(
+        post => post.dogName === dogName && post.diaryDate === date
+      ) || null;
+    } else {
+      // 안내견/은퇴견/부모견: diaryDate 필드가 없는 일반 다이어리를 createdAt 날짜로 매칭
+      return allPosts.find(post => {
+        if (post.dogName !== dogName || post.diaryDate) return false;
+        const createdDate = new Date(post.createdAt).toISOString().split('T')[0];
+        return createdDate === date;
+      }) || null;
+    }
   };
 
   // 날짜 설정 함수 (퍼피티칭용)
@@ -332,6 +344,69 @@ export const DiaryPage = () => {
     });
   };
 
+  // 퍼피티칭 기록 모달
+  if (showPuppyRecords && selectedDogForPuppy) {
+    const puppyPosts = allPosts.filter(
+      post => post.dogName === selectedDogForPuppy && post.diaryDate
+    ).sort((a, b) => {
+      if (!a.diaryDate || !b.diaryDate) return 0;
+      return new Date(b.diaryDate).getTime() - new Date(a.diaryDate).getTime();
+    });
+
+    return (
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {selectedDogForPuppy} - 퍼피티칭 기록
+            </h2>
+            <button
+              onClick={() => {
+                setShowPuppyRecords(false);
+                setSelectedDogForPuppy(null);
+              }}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              닫기
+            </button>
+          </div>
+
+          {puppyPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">퍼피티칭 기록이 없습니다.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {puppyPosts.map((post) => (
+                <div
+                  key={post.id}
+                  className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex justify-between items-start">
+                    <button
+                      onClick={() => setViewingPost(post)}
+                      className="text-lg font-bold text-blue-600 hover:text-blue-800 underline text-left"
+                    >
+                      {post.title}
+                    </button>
+                    <span className="text-sm text-gray-600">
+                      작성: {post.userName}
+                    </span>
+                  </div>
+                  <div className="mt-2 text-sm text-gray-600">
+                    {post.diaryDate && (
+                      <span>날짜: {post.diaryDate}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   // 글 상세보기
   if (viewingPost) {
     return (
@@ -339,7 +414,16 @@ export const DiaryPage = () => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-start mb-6">
             <button
-              onClick={() => setViewingPost(null)}
+              onClick={() => {
+                setViewingPost(null);
+                // 퍼피티칭 기록 모달에서 왔으면 다시 모달로 돌아가기
+                if (showPuppyRecords && selectedDogForPuppy) {
+                  // 모달 상태 유지
+                } else {
+                  setShowPuppyRecords(false);
+                  setSelectedDogForPuppy(null);
+                }
+              }}
               className="text-blue-600 hover:text-blue-800 font-semibold"
             >
               ← 목록으로
@@ -1080,8 +1164,21 @@ export const DiaryPage = () => {
                 <tbody>
                   {dogs.map(dog => (
                     <tr key={dog.id} className="hover:bg-gray-50 border-b">
-                      <td className="px-4 py-3 font-semibold text-gray-800 sticky left-0 bg-white z-10">
-                        {dog.name}
+                      <td className="px-4 py-3 sticky left-0 bg-white z-10">
+                        <div className="flex flex-col gap-2">
+                          <span className="font-semibold text-gray-800">{dog.name}</span>
+                          {adminCategory !== '퍼피티칭' && (
+                            <button
+                              onClick={() => {
+                                setSelectedDogForPuppy(dog.name);
+                                setShowPuppyRecords(true);
+                              }}
+                              className="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded transition-colors"
+                            >
+                              퍼피티칭 기록 보기
+                            </button>
+                          )}
+                        </div>
                       </td>
                       {dates.slice().reverse().map(date => {
                         const diary = getDiaryForDogAndDate(dog.name, date);
