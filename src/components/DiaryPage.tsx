@@ -210,13 +210,26 @@ export const DiaryPage = () => {
     } else {
       // 안내견/은퇴견/부모견: dogCategory로 필터링하고 createdAt 날짜로 매칭
       return allPosts.find(post => {
-        if (post.dogName !== dogName) return false;
+        // dogName이 있으면 일치 확인, 없으면 통과 (파트너가 작성한 경우 Activity로 추적)
+        if (post.dogName && post.dogName !== dogName) return false;
 
         // 퍼피티칭 기록(diaryDate 있음)은 제외
         if (post.diaryDate) return false;
 
         // dogCategory가 있으면 정확히 매칭, 없으면 (기존 다이어리) 현재 카테고리로 간주
         if (post.dogCategory && post.dogCategory !== adminCategory) return false;
+
+        // dogName이 없는 경우 userId로 파트너 찾아서 매칭 확인
+        if (!post.dogName && post.userId) {
+          const activities = getActivities();
+          const partnerId = post.userId.replace('partner_', '');
+          const activity = activities.find(a => a.partnerId === partnerId);
+          if (activity) {
+            const dogs = getGuideDogs();
+            const dog = dogs.find(d => d.id === activity.guideDogId);
+            if (dog && dog.name !== dogName) return false;
+          }
+        }
 
         // 로컬 시간대로 날짜 비교
         const createdDate = new Date(post.createdAt);
