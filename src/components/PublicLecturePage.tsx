@@ -134,8 +134,8 @@ export const PublicLecturePage = () => {
   const loadLectures = () => {
     const allLectures = getLectures();
 
-    // 관리자는 모든 강의 볼 수 있음
-    if (user?.role === 'admin') {
+    // 관리자와 준관리자는 모든 강의 볼 수 있음
+    if (user?.role === 'admin' || user?.role === 'moderator') {
       setLectures(allLectures);
       return;
     }

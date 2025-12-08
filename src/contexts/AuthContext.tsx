@@ -192,6 +192,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return true;
     }
 
+    // 준관리자 로그인
+    if (username === '박태진') {
+      const moderatorUser: User = {
+        id: '박태진',
+        role: 'moderator',
+        name: '박태진',
+      };
+      setUser(moderatorUser);
+      localStorage.setItem('guidedog_user', JSON.stringify(moderatorUser));
+      return true;
+    }
+
     // 담당자 로그인 (견명.담당자성명 형식)
     // 견명.퍼피티처, 견명.훈련사, 견명.파트너, 견명.은퇴견홈케어, 견명.부모견홈케어 등 모두 가능
     const dogs = getGuideDogs();

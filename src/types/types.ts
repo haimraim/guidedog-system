@@ -130,7 +130,7 @@ export interface FormErrors {
 /**
  * 사용자 타입
  */
-export type UserRole = 'admin' | 'partner' | 'puppyTeacher' | 'trainer' | 'retiredHomeCare' | 'parentCaregiver';
+export type UserRole = 'admin' | 'moderator' | 'partner' | 'puppyTeacher' | 'trainer' | 'retiredHomeCare' | 'parentCaregiver';
 
 /**
  * 사용자 정보

@@ -39,8 +39,8 @@ export const LecturePage = () => {
               </div>
             </button>
 
-            {/* 직원용 강의실 (관리자만) */}
-            {user?.role === 'admin' && (
+            {/* 직원용 강의실 (관리자 및 준관리자만) */}
+            {(user?.role === 'admin' || user?.role === 'moderator') && (
               <button
                 onClick={() => setCurrentSubmenu('staff')}
                 className="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-2 border-purple-300 rounded-xl p-8 text-left transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2"
@@ -61,8 +61,8 @@ export const LecturePage = () => {
           <h3 className="text-lg font-semibold text-gray-800 mb-3">💡 이용 안내</h3>
           <ul className="text-sm text-gray-700 space-y-2">
             <li>• <strong>일반 강의실:</strong> 카테고리별 안내견 관련 강의 자료를 확인할 수 있습니다</li>
-            {user?.role === 'admin' && (
-              <li>• <strong>직원용 강의실:</strong> 직원 전용 교육 자료를 관리할 수 있습니다 (관리자 전용)</li>
+            {(user?.role === 'admin' || user?.role === 'moderator') && (
+              <li>• <strong>직원용 강의실:</strong> 직원 전용 교육 자료를 확인할 수 있습니다 {user?.role === 'admin' ? '(관리자 전용)' : '(준관리자 이상)'}</li>
             )}
             <li>• 모든 영상은 키보드로 조작 가능합니다 (스페이스바, 화살표 등)</li>
           </ul>
