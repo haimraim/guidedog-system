@@ -25,20 +25,11 @@ export const MainLayout = () => {
   const [currentPage, setCurrentPage] = useState<MenuItem>('home');
   const [myDogInfo, setMyDogInfo] = useState<CombinedData | null>(null);
 
-  // URL에서 현재 페이지 파라미터 읽기 및 초기 히스토리 설정
+  // 초기 로드 시 항상 홈으로 시작
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const page = params.get('page') as MenuItem;
-
-    if (page && page !== currentPage) {
-      // URL에 페이지 파라미터가 있으면 해당 페이지로 이동
-      setCurrentPage(page);
-      // 현재 상태를 히스토리에 등록
-      window.history.replaceState({ page }, '', `?page=${page}`);
-    } else {
-      // URL에 페이지 파라미터가 없으면 홈으로 설정
-      window.history.replaceState({ page: 'home' }, '', '?page=home');
-    }
+    // 로그인 직후에는 항상 홈으로 설정
+    setCurrentPage('home');
+    window.history.replaceState({ page: 'home' }, '', '?page=home');
   }, []);
 
   // 브라우저 뒤로가기/앞으로가기 이벤트 처리
