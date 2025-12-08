@@ -14,80 +14,18 @@ import {
   createVideoObjectURL,
   revokeVideoObjectURL,
 } from '../utils/videoStorage';
+import {
+  getStaffCourses,
+  saveStaffCourse,
+  deleteStaffCourse,
+  getStaffLectures,
+  saveStaffLecture,
+  deleteStaffLecture,
+  type Course,
+  type StaffLecture,
+} from '../utils/firestoreLectures';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-
-interface Course {
-  id: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface StaffLecture {
-  id: string;
-  courseId: string;
-  title: string;
-  content: string;
-  videoUrl?: string; // IndexedDB: 'indexed' or NAS URL
-  youtubeUrl?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const COURSES_KEY = 'guidedog_staff_courses';
-const LECTURES_KEY = 'guidedog_staff_lectures';
-
-const getCourses = (): Course[] => {
-  const data = localStorage.getItem(COURSES_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveCourse = (course: Course): void => {
-  const courses = getCourses();
-  const existingIndex = courses.findIndex(c => c.id === course.id);
-
-  if (existingIndex >= 0) {
-    courses[existingIndex] = { ...course, updatedAt: new Date().toISOString() };
-  } else {
-    courses.unshift(course);
-  }
-
-  localStorage.setItem(COURSES_KEY, JSON.stringify(courses));
-};
-
-const deleteCourse = (id: string): void => {
-  const courses = getCourses().filter(c => c.id !== id);
-  localStorage.setItem(COURSES_KEY, JSON.stringify(courses));
-
-  // 해당 과목의 모든 강의도 삭제
-  const lectures = getLectures().filter(l => l.courseId !== id);
-  localStorage.setItem(LECTURES_KEY, JSON.stringify(lectures));
-};
-
-const getLectures = (): StaffLecture[] => {
-  const data = localStorage.getItem(LECTURES_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveLecture = (lecture: StaffLecture): void => {
-  const lectures = getLectures();
-  const existingIndex = lectures.findIndex(l => l.id === lecture.id);
-
-  if (existingIndex >= 0) {
-    lectures[existingIndex] = { ...lecture, updatedAt: new Date().toISOString() };
-  } else {
-    lectures.unshift(lecture);
-  }
-
-  localStorage.setItem(LECTURES_KEY, JSON.stringify(lectures));
-};
-
-const deleteLecture = (id: string): void => {
-  const lectures = getLectures().filter(l => l.id !== id);
-  localStorage.setItem(LECTURES_KEY, JSON.stringify(lectures));
-};
 
 type ViewMode = 'courses' | 'lectures' | 'viewing' | 'writing' | 'courseForm';
 
@@ -174,17 +112,27 @@ export const StaffLecturePage = () => {
     };
   }, [viewingLecture, videoObjectUrl]);
 
-  const loadCourses = () => {
-    const allCourses = getCourses();
-    setCourses(allCourses);
+  const loadCourses = async () => {
+    try {
+      const allCourses = await getStaffCourses();
+      setCourses(allCourses);
+    } catch (error) {
+      console.error('과목 목록 로드 실패:', error);
+      alert('과목 목록을 불러오는데 실패했습니다.');
+    }
   };
 
-  const loadLectures = () => {
-    const allLectures = getLectures();
-    setLectures(allLectures);
+  const loadLectures = async () => {
+    try {
+      const allLectures = await getStaffLectures();
+      setLectures(allLectures);
+    } catch (error) {
+      console.error('강의 목록 로드 실패:', error);
+      alert('강의 목록을 불러오는데 실패했습니다.');
+    }
   };
 
-  const handleCourseSubmit = (e: React.FormEvent) => {
+  const handleCourseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!courseName.trim()) {
@@ -200,10 +148,15 @@ export const StaffLecturePage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveCourse(course);
-    resetCourseForm();
-    loadCourses();
-    setViewMode('courses');
+    try {
+      await saveStaffCourse(course);
+      resetCourseForm();
+      await loadCourses();
+      setViewMode('courses');
+    } catch (error) {
+      alert('과목 저장에 실패했습니다. 다시 시도해주세요.');
+      console.error(error);
+    }
   };
 
   const handleLectureSubmit = async (e: React.FormEvent) => {
@@ -244,15 +197,20 @@ export const StaffLecturePage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveLecture(lecture);
+    try {
+      await saveStaffLecture(lecture);
 
-    if (videoUrl && videoUrl.startsWith('blob:')) {
-      revokeVideoObjectURL(videoUrl);
+      if (videoUrl && videoUrl.startsWith('blob:')) {
+        revokeVideoObjectURL(videoUrl);
+      }
+
+      resetLectureForm();
+      await loadLectures();
+      setViewMode('lectures');
+    } catch (error) {
+      alert('강의 저장에 실패했습니다. 다시 시도해주세요.');
+      console.error(error);
     }
-
-    resetLectureForm();
-    loadLectures();
-    setViewMode('lectures');
   };
 
   const handleEditCourse = (course: Course) => {
@@ -262,11 +220,16 @@ export const StaffLecturePage = () => {
     setViewMode('courseForm');
   };
 
-  const handleDeleteCourse = (id: string) => {
+  const handleDeleteCourse = async (id: string) => {
     if (confirm('과목을 삭제하면 모든 강의도 함께 삭제됩니다. 정말 삭제하시겠습니까?')) {
-      deleteCourse(id);
-      loadCourses();
-      loadLectures();
+      try {
+        await deleteStaffCourse(id);
+        await loadCourses();
+        await loadLectures();
+      } catch (error) {
+        alert('과목 삭제에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
+      }
     }
   };
 
@@ -282,11 +245,16 @@ export const StaffLecturePage = () => {
 
   const handleDeleteLecture = async (id: string) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-      await deleteVideoFromIndexedDB(id);
-      deleteLecture(id);
-      loadLectures();
-      setViewingLecture(null);
-      setViewMode('lectures');
+      try {
+        await deleteVideoFromIndexedDB(id);
+        await deleteStaffLecture(id);
+        await loadLectures();
+        setViewingLecture(null);
+        setViewMode('lectures');
+      } catch (error) {
+        alert('강의 삭제에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
+      }
     }
   };
 

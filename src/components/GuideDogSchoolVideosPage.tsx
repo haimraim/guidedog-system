@@ -14,43 +14,14 @@ import {
   createVideoObjectURL,
   revokeVideoObjectURL,
 } from '../utils/videoStorage';
+import {
+  getSchoolVideos,
+  saveSchoolVideo,
+  deleteSchoolVideo,
+  type SchoolVideo,
+} from '../utils/firestoreLectures';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-
-interface SchoolVideo {
-  id: string;
-  title: string;
-  content: string;
-  videoUrl?: string; // IndexedDB: 'indexed' or NAS URL
-  youtubeUrl?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const STORAGE_KEY = 'guidedog_school_videos';
-
-const getVideos = (): SchoolVideo[] => {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveVideo = (video: SchoolVideo): void => {
-  const videos = getVideos();
-  const existingIndex = videos.findIndex(v => v.id === video.id);
-
-  if (existingIndex >= 0) {
-    videos[existingIndex] = { ...video, updatedAt: new Date().toISOString() };
-  } else {
-    videos.unshift(video);
-  }
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-};
-
-const deleteVideo = (id: string): void => {
-  const videos = getVideos().filter(v => v.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-};
 
 export const GuideDogSchoolVideosPage = () => {
   const { user } = useAuth();
@@ -127,9 +98,14 @@ export const GuideDogSchoolVideosPage = () => {
     };
   }, [viewingVideo, videoObjectUrl]);
 
-  const loadVideos = () => {
-    const allVideos = getVideos();
-    setVideos(allVideos);
+  const loadVideos = async () => {
+    try {
+      const allVideos = await getSchoolVideos();
+      setVideos(allVideos);
+    } catch (error) {
+      console.error('영상 목록 로드 실패:', error);
+      alert('영상 목록을 불러오는데 실패했습니다.');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -164,14 +140,19 @@ export const GuideDogSchoolVideosPage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveVideo(video);
+    try {
+      await saveSchoolVideo(video);
 
-    if (videoUrl && videoUrl.startsWith('blob:')) {
-      revokeVideoObjectURL(videoUrl);
+      if (videoUrl && videoUrl.startsWith('blob:')) {
+        revokeVideoObjectURL(videoUrl);
+      }
+
+      resetForm();
+      await loadVideos();
+    } catch (error) {
+      alert('영상 저장에 실패했습니다. 다시 시도해주세요.');
+      console.error(error);
     }
-
-    resetForm();
-    loadVideos();
   };
 
   const handleEdit = (video: SchoolVideo) => {
@@ -186,10 +167,15 @@ export const GuideDogSchoolVideosPage = () => {
 
   const handleDelete = async (id: string) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-      await deleteVideoFromIndexedDB(id);
-      deleteVideo(id);
-      loadVideos();
-      setViewingVideo(null);
+      try {
+        await deleteVideoFromIndexedDB(id);
+        await deleteSchoolVideo(id);
+        await loadVideos();
+        setViewingVideo(null);
+      } catch (error) {
+        alert('영상 삭제에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
+      }
     }
   };
 

@@ -15,10 +15,13 @@ import {
   createVideoObjectURL,
   revokeVideoObjectURL,
 } from '../utils/videoStorage';
+import {
+  getPublicLectures,
+  savePublicLecture,
+  deletePublicLecture,
+} from '../utils/firestoreLectures';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-
-const STORAGE_KEY = 'guidedog_lectures';
 
 // NAS 폴더 경로 매핑
 const NAS_FOLDER_MAP: Record<LectureCategory, string> = {
@@ -27,29 +30,6 @@ const NAS_FOLDER_MAP: Record<LectureCategory, string> = {
   '안내견': 'https://dogjong.synology.me/partner',
   '퍼피': 'https://dogjong.synology.me/puppy',
   '은퇴견': 'https://dogjong.synology.me/retire',
-};
-
-const getLectures = (): Lecture[] => {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveLecture = (lecture: Lecture): void => {
-  const lectures = getLectures();
-  const existingIndex = lectures.findIndex(l => l.id === lecture.id);
-
-  if (existingIndex >= 0) {
-    lectures[existingIndex] = { ...lecture, updatedAt: new Date().toISOString() };
-  } else {
-    lectures.unshift(lecture);
-  }
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(lectures));
-};
-
-const deleteLecture = (id: string): void => {
-  const lectures = getLectures().filter(l => l.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(lectures));
 };
 
 export const PublicLecturePage = () => {
@@ -131,37 +111,42 @@ export const PublicLecturePage = () => {
     };
   }, [viewingLecture, videoObjectUrl]);
 
-  const loadLectures = () => {
-    const allLectures = getLectures();
+  const loadLectures = async () => {
+    try {
+      const allLectures = await getPublicLectures();
 
-    // 관리자와 준관리자는 모든 강의 볼 수 있음
-    if (user?.role === 'admin' || user?.role === 'moderator') {
-      setLectures(allLectures);
-      return;
+      // 관리자와 준관리자는 모든 강의 볼 수 있음
+      if (user?.role === 'admin' || user?.role === 'moderator') {
+        setLectures(allLectures);
+        return;
+      }
+
+      // 사용자 역할에 따라 필터링
+      const filtered = allLectures.filter(lecture => {
+        // '공통' 카테고리는 모든 사용자가 볼 수 있음
+        if (lecture.category === '공통') {
+          return true;
+        }
+
+        switch (lecture.category) {
+          case '퍼피':
+            return user?.role === 'puppyTeacher';
+          case '안내견':
+            return user?.role === 'partner';
+          case '은퇴견':
+            return user?.role === 'retiredHomeCare';
+          case '부모견':
+            return user?.role === 'parentCaregiver';
+          default:
+            return false;
+        }
+      });
+
+      setLectures(filtered);
+    } catch (error) {
+      console.error('강의 목록 로드 실패:', error);
+      alert('강의 목록을 불러오는데 실패했습니다.');
     }
-
-    // 사용자 역할에 따라 필터링
-    const filtered = allLectures.filter(lecture => {
-      // '공통' 카테고리는 모든 사용자가 볼 수 있음
-      if (lecture.category === '공통') {
-        return true;
-      }
-
-      switch (lecture.category) {
-        case '퍼피':
-          return user?.role === 'puppyTeacher';
-        case '안내견':
-          return user?.role === 'partner';
-        case '은퇴견':
-          return user?.role === 'retiredHomeCare';
-        case '부모견':
-          return user?.role === 'parentCaregiver';
-        default:
-          return false;
-      }
-    });
-
-    setLectures(filtered);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -201,15 +186,20 @@ export const PublicLecturePage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveLecture(lecture);
+    try {
+      await savePublicLecture(lecture);
 
-    // Object URL 정리
-    if (videoUrl && videoUrl.startsWith('blob:')) {
-      revokeVideoObjectURL(videoUrl);
+      // Object URL 정리
+      if (videoUrl && videoUrl.startsWith('blob:')) {
+        revokeVideoObjectURL(videoUrl);
+      }
+
+      resetForm();
+      await loadLectures();
+    } catch (error) {
+      alert('강의 저장에 실패했습니다. 다시 시도해주세요.');
+      console.error(error);
     }
-
-    resetForm();
-    loadLectures();
   };
 
   const handleEdit = (lecture: Lecture) => {
@@ -225,12 +215,17 @@ export const PublicLecturePage = () => {
 
   const handleDelete = async (id: string) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-      // IndexedDB에서 영상 삭제
-      await deleteVideoFromIndexedDB(id);
-      // localStorage에서 강의 삭제
-      deleteLecture(id);
-      loadLectures();
-      setViewingLecture(null);
+      try {
+        // IndexedDB에서 영상 삭제
+        await deleteVideoFromIndexedDB(id);
+        // Firestore에서 강의 삭제
+        await deletePublicLecture(id);
+        await loadLectures();
+        setViewingLecture(null);
+      } catch (error) {
+        alert('강의 삭제에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
+      }
     }
   };
 
