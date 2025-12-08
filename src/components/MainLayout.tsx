@@ -22,8 +22,38 @@ type MenuItem = 'home' | 'diary' | 'lecture' | 'boarding' | 'products' | 'medica
 export const MainLayout = () => {
   const { user, logout } = useAuth();
   const [currentPage, setCurrentPage] = useState<MenuItem>('home');
-  const [pageHistory, setPageHistory] = useState<MenuItem[]>(['home']);
   const [myDogInfo, setMyDogInfo] = useState<CombinedData | null>(null);
+
+  // URL에서 현재 페이지 파라미터 읽기 및 초기 히스토리 설정
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const page = params.get('page') as MenuItem;
+
+    if (page && page !== currentPage) {
+      // URL에 페이지 파라미터가 있으면 해당 페이지로 이동
+      setCurrentPage(page);
+      // 현재 상태를 히스토리에 등록
+      window.history.replaceState({ page }, '', `?page=${page}`);
+    } else {
+      // URL에 페이지 파라미터가 없으면 홈으로 설정
+      window.history.replaceState({ page: 'home' }, '', '?page=home');
+    }
+  }, []);
+
+  // 브라우저 뒤로가기/앞으로가기 이벤트 처리
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const page = event.state?.page as MenuItem;
+      if (page) {
+        setCurrentPage(page);
+      } else {
+        setCurrentPage('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const handleLogout = () => {
     if (confirm('로그아웃 하시겠습니까?')) {
@@ -33,24 +63,21 @@ export const MainLayout = () => {
 
   const navigateToPage = (page: MenuItem) => {
     if (page !== currentPage) {
-      setPageHistory(prev => [...prev, page]);
+      // 브라우저 히스토리에 추가
+      window.history.pushState({ page }, '', `?page=${page}`);
       setCurrentPage(page);
     }
   };
 
   const navigateBack = () => {
-    if (pageHistory.length > 1) {
-      const newHistory = [...pageHistory];
-      newHistory.pop();
-      const previousPage = newHistory[newHistory.length - 1];
-      setPageHistory(newHistory);
-      setCurrentPage(previousPage);
-    }
+    // 브라우저의 뒤로가기 사용
+    window.history.back();
   };
 
   const navigateHome = () => {
+    // 홈으로 이동 시 히스토리 교체
+    window.history.pushState({ page: 'home' }, '', '?page=home');
     setCurrentPage('home');
-    setPageHistory(['home']);
   };
 
   // 담당 안내견 정보 로드 (일반 회원만)
@@ -63,22 +90,6 @@ export const MainLayout = () => {
       setMyDogInfo(null);
     }
   }, [user]);
-
-  // 키보드 네비게이션 (Alt+Left Arrow, Backspace)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Alt + Left Arrow 또는 Backspace로 뒤로가기
-      if ((e.altKey && e.key === 'ArrowLeft') ||
-          (e.key === 'Backspace' && (e.target as HTMLElement).tagName !== 'INPUT' &&
-           (e.target as HTMLElement).tagName !== 'TEXTAREA')) {
-        e.preventDefault();
-        navigateBack();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [pageHistory]);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -201,7 +212,7 @@ export const MainLayout = () => {
             <button
               onClick={navigateBack}
               className="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 outline-none"
-              disabled={pageHistory.length <= 1}
+              aria-label="이전 페이지로 돌아가기 (Alt + 왼쪽 화살표)"
             >
               <span>← 뒤로</span>
             </button>
