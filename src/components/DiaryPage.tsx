@@ -61,7 +61,7 @@ export const DiaryPage = () => {
 
   // 관리자 필터 상태
   const [adminCategory, setAdminCategory] = useState<DogCategory | 'all'>('all');
-  const [periodFilter, setPeriodFilter] = useState<'today' | '3days' | 'week' | 'month' | '3months' | 'custom' | 'all'>('week');
+  const [periodFilter, setPeriodFilter] = useState<'today' | '3days' | 'week' | 'month' | '3months' | 'custom' | 'all'>('all');
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
   const [showOtherRecords, setShowOtherRecords] = useState(false);
