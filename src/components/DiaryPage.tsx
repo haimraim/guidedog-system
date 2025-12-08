@@ -73,16 +73,6 @@ export const DiaryPage = () => {
   }, []);
 
   useEffect(() => {
-    // 퍼피티칭 사용자가 이전 사료 타입 체크 시 불러오기
-    if (user?.role === 'puppyTeacher' && usePreviousFoodType) {
-      const userPosts = getDiaryPosts().filter(p => p.userId === user.id && p.foodType);
-      if (userPosts.length > 0) {
-        setFoodType(userPosts[0].foodType || '');
-      }
-    }
-  }, [usePreviousFoodType, user]);
-
-  useEffect(() => {
     // 필터 적용
     if (user?.role === 'admin') {
       if (selectedDog === 'all') {
