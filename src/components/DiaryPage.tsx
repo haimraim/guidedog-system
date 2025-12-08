@@ -144,23 +144,27 @@ export const DiaryPage = () => {
     const categories: DogCategory[] = [];
     const dogPosts = allPosts.filter(post => post.dogName === dogName);
 
-    // 퍼피티칭 기록 확인 (diaryDate 필드가 있는 다이어리)
-    const hasPuppyRecords = dogPosts.some(post => post.diaryDate);
-    if (hasPuppyRecords && adminCategory !== '퍼피티칭') {
-      categories.push('퍼피티칭');
-    }
+    // 모든 가능한 카테고리 체크
+    const allCategories: DogCategory[] = ['퍼피티칭', '안내견', '은퇴견', '부모견'];
 
-    // 일반 다이어리 기록 확인 (diaryDate 필드가 없는 다이어리)
-    const hasGeneralRecords = dogPosts.some(post => !post.diaryDate);
-    if (hasGeneralRecords) {
-      // 현재 선택된 카테고리가 아닌 다른 카테고리들 추가
-      const otherCategories: DogCategory[] = ['안내견', '은퇴견', '부모견'];
-      otherCategories.forEach(cat => {
-        if (cat !== adminCategory && adminCategory !== 'all') {
-          categories.push(cat);
+    allCategories.forEach(category => {
+      // 현재 선택된 카테고리는 제외
+      if (category === adminCategory) return;
+
+      // 해당 카테고리의 기록이 있는지 확인
+      const hasRecords = dogPosts.some(post => {
+        // 퍼피티칭은 diaryDate 필드로 확인
+        if (category === '퍼피티칭') {
+          return post.diaryDate !== undefined;
         }
+        // 다른 카테고리는 dogCategory 필드로 확인
+        return post.dogCategory === category;
       });
-    }
+
+      if (hasRecords) {
+        categories.push(category);
+      }
+    });
 
     return categories;
   };
@@ -209,10 +213,23 @@ export const DiaryPage = () => {
       return allPosts.find(
         post => post.dogName === dogName && post.diaryDate === date
       ) || null;
-    } else {
-      // 안내견/은퇴견/부모견: diaryDate 필드가 없는 일반 다이어리를 createdAt 날짜로 매칭
+    } else if (adminCategory === 'all') {
+      // 전체: 모든 다이어리 표시
       return allPosts.find(post => {
-        if (post.dogName !== dogName || post.diaryDate) return false;
+        if (post.dogName !== dogName) return false;
+        // diaryDate가 있으면 diaryDate로 매칭
+        if (post.diaryDate) {
+          return post.diaryDate === date;
+        }
+        // 없으면 createdAt으로 매칭
+        const createdDate = new Date(post.createdAt).toISOString().split('T')[0];
+        return createdDate === date;
+      }) || null;
+    } else {
+      // 안내견/은퇴견/부모견: dogCategory로 필터링하고 createdAt 날짜로 매칭
+      return allPosts.find(post => {
+        if (post.dogName !== dogName) return false;
+        if (post.dogCategory !== adminCategory) return false;
         const createdDate = new Date(post.createdAt).toISOString().split('T')[0];
         return createdDate === date;
       }) || null;
@@ -253,11 +270,17 @@ export const DiaryPage = () => {
       }
     }
 
+    // 개의 현재 카테고리 정보 가져오기
+    const dogCategory = user?.dogName
+      ? getGuideDogs().find(dog => dog.name === user.dogName)?.category
+      : undefined;
+
     const post: DiaryPost = {
       id: editingPost?.id || generateId(),
       userId: user!.id,
       userName: user!.name,
       dogName: user?.dogName,
+      dogCategory: dogCategory,
       title: user?.role === 'puppyTeacher' ? `${diaryDate} 일지` : title.trim(),
       content: user?.role === 'puppyTeacher' ? '퍼피티칭 일지' : content.trim(),
       createdAt: editingPost?.createdAt || new Date().toISOString(),
@@ -381,8 +404,8 @@ export const DiaryPage = () => {
         return post.diaryDate !== undefined;
       }
 
-      // 일반 다이어리 (안내견/은퇴견/부모견)
-      return post.diaryDate === undefined;
+      // 일반 다이어리 (안내견/은퇴견/부모견) - dogCategory로 확인
+      return post.dogCategory === selectedCategory;
     }).sort((a, b) => {
       // 퍼피티칭은 diaryDate로 정렬
       if (selectedCategory === '퍼피티칭' && a.diaryDate && b.diaryDate) {

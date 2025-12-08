@@ -154,6 +154,7 @@ export interface DiaryPost {
   userId: string; // 작성자 ID
   userName: string; // 작성자 이름
   dogName?: string; // 안내견 이름
+  dogCategory?: DogCategory; // 개의 카테고리 (작성 시점)
   title: string; // 제목
   content: string; // 내용
   createdAt: string; // 작성일시
