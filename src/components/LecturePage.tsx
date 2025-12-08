@@ -1,9 +1,10 @@
 /**
  * 강의실 페이지 컴포넌트
  * 카테고리별 권한에 따른 강의 자료 열람
+ * Video.js를 사용한 접근성 향상된 비디오 플레이어
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import type { Lecture, LectureCategory } from '../types/types';
 import { generateId } from '../utils/storage';
@@ -14,8 +15,19 @@ import {
   createVideoObjectURL,
   revokeVideoObjectURL,
 } from '../utils/videoStorage';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 
 const STORAGE_KEY = 'guidedog_lectures';
+
+// NAS 폴더 경로 매핑
+const NAS_FOLDER_MAP: Record<LectureCategory, string> = {
+  '공통': 'https://dogjong.synology.me/common',
+  '부모견': 'https://dogjong.synology.me/Parent',
+  '안내견': 'https://dogjong.synology.me/partner',
+  '퍼피': 'https://dogjong.synology.me/puppy',
+  '은퇴견': 'https://dogjong.synology.me/retire',
+};
 
 const getLectures = (): Lecture[] => {
   const data = localStorage.getItem(STORAGE_KEY);
@@ -47,12 +59,15 @@ export const LecturePage = () => {
   const [editingLecture, setEditingLecture] = useState<Lecture | null>(null);
   const [viewingLecture, setViewingLecture] = useState<Lecture | null>(null);
   const [videoObjectUrl, setVideoObjectUrl] = useState<string>('');
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const playerRef = useRef<any>(null);
 
   // 폼 필드
   const [category, setCategory] = useState<LectureCategory>('안내견');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [videoUrl, setVideoUrl] = useState<string>('');
+  const [youtubeUrl, setYoutubeUrl] = useState<string>('');
 
   useEffect(() => {
     loadLectures();
@@ -87,6 +102,34 @@ export const LecturePage = () => {
     };
   }, [viewingLecture]);
 
+  // Video.js 초기화 (상세보기 화면에서)
+  useEffect(() => {
+    if (viewingLecture && videoRef.current && !playerRef.current) {
+      // Video.js 플레이어 초기화
+      const player = videojs(videoRef.current, {
+        controls: true,
+        fluid: true,
+        preload: 'metadata',
+        controlBar: {
+          pictureInPictureToggle: false,
+        },
+        userActions: {
+          hotkeys: true, // 키보드 단축키 활성화
+        },
+      });
+
+      playerRef.current = player;
+    }
+
+    // Cleanup
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+    };
+  }, [viewingLecture, videoObjectUrl]);
+
   const loadLectures = () => {
     const allLectures = getLectures();
 
@@ -98,15 +141,19 @@ export const LecturePage = () => {
 
     // 사용자 역할에 따라 필터링
     const filtered = allLectures.filter(lecture => {
+      // '공통' 카테고리는 모든 사용자가 볼 수 있음
+      if (lecture.category === '공통') {
+        return true;
+      }
+
       switch (lecture.category) {
-        case '퍼피티칭':
+        case '퍼피':
           return user?.role === 'puppyTeacher';
         case '안내견':
           return user?.role === 'partner';
         case '은퇴견':
           return user?.role === 'retiredHomeCare';
-        case '부견':
-        case '모견':
+        case '부모견':
           return user?.role === 'parentCaregiver';
         default:
           return false;
@@ -148,6 +195,7 @@ export const LecturePage = () => {
       attachments: [],
       // IndexedDB에 저장된 경우 'indexed' 플래그 사용
       videoUrl: videoFile ? 'indexed' : editingLecture?.videoUrl,
+      youtubeUrl: youtubeUrl.trim() || undefined,
       createdAt: editingLecture?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -169,6 +217,7 @@ export const LecturePage = () => {
     setTitle(lecture.title);
     setContent(lecture.content);
     setVideoUrl(lecture.videoUrl || '');
+    setYoutubeUrl(lecture.youtubeUrl || '');
     setIsWriting(true);
     setViewingLecture(null);
   };
@@ -189,6 +238,7 @@ export const LecturePage = () => {
     setTitle('');
     setContent('');
     setVideoUrl('');
+    setYoutubeUrl('');
     setIsWriting(false);
     setEditingLecture(null);
   };
@@ -228,24 +278,45 @@ export const LecturePage = () => {
 
   const getCategoryBadge = (cat: LectureCategory) => {
     const colors = {
-      '퍼피티칭': 'bg-yellow-100 text-yellow-800 border-yellow-300',
+      '퍼피': 'bg-yellow-100 text-yellow-800 border-yellow-300',
       '안내견': 'bg-green-100 text-green-800 border-green-300',
       '은퇴견': 'bg-gray-100 text-gray-800 border-gray-300',
-      '부견': 'bg-cyan-100 text-cyan-800 border-cyan-300',
-      '모견': 'bg-rose-100 text-rose-800 border-rose-300',
+      '부모견': 'bg-cyan-100 text-cyan-800 border-cyan-300',
+      '공통': 'bg-blue-100 text-blue-800 border-blue-300',
     };
     return colors[cat] || 'bg-gray-100 text-gray-800 border-gray-300';
   };
 
+  // YouTube URL을 embed URL로 변환
+  const getYouTubeEmbedUrl = (url: string): string => {
+    if (!url) return '';
+
+    // 이미 embed URL인 경우
+    if (url.includes('youtube.com/embed/')) {
+      return url;
+    }
+
+    // 일반 YouTube URL 변환
+    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+    if (videoIdMatch && videoIdMatch[1]) {
+      return `https://www.youtube.com/embed/${videoIdMatch[1]}`;
+    }
+
+    return url;
+  };
+
   // 강의 상세보기
   if (viewingLecture) {
+    const hasVideo = (viewingLecture.videoUrl && videoObjectUrl) || viewingLecture.youtubeUrl;
+
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-start mb-6">
             <button
               onClick={() => setViewingLecture(null)}
-              className="text-blue-600 hover:text-blue-800 font-semibold"
+              className="text-blue-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+              aria-label="강의 목록으로 돌아가기"
             >
               ← 목록으로
             </button>
@@ -253,13 +324,15 @@ export const LecturePage = () => {
               <div className="space-x-2">
                 <button
                   onClick={() => handleEdit(viewingLecture)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  aria-label="강의 수정"
                 >
                   수정
                 </button>
                 <button
                   onClick={() => handleDelete(viewingLecture.id)}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  aria-label="강의 삭제"
                 >
                   삭제
                 </button>
@@ -284,22 +357,41 @@ export const LecturePage = () => {
             )}
           </div>
 
-          {(viewingLecture.videoUrl && videoObjectUrl) && (
+          {hasVideo && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">강의 영상</h3>
-              <video
-                controls
-                controlsList="nodownload"
-                disablePictureInPicture
-                onContextMenu={(e) => e.preventDefault()}
-                className="w-full max-w-3xl rounded-lg shadow-md"
-                style={{ userSelect: 'none' }}
-              >
-                <source src={videoObjectUrl} type="video/mp4" />
-                <source src={videoObjectUrl} type="video/webm" />
-                <source src={videoObjectUrl} type="video/ogg" />
-                브라우저가 비디오 재생을 지원하지 않습니다.
-              </video>
+
+              {/* YouTube 영상 */}
+              {viewingLecture.youtubeUrl && (
+                <div className="mb-4">
+                  <iframe
+                    src={getYouTubeEmbedUrl(viewingLecture.youtubeUrl)}
+                    className="w-full aspect-video rounded-lg shadow-md"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title={`${viewingLecture.title} - YouTube 영상`}
+                  />
+                </div>
+              )}
+
+              {/* 업로드된 영상 (Video.js) */}
+              {viewingLecture.videoUrl && videoObjectUrl && (
+                <div data-vjs-player>
+                  <video
+                    ref={videoRef}
+                    className="video-js vjs-big-play-centered"
+                    onContextMenu={(e) => e.preventDefault()}
+                    aria-label={`${viewingLecture.title} 강의 영상`}
+                  >
+                    <source src={videoObjectUrl} type="video/mp4" />
+                    <source src={videoObjectUrl} type="video/webm" />
+                    <source src={videoObjectUrl} type="video/ogg" />
+                    <p className="vjs-no-js">
+                      JavaScript를 활성화하거나 HTML5 비디오를 지원하는 브라우저를 사용해주세요.
+                    </p>
+                  </video>
+                </div>
+              )}
             </div>
           )}
 
@@ -341,15 +433,16 @@ export const LecturePage = () => {
                 onChange={(e) => setCategory(e.target.value as LectureCategory)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 required
+                aria-label="강의 카테고리 선택"
               >
-                <option value="퍼피티칭">퍼피티칭</option>
+                <option value="퍼피">퍼피</option>
                 <option value="안내견">안내견</option>
+                <option value="부모견">부모견</option>
                 <option value="은퇴견">은퇴견</option>
-                <option value="부견">부견</option>
-                <option value="모견">모견</option>
+                <option value="공통">공통 (모든 사용자)</option>
               </select>
               <p className="text-sm text-gray-500 mt-1">
-                선택한 카테고리에 해당하는 사용자만 이 강의를 볼 수 있습니다.
+                '공통'을 선택하면 모든 사용자가 볼 수 있습니다. NAS 저장 위치: {NAS_FOLDER_MAP[category]}
               </p>
             </div>
 
@@ -368,6 +461,7 @@ export const LecturePage = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 placeholder="강의 제목을 입력하세요"
                 required
+                aria-label="강의 제목"
               />
             </div>
 
@@ -386,7 +480,29 @@ export const LecturePage = () => {
                 rows={15}
                 placeholder="강의 내용을 입력하세요"
                 required
+                aria-label="강의 내용"
               />
+            </div>
+
+            <div>
+              <label
+                htmlFor="youtubeUrl"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                유튜브 링크
+              </label>
+              <input
+                type="url"
+                id="youtubeUrl"
+                value={youtubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                placeholder="https://www.youtube.com/watch?v=..."
+                aria-label="유튜브 영상 링크"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                유튜브 영상 링크를 입력하면 영상이 임베드됩니다.
+              </p>
             </div>
 
             <div>
@@ -394,7 +510,7 @@ export const LecturePage = () => {
                 htmlFor="video"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                영상 첨부
+                영상 파일 첨부 (NAS 업로드용)
               </label>
               <input
                 type="file"
@@ -402,6 +518,7 @@ export const LecturePage = () => {
                 accept="video/*"
                 onChange={handleVideoChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                aria-label="영상 파일 첨부"
               />
               {videoUrl && (
                 <div className="mt-3">
@@ -417,21 +534,23 @@ export const LecturePage = () => {
                 </div>
               )}
               <p className="text-sm text-gray-500 mt-1">
-                영상 파일은 500MB 이하만 업로드 가능합니다.
+                영상 파일은 500MB 이하만 업로드 가능합니다. 수동으로 NAS 폴더에 업로드하는 것을 권장합니다.
               </p>
             </div>
 
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label={editingLecture ? '강의 수정 완료' : '강의 등록 완료'}
               >
                 {editingLecture ? '수정 완료' : '등록 완료'}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                aria-label="강의 작성 취소"
               >
                 취소
               </button>
@@ -450,7 +569,8 @@ export const LecturePage = () => {
         {user?.role === 'admin' && (
           <button
             onClick={() => setIsWriting(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label="새 강의 등록"
           >
             강의 등록
           </button>
@@ -463,7 +583,8 @@ export const LecturePage = () => {
           {user?.role === 'admin' && (
             <button
               onClick={() => setIsWriting(true)}
-              className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+              className="mt-4 text-blue-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+              aria-label="첫 강의 등록하기"
             >
               첫 강의 등록하기
             </button>
@@ -480,10 +601,14 @@ export const LecturePage = () => {
                 <button
                   onClick={() => setViewingLecture(lecture)}
                   className="text-xl font-bold text-blue-600 hover:text-blue-800 underline flex-1 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+                  aria-label={`${lecture.title} 강의 보기. 카테고리: ${lecture.category}`}
                 >
                   {lecture.title}
                 </button>
-                <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${getCategoryBadge(lecture.category)}`}>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-semibold border ${getCategoryBadge(lecture.category)}`}
+                  aria-label={`카테고리: ${lecture.category}`}
+                >
                   {lecture.category}
                 </span>
               </div>

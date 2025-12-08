@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@videojs/themes": "^1.0.1",
     "firebase": "^12.6.0",
     "mysql2": "^3.15.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "video.js": "^8.23.4",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

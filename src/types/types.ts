@@ -269,7 +269,7 @@ export interface MedicationCheck {
 /**
  * 강의 카테고리
  */
-export type LectureCategory = '퍼피티칭' | '안내견' | '은퇴견' | '부모견';
+export type LectureCategory = '퍼피' | '안내견' | '부모견' | '은퇴견' | '공통';
 
 /**
  * 강의 자료
@@ -280,7 +280,8 @@ export interface Lecture {
   title: string; // 제목
   content: string; // 내용
   attachments: string[]; // 첨부파일 (Base64 또는 URL)
-  videoUrl?: string; // 영상 파일 (Base64 또는 URL)
+  videoUrl?: string; // 영상 파일 (NAS URL 또는 Base64)
+  youtubeUrl?: string; // 유튜브 링크
   createdAt: string; // 작성일시
   updatedAt: string; // 수정일시
 }
