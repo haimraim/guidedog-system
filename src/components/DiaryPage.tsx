@@ -208,18 +208,20 @@ export const DiaryPage = () => {
         return localDateStr === date;
       }) || null;
     } else {
-      // 안내견/은퇴견/부모견: 현재 개의 카테고리로 필터링하고 createdAt 날짜로 매칭
+      // 안내견/은퇴견/부모견: 현재 개의 카테고리로 필터링하고 날짜로 매칭
       return allPosts.find(post => {
         if (post.dogName !== dogName) return false;
-
-        // 퍼피티칭 기록(diaryDate 있음)은 제외
-        if (post.diaryDate) return false;
 
         // 현재 개의 카테고리를 실시간으로 확인하여 필터링
         const currentDog = getGuideDogs().find(d => d.name === post.dogName);
         if (currentDog && currentDog.category !== adminCategory) return false;
 
-        // 로컬 시간대로 날짜 비교
+        // diaryDate가 있으면 diaryDate로 매칭 (새 형식)
+        if (post.diaryDate) {
+          return post.diaryDate === date;
+        }
+
+        // 없으면 createdAt으로 로컬 시간대로 매칭 (구 형식)
         const createdDate = new Date(post.createdAt);
         const year = createdDate.getFullYear();
         const month = String(createdDate.getMonth() + 1).padStart(2, '0');
@@ -252,12 +254,15 @@ export const DiaryPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // 모든 사용자 공통 검증
+    if (!diaryDate) {
+      alert('날짜를 입력해주세요.');
+      return;
+    }
+
     // 퍼피티칭 사용자 검증
     if (user?.role === 'puppyTeacher') {
-      if (!diaryDate) {
-        alert('날짜를 입력해주세요.');
-        return;
-      }
+      // 퍼피티칭은 제목/내용 자동 생성되므로 추가 검증 불필요
     } else {
       if (!title.trim() || !content.trim()) {
         alert('제목과 내용을 모두 입력해주세요.');
@@ -280,9 +285,9 @@ export const DiaryPage = () => {
       content: user?.role === 'puppyTeacher' ? '퍼피티칭 일지' : content.trim(),
       createdAt: editingPost?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      diaryDate, // 모든 사용자에게 diaryDate 저장
       // 퍼피티칭 전용 필드 (배열 기반)
       ...(user?.role === 'puppyTeacher' && {
-        diaryDate,
         feedings: feedings.filter(f => f.time || f.foodType || f.amount || f.notes),
         dt1Records: dt1Records.filter(d => d.time || d.place || d.success || d.accident || d.notes),
         dt2Records: dt2Records.filter(d => d.time || d.place || d.success || d.accident || d.notes),
@@ -1242,6 +1247,32 @@ export const DiaryPage = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label
+                htmlFor="diaryDate"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                다이어리 날짜
+              </label>
+              <div className="flex space-x-2">
+                <input
+                  type="date"
+                  id="diaryDate"
+                  value={diaryDate}
+                  onChange={(e) => setDiaryDate(e.target.value)}
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={setTodayDate}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors"
+                >
+                  오늘
+                </button>
+              </div>
+            </div>
+
             <div>
               <label
                 htmlFor="title"
