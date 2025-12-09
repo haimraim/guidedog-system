@@ -12,6 +12,8 @@ import { DataForm } from './DataForm';
 import { ExcelImport } from './ExcelImport';
 import { DataDetailView } from './DataDetailView';
 import { useAuth } from '../contexts/AuthContext';
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 export const DataTableEnhanced = () => {
   const { user } = useAuth();
@@ -22,6 +24,11 @@ export const DataTableEnhanced = () => {
   const [viewingItem, setViewingItem] = useState<CombinedData | null>(null);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showExcelImportModal, setShowExcelImportModal] = useState(false);
+
+  // 마이그레이션 상태
+  const [isMigrating, setIsMigrating] = useState(false);
+  const [migrationLog, setMigrationLog] = useState<string[]>([]);
+  const [migrationComplete, setMigrationComplete] = useState(false);
 
   // 다중 선택 상태
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
@@ -319,6 +326,100 @@ export const DataTableEnhanced = () => {
           setDeleteStatus('❌ 데이터 삭제에 실패했습니다.');
         }
       }
+    }
+  };
+
+  // localStorage 데이터를 Firestore로 마이그레이션
+  const handleMigration = async () => {
+    if (isMigrating) return;
+
+    const confirmMessage = 'localStorage에 저장된 강의실 데이터를 Firestore로 마이그레이션하시겠습니까?\n\n이 작업은 다른 PC에서도 같은 데이터를 볼 수 있도록 합니다.';
+    if (!window.confirm(confirmMessage)) return;
+
+    setIsMigrating(true);
+    setMigrationLog([]);
+    setMigrationComplete(false);
+
+    const addLog = (message: string) => {
+      setMigrationLog(prev => [...prev, message]);
+    };
+
+    try {
+      addLog('🚀 Firestore 마이그레이션 시작...');
+      let totalMigrated = 0;
+
+      // 1. 일반 강의실 강의 마이그레이션
+      addLog('📚 일반 강의실 강의 마이그레이션 중...');
+      const lectures = JSON.parse(localStorage.getItem('guidedog_lectures') || '[]');
+      for (const lecture of lectures) {
+        try {
+          await setDoc(doc(db, 'lectures', lecture.id), lecture);
+          totalMigrated++;
+          addLog(`  ✓ 강의: ${lecture.title}`);
+        } catch (error) {
+          addLog(`  ✗ 실패: ${lecture.title}`);
+          console.error(error);
+        }
+      }
+      addLog(`✅ 일반 강의실: ${lectures.length}개 완료`);
+
+      // 2. 직원용 강의실 - 과목 마이그레이션
+      addLog('📂 직원용 과목 마이그레이션 중...');
+      const courses = JSON.parse(localStorage.getItem('guidedog_staff_courses') || '[]');
+      for (const course of courses) {
+        try {
+          await setDoc(doc(db, 'staff_courses', course.id), course);
+          totalMigrated++;
+          addLog(`  ✓ 과목: ${course.name}`);
+        } catch (error) {
+          addLog(`  ✗ 실패: ${course.name}`);
+          console.error(error);
+        }
+      }
+      addLog(`✅ 직원용 과목: ${courses.length}개 완료`);
+
+      // 3. 직원용 강의실 - 강의 마이그레이션
+      addLog('📖 직원용 강의 마이그레이션 중...');
+      const staffLectures = JSON.parse(localStorage.getItem('guidedog_staff_lectures') || '[]');
+      for (const lecture of staffLectures) {
+        try {
+          await setDoc(doc(db, 'staff_lectures', lecture.id), lecture);
+          totalMigrated++;
+          addLog(`  ✓ 강의: ${lecture.title}`);
+        } catch (error) {
+          addLog(`  ✗ 실패: ${lecture.title}`);
+          console.error(error);
+        }
+      }
+      addLog(`✅ 직원용 강의: ${staffLectures.length}개 완료`);
+
+      // 4. 안내견학교 행사 영상 마이그레이션
+      addLog('🎬 안내견학교 행사 영상 마이그레이션 중...');
+      const videos = JSON.parse(localStorage.getItem('guidedog_school_videos') || '[]');
+      for (const video of videos) {
+        try {
+          await setDoc(doc(db, 'school_videos', video.id), video);
+          totalMigrated++;
+          addLog(`  ✓ 영상: ${video.title}`);
+        } catch (error) {
+          addLog(`  ✗ 실패: ${video.title}`);
+          console.error(error);
+        }
+      }
+      addLog(`✅ 안내견학교 영상: ${videos.length}개 완료`);
+
+      // 완료 메시지
+      addLog('═══════════════════════════════════════');
+      addLog(`🎉 마이그레이션 완료! 총 ${totalMigrated}개 항목이 Firestore로 이동되었습니다.`);
+      addLog('📱 이제 모든 PC에서 같은 데이터를 볼 수 있습니다!');
+      addLog('💡 페이지를 새로고침하세요 (F5)');
+
+      setMigrationComplete(true);
+    } catch (error) {
+      addLog('❌ 마이그레이션 중 오류가 발생했습니다.');
+      console.error('Migration error:', error);
+    } finally {
+      setIsMigrating(false);
     }
   };
 
@@ -711,6 +812,16 @@ export const DataTableEnhanced = () => {
               aria-label="백업 파일에서 복원"
             />
           </label>
+          {user?.role === 'admin' && (
+            <button
+              onClick={handleMigration}
+              disabled={isMigrating}
+              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-300 disabled:bg-gray-400 disabled:cursor-not-allowed font-semibold"
+              aria-label="강의실 데이터 Firestore 마이그레이션"
+            >
+              {isMigrating ? '⏳ 마이그레이션 중...' : '🔄 강의실 데이터 마이그레이션'}
+            </button>
+          )}
           <button
             onClick={handleClearAllData}
             disabled={data.length === 0}
@@ -721,6 +832,38 @@ export const DataTableEnhanced = () => {
           </button>
         </div>
       </div>
+
+      {/* 마이그레이션 진행 상황 */}
+      {migrationLog.length > 0 && (
+        <div className="mt-8 p-4 bg-blue-50 border-2 border-blue-300 rounded-lg">
+          <h3 className="text-lg font-semibold mb-4 text-blue-800">
+            {isMigrating ? '⏳ 마이그레이션 진행 중...' : migrationComplete ? '✅ 마이그레이션 완료!' : '📋 마이그레이션 로그'}
+          </h3>
+          <div
+            role="log"
+            aria-live="polite"
+            aria-atomic="false"
+            className="bg-white p-4 rounded border border-blue-200 max-h-96 overflow-y-auto"
+          >
+            <div className="font-mono text-sm space-y-1">
+              {migrationLog.map((log, index) => (
+                <div key={index} className="text-gray-800">
+                  {log}
+                </div>
+              ))}
+            </div>
+          </div>
+          {migrationComplete && (
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold"
+              aria-label="페이지 새로고침"
+            >
+              🔄 페이지 새로고침 (F5)
+            </button>
+          )}
+        </div>
+      )}
         </section>
       )}
     </>
