@@ -7,31 +7,11 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import type { DiaryPost, DogCategory } from '../types/types';
 import { generateId, getGuideDogs } from '../utils/storage';
-
-const STORAGE_KEY = 'guidedog_diary';
-
-const getDiaryPosts = (): DiaryPost[] => {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveDiaryPost = (post: DiaryPost): void => {
-  const posts = getDiaryPosts();
-  const existingIndex = posts.findIndex(p => p.id === post.id);
-
-  if (existingIndex >= 0) {
-    posts[existingIndex] = { ...post, updatedAt: new Date().toISOString() };
-  } else {
-    posts.unshift(post); // 최신 글이 위로
-  }
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-};
-
-const deleteDiaryPost = (id: string): void => {
-  const posts = getDiaryPosts().filter(p => p.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-};
+import {
+  getDiaryPosts,
+  saveDiaryPost,
+  deleteDiaryPost,
+} from '../utils/firestoreLectures';
 
 export const DiaryPage = () => {
   const { user } = useAuth();
@@ -83,20 +63,25 @@ export const DiaryPage = () => {
     }
   }, [selectedDog, allPosts, user?.role]);
 
-  const loadPosts = () => {
-    const loadedPosts = getDiaryPosts();
+  const loadPosts = async () => {
+    try {
+      const loadedPosts = await getDiaryPosts();
 
-    // 관리자는 모든 글 로드 후 필터 가능
-    if (user?.role === 'admin') {
-      setAllPosts(loadedPosts);
-      setPosts(loadedPosts);
-      return;
+      // 관리자는 모든 글 로드 후 필터 가능
+      if (user?.role === 'admin') {
+        setAllPosts(loadedPosts);
+        setPosts(loadedPosts);
+        return;
+      }
+
+      // 일반 담당자는 자신이 작성한 글만 표시 (자기 안내견에 대해 다른 담당자가 쓴 글은 보이지 않음)
+      const filteredPosts = loadedPosts.filter(p => p.userId === user?.id);
+      setAllPosts(filteredPosts);
+      setPosts(filteredPosts);
+    } catch (error) {
+      console.error('다이어리 로드 실패:', error);
+      alert('다이어리를 불러오는데 실패했습니다.');
     }
-
-    // 일반 담당자는 자신이 작성한 글만 표시 (자기 안내견에 대해 다른 담당자가 쓴 글은 보이지 않음)
-    const filteredPosts = loadedPosts.filter(p => p.userId === user?.id);
-    setAllPosts(filteredPosts);
-    setPosts(filteredPosts);
   };
 
   // 안내견 목록 가져오기 (관리자용 필터)
@@ -255,7 +240,7 @@ export const DiaryPage = () => {
     setDiaryDate(`${year}-${month}-${day}`);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // 모든 사용자 공통 검증
@@ -300,9 +285,14 @@ export const DiaryPage = () => {
       }),
     };
 
-    saveDiaryPost(post);
-    resetForm();
-    loadPosts();
+    try {
+      await saveDiaryPost(post);
+      resetForm();
+      await loadPosts();
+    } catch (error) {
+      console.error('다이어리 저장 실패:', error);
+      alert('다이어리 저장에 실패했습니다.');
+    }
   };
 
   const handleEdit = (post: DiaryPost) => {
@@ -367,11 +357,16 @@ export const DiaryPage = () => {
     setViewingPost(null);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-      deleteDiaryPost(id);
-      loadPosts();
-      setViewingPost(null);
+      try {
+        await deleteDiaryPost(id);
+        await loadPosts();
+        setViewingPost(null);
+      } catch (error) {
+        console.error('다이어리 삭제 실패:', error);
+        alert('다이어리 삭제에 실패했습니다.');
+      }
     }
   };
 

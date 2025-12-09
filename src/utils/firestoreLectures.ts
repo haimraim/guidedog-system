@@ -15,7 +15,7 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import type { Lecture, LectureCategory } from '../types/types';
+import type { Lecture, LectureCategory, DiaryPost } from '../types/types';
 
 // ==================== 일반 강의실 (Public Lectures) ====================
 
@@ -276,6 +276,60 @@ export const deleteSchoolVideo = async (id: string): Promise<void> => {
     localStorage.setItem('guidedog_school_videos', JSON.stringify(filtered));
   } catch (error) {
     console.error('안내견학교 영상 삭제 실패:', error);
+    throw error;
+  }
+};
+
+// ==================== 다이어리 (Diary Posts) ====================
+
+const DIARY_COLLECTION = 'diary_posts';
+
+export const getDiaryPosts = async (): Promise<DiaryPost[]> => {
+  try {
+    const diaryRef = collection(db, DIARY_COLLECTION);
+    const q = query(diaryRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as DiaryPost[];
+  } catch (error) {
+    console.error('다이어리 목록 로드 실패:', error);
+    const data = localStorage.getItem('guidedog_diary');
+    return data ? JSON.parse(data) : [];
+  }
+};
+
+export const saveDiaryPost = async (post: DiaryPost): Promise<void> => {
+  try {
+    const postRef = doc(db, DIARY_COLLECTION, post.id);
+    await setDoc(postRef, post);
+
+    const posts = await getDiaryPosts();
+    const existingIndex = posts.findIndex(p => p.id === post.id);
+    if (existingIndex >= 0) {
+      posts[existingIndex] = post;
+    } else {
+      posts.unshift(post);
+    }
+    localStorage.setItem('guidedog_diary', JSON.stringify(posts));
+  } catch (error) {
+    console.error('다이어리 저장 실패:', error);
+    throw error;
+  }
+};
+
+export const deleteDiaryPost = async (id: string): Promise<void> => {
+  try {
+    const postRef = doc(db, DIARY_COLLECTION, id);
+    await deleteDoc(postRef);
+
+    const posts = await getDiaryPosts();
+    const filtered = posts.filter(p => p.id !== id);
+    localStorage.setItem('guidedog_diary', JSON.stringify(filtered));
+  } catch (error) {
+    console.error('다이어리 삭제 실패:', error);
     throw error;
   }
 };

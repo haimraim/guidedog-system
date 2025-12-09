@@ -408,6 +408,21 @@ export const DataTableEnhanced = () => {
       }
       addLog(`✅ 안내견학교 영상: ${videos.length}개 완료`);
 
+      // 5. 다이어리 마이그레이션
+      addLog('📝 다이어리 마이그레이션 중...');
+      const diaryPosts = JSON.parse(localStorage.getItem('guidedog_diary') || '[]');
+      for (const post of diaryPosts) {
+        try {
+          await setDoc(doc(db, 'diary_posts', post.id), post);
+          totalMigrated++;
+          addLog(`  ✓ 다이어리: ${post.title}`);
+        } catch (error) {
+          addLog(`  ✗ 실패: ${post.title}`);
+          console.error(error);
+        }
+      }
+      addLog(`✅ 다이어리: ${diaryPosts.length}개 완료`);
+
       // 완료 메시지
       addLog('═══════════════════════════════════════');
       addLog(`🎉 마이그레이션 완료! 총 ${totalMigrated}개 항목이 Firestore로 이동되었습니다.`);
