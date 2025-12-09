@@ -8,31 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { getGuideDogs } from '../utils/storage';
 import type { MedicationCheck, MedicationType, GuideDog } from '../types/types';
 import { generateId } from '../utils/storage';
-
-const STORAGE_KEY = 'guidedog_medication';
-
-const getMedicationChecks = (): MedicationCheck[] => {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveMedicationCheck = (check: MedicationCheck): void => {
-  const checks = getMedicationChecks();
-  const existingIndex = checks.findIndex(c => c.id === check.id);
-
-  if (existingIndex >= 0) {
-    checks[existingIndex] = { ...check, updatedAt: new Date().toISOString() };
-  } else {
-    checks.unshift(check);
-  }
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
-};
-
-const deleteMedicationCheck = (id: string): void => {
-  const checks = getMedicationChecks().filter(c => c.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
-};
+import { getMedicationChecks, saveMedicationCheck, deleteMedicationCheck } from '../utils/firestoreLectures';
 
 // 약품별 정보
 const MEDICATION_INFO = {
@@ -91,8 +67,8 @@ export const MedicationCheckPage = () => {
     loadChecks();
   }, []);
 
-  const loadChecks = () => {
-    const allChecks = getMedicationChecks();
+  const loadChecks = async () => {
+    const allChecks = await getMedicationChecks();
 
     // 관리자는 모든 기록 표시
     if (user?.role === 'admin') {
@@ -105,7 +81,7 @@ export const MedicationCheckPage = () => {
     setChecks(filteredChecks);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!selectedMedication || !checkDate) {
@@ -130,15 +106,15 @@ export const MedicationCheckPage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveMedicationCheck(check);
+    await saveMedicationCheck(check);
     resetForm();
-    loadChecks();
+    await loadChecks();
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-      deleteMedicationCheck(id);
-      loadChecks();
+      await deleteMedicationCheck(id);
+      await loadChecks();
     }
   };
 

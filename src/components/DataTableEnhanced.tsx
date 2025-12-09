@@ -12,8 +12,13 @@ import { DataForm } from './DataForm';
 import { ExcelImport } from './ExcelImport';
 import { DataDetailView } from './DataDetailView';
 import { useAuth } from '../contexts/AuthContext';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import {
+  getBoardingForms, saveBoardingForm,
+  getMedicalRecords, saveMedicalRecord,
+  getMedicationChecks, saveMedicationCheck,
+  getProducts, saveProduct,
+  getProductOrders, saveProductOrder
+} from '../utils/firestoreLectures';
 
 export const DataTableEnhanced = () => {
   const { user } = useAuth();
@@ -25,13 +30,12 @@ export const DataTableEnhanced = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showExcelImportModal, setShowExcelImportModal] = useState(false);
 
-  // 마이그레이션 상태
-  const [isMigrating, setIsMigrating] = useState(false);
-  const [migrationLog, setMigrationLog] = useState<string[]>([]);
-  const [migrationComplete, setMigrationComplete] = useState(false);
-
   // 다중 선택 상태
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+
+  // 마이그레이션 상태
+  const [isMigrating, setIsMigrating] = useState(false);
+  const [migrationProgress, setMigrationProgress] = useState<string[]>([]);
 
   // 검색 상태
   const [filter, setFilter] = useState<SearchFilter>({
@@ -329,110 +333,92 @@ export const DataTableEnhanced = () => {
     }
   };
 
-  // localStorage 데이터를 Firestore로 마이그레이션
   const handleMigration = async () => {
-    if (isMigrating) return;
-
-    const confirmMessage = 'localStorage에 저장된 강의실 데이터를 Firestore로 마이그레이션하시겠습니까?\n\n이 작업은 다른 PC에서도 같은 데이터를 볼 수 있도록 합니다.';
-    if (!window.confirm(confirmMessage)) return;
+    if (!window.confirm('localStorage 데이터를 Firestore로 마이그레이션하시겠습니까?')) {
+      return;
+    }
 
     setIsMigrating(true);
-    setMigrationLog([]);
-    setMigrationComplete(false);
-
-    const addLog = (message: string) => {
-      setMigrationLog(prev => [...prev, message]);
-    };
+    setMigrationProgress([]);
 
     try {
-      addLog('🚀 Firestore 마이그레이션 시작...');
-      let totalMigrated = 0;
+      const addLog = (message: string) => {
+        setMigrationProgress(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${message}`]);
+      };
 
-      // 1. 일반 강의실 강의 마이그레이션
-      addLog('📚 일반 강의실 강의 마이그레이션 중...');
-      const lectures = JSON.parse(localStorage.getItem('guidedog_lectures') || '[]');
-      for (const lecture of lectures) {
-        try {
-          await setDoc(doc(db, 'lectures', lecture.id), lecture);
-          totalMigrated++;
-          addLog(`  ✓ 강의: ${lecture.title}`);
-        } catch (error) {
-          addLog(`  ✗ 실패: ${lecture.title}`);
-          console.error(error);
+      addLog('마이그레이션 시작...');
+
+      // 보딩 폼 마이그레이션
+      addLog('보딩 폼 마이그레이션 중...');
+      const localBoarding = localStorage.getItem('guidedog_boarding_forms');
+      if (localBoarding) {
+        const boardingForms = JSON.parse(localBoarding);
+        for (const form of boardingForms) {
+          await saveBoardingForm(form);
         }
+        addLog(`✓ 보딩 폼 ${boardingForms.length}개 마이그레이션 완료`);
+      } else {
+        addLog('보딩 폼 데이터 없음');
       }
-      addLog(`✅ 일반 강의실: ${lectures.length}개 완료`);
 
-      // 2. 직원용 강의실 - 과목 마이그레이션
-      addLog('📂 직원용 과목 마이그레이션 중...');
-      const courses = JSON.parse(localStorage.getItem('guidedog_staff_courses') || '[]');
-      for (const course of courses) {
-        try {
-          await setDoc(doc(db, 'staff_courses', course.id), course);
-          totalMigrated++;
-          addLog(`  ✓ 과목: ${course.name}`);
-        } catch (error) {
-          addLog(`  ✗ 실패: ${course.name}`);
-          console.error(error);
+      // 진료 기록 마이그레이션
+      addLog('진료 기록 마이그레이션 중...');
+      const localMedical = localStorage.getItem('guidedog_medical');
+      if (localMedical) {
+        const medicalRecords = JSON.parse(localMedical);
+        for (const record of medicalRecords) {
+          await saveMedicalRecord(record);
         }
+        addLog(`✓ 진료 기록 ${medicalRecords.length}개 마이그레이션 완료`);
+      } else {
+        addLog('진료 기록 데이터 없음');
       }
-      addLog(`✅ 직원용 과목: ${courses.length}개 완료`);
 
-      // 3. 직원용 강의실 - 강의 마이그레이션
-      addLog('📖 직원용 강의 마이그레이션 중...');
-      const staffLectures = JSON.parse(localStorage.getItem('guidedog_staff_lectures') || '[]');
-      for (const lecture of staffLectures) {
-        try {
-          await setDoc(doc(db, 'staff_lectures', lecture.id), lecture);
-          totalMigrated++;
-          addLog(`  ✓ 강의: ${lecture.title}`);
-        } catch (error) {
-          addLog(`  ✗ 실패: ${lecture.title}`);
-          console.error(error);
+      // 약품 체크 마이그레이션
+      addLog('약품 체크 마이그레이션 중...');
+      const localMedication = localStorage.getItem('guidedog_medication');
+      if (localMedication) {
+        const medicationChecks = JSON.parse(localMedication);
+        for (const check of medicationChecks) {
+          await saveMedicationCheck(check);
         }
+        addLog(`✓ 약품 체크 ${medicationChecks.length}개 마이그레이션 완료`);
+      } else {
+        addLog('약품 체크 데이터 없음');
       }
-      addLog(`✅ 직원용 강의: ${staffLectures.length}개 완료`);
 
-      // 4. 안내견학교 행사 영상 마이그레이션
-      addLog('🎬 안내견학교 행사 영상 마이그레이션 중...');
-      const videos = JSON.parse(localStorage.getItem('guidedog_school_videos') || '[]');
-      for (const video of videos) {
-        try {
-          await setDoc(doc(db, 'school_videos', video.id), video);
-          totalMigrated++;
-          addLog(`  ✓ 영상: ${video.title}`);
-        } catch (error) {
-          addLog(`  ✗ 실패: ${video.title}`);
-          console.error(error);
+      // 물품 마이그레이션
+      addLog('물품 마이그레이션 중...');
+      const localProducts = localStorage.getItem('guidedog_products');
+      if (localProducts) {
+        const products = JSON.parse(localProducts);
+        for (const product of products) {
+          await saveProduct(product);
         }
+        addLog(`✓ 물품 ${products.length}개 마이그레이션 완료`);
+      } else {
+        addLog('물품 데이터 없음');
       }
-      addLog(`✅ 안내견학교 영상: ${videos.length}개 완료`);
 
-      // 5. 다이어리 마이그레이션
-      addLog('📝 다이어리 마이그레이션 중...');
-      const diaryPosts = JSON.parse(localStorage.getItem('guidedog_diary') || '[]');
-      for (const post of diaryPosts) {
-        try {
-          await setDoc(doc(db, 'diary_posts', post.id), post);
-          totalMigrated++;
-          addLog(`  ✓ 다이어리: ${post.title}`);
-        } catch (error) {
-          addLog(`  ✗ 실패: ${post.title}`);
-          console.error(error);
+      // 물품 신청 마이그레이션
+      addLog('물품 신청 마이그레이션 중...');
+      const localOrders = localStorage.getItem('guidedog_orders');
+      if (localOrders) {
+        const orders = JSON.parse(localOrders);
+        for (const order of orders) {
+          await saveProductOrder(order);
         }
+        addLog(`✓ 물품 신청 ${orders.length}개 마이그레이션 완료`);
+      } else {
+        addLog('물품 신청 데이터 없음');
       }
-      addLog(`✅ 다이어리: ${diaryPosts.length}개 완료`);
 
-      // 완료 메시지
-      addLog('═══════════════════════════════════════');
-      addLog(`🎉 마이그레이션 완료! 총 ${totalMigrated}개 항목이 Firestore로 이동되었습니다.`);
-      addLog('📱 이제 모든 PC에서 같은 데이터를 볼 수 있습니다!');
-      addLog('💡 페이지를 새로고침하세요 (F5)');
-
-      setMigrationComplete(true);
+      addLog('✅ 마이그레이션 완료!');
+      alert('마이그레이션이 성공적으로 완료되었습니다!');
     } catch (error) {
-      addLog('❌ 마이그레이션 중 오류가 발생했습니다.');
-      console.error('Migration error:', error);
+      console.error('마이그레이션 오류:', error);
+      setMigrationProgress(prev => [...prev, `❌ 오류 발생: ${(error as Error).message}`]);
+      alert('마이그레이션 중 오류가 발생했습니다. 콘솔을 확인해주세요.');
     } finally {
       setIsMigrating(false);
     }
@@ -827,16 +813,6 @@ export const DataTableEnhanced = () => {
               aria-label="백업 파일에서 복원"
             />
           </label>
-          {user?.role === 'admin' && (
-            <button
-              onClick={handleMigration}
-              disabled={isMigrating}
-              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-300 disabled:bg-gray-400 disabled:cursor-not-allowed font-semibold"
-              aria-label="강의실 데이터 Firestore 마이그레이션"
-            >
-              {isMigrating ? '⏳ 마이그레이션 중...' : '🔄 강의실 데이터 마이그레이션'}
-            </button>
-          )}
           <button
             onClick={handleClearAllData}
             disabled={data.length === 0}
@@ -845,40 +821,31 @@ export const DataTableEnhanced = () => {
           >
             🗑️ 전체 삭제
           </button>
-        </div>
-      </div>
-
-      {/* 마이그레이션 진행 상황 */}
-      {migrationLog.length > 0 && (
-        <div className="mt-8 p-4 bg-blue-50 border-2 border-blue-300 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4 text-blue-800">
-            {isMigrating ? '⏳ 마이그레이션 진행 중...' : migrationComplete ? '✅ 마이그레이션 완료!' : '📋 마이그레이션 로그'}
-          </h3>
-          <div
-            role="log"
-            aria-live="polite"
-            aria-atomic="false"
-            className="bg-white p-4 rounded border border-blue-200 max-h-96 overflow-y-auto"
-          >
-            <div className="font-mono text-sm space-y-1">
-              {migrationLog.map((log, index) => (
-                <div key={index} className="text-gray-800">
-                  {log}
-                </div>
-              ))}
-            </div>
-          </div>
-          {migrationComplete && (
+          {user?.role === 'admin' && (
             <button
-              onClick={() => window.location.reload()}
-              className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold"
-              aria-label="페이지 새로고침"
+              onClick={handleMigration}
+              disabled={isMigrating}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:ring-4 focus:ring-yellow-300 disabled:bg-gray-300 disabled:cursor-not-allowed font-semibold"
+              aria-label="Firestore 마이그레이션"
             >
-              🔄 페이지 새로고침 (F5)
+              {isMigrating ? '⏳ 마이그레이션 중...' : '🔄 Firestore 마이그레이션'}
             </button>
           )}
         </div>
+      </div>
+
+      {/* 마이그레이션 진행 로그 */}
+      {isMigrating && migrationProgress.length > 0 && (
+        <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">마이그레이션 진행 상황</h3>
+          <div className="bg-black text-green-400 p-4 rounded-lg font-mono text-sm max-h-96 overflow-y-auto">
+            {migrationProgress.map((log, index) => (
+              <div key={index}>{log}</div>
+            ))}
+          </div>
+        </div>
       )}
+
         </section>
       )}
     </>

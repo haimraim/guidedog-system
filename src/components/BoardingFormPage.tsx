@@ -8,39 +8,21 @@ import { useAuth } from '../contexts/AuthContext';
 import { getGuideDogs } from '../utils/storage';
 import type { BoardingForm, GuideDog, BoardingComment } from '../types/types';
 import { generateId } from '../utils/storage';
+import {
+  getBoardingForms,
+  saveBoardingForm as saveFormToFirestore,
+  deleteBoardingForm as deleteFormFromFirestore,
+} from '../utils/firestoreLectures';
 
 const STORAGE_KEY = 'guidedog_boarding';
-
-const getBoardingForms = (): BoardingForm[] => {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveBoardingForm = (form: BoardingForm): void => {
-  const forms = getBoardingForms();
-  const existingIndex = forms.findIndex(f => f.id === form.id);
-
-  if (existingIndex >= 0) {
-    forms[existingIndex] = { ...form, updatedAt: new Date().toISOString() };
-  } else {
-    forms.unshift(form);
-  }
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(forms));
-};
-
-const deleteBoardingForm = (id: string): void => {
-  const forms = getBoardingForms().filter(f => f.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(forms));
-};
 
 const deleteAllBoardingForms = (): void => {
   localStorage.removeItem(STORAGE_KEY);
 };
 
 // 코멘트 추가
-const addComment = (formId: string, comment: BoardingComment): void => {
-  const forms = getBoardingForms();
+const addComment = async (formId: string, comment: BoardingComment): Promise<void> => {
+  const forms = await getBoardingForms();
   const formIndex = forms.findIndex(f => f.id === formId);
 
   if (formIndex >= 0) {
@@ -49,13 +31,13 @@ const addComment = (formId: string, comment: BoardingComment): void => {
     }
     forms[formIndex].comments!.unshift(comment);
     forms[formIndex].updatedAt = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(forms));
+    await saveFormToFirestore(forms[formIndex]);
   }
 };
 
 // 코멘트 읽음 처리
-const markCommentsAsRead = (formId: string, userId: string): void => {
-  const forms = getBoardingForms();
+const markCommentsAsRead = async (formId: string, userId: string): Promise<void> => {
+  const forms = await getBoardingForms();
   const formIndex = forms.findIndex(f => f.id === formId);
 
   if (formIndex >= 0 && forms[formIndex].comments) {
@@ -65,7 +47,7 @@ const markCommentsAsRead = (formId: string, userId: string): void => {
         comment.isRead = true;
       }
     });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(forms));
+    await saveFormToFirestore(forms[formIndex]);
   }
 };
 
@@ -164,8 +146,8 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     setDogInfo(dog || null);
   };
 
-  const loadForms = () => {
-    const allForms = getBoardingForms();
+  const loadForms = async () => {
+    const allForms = await getBoardingForms();
 
     // 관리자는 모든 신청서 표시
     if (user?.role === 'admin') {
@@ -199,7 +181,7 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!user?.dogName && user?.role !== 'admin') {
@@ -257,10 +239,11 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveBoardingForm(form);
+    try {
+      await saveFormToFirestore(form);
 
-    // 신청 내용 상세 확인 메시지 (시각장애인 접근성)
-    const confirmMessage = `
+      // 신청 내용 상세 확인 메시지 (시각장애인 접근성)
+      const confirmMessage = `
 ✅ ${editingForm ? '보딩 신청서가 수정되었습니다' : '보딩 신청서가 접수되었습니다'}
 
 📋 신청 내용:
@@ -278,11 +261,15 @@ ${form.medicalReason ? `• ${form.boardingReason} 사유: ${form.medicalReason}
 ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
 신청 상태: 대기
-    `.trim();
+      `.trim();
 
-    alert(confirmMessage);
-    resetForm();
-    loadForms();
+      alert(confirmMessage);
+      resetForm();
+      await loadForms();
+    } catch (error) {
+      console.error('보딩 폼 저장 실패:', error);
+      alert('보딩 신청서 저장에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   const handleEdit = (form: BoardingForm) => {
@@ -318,20 +305,30 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
     setIsAdding(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-      deleteBoardingForm(id);
-      loadForms();
+      try {
+        await deleteFormFromFirestore(id);
+        await loadForms();
+      } catch (error) {
+        console.error('보딩 폼 삭제 실패:', error);
+        alert('보딩 신청서 삭제에 실패했습니다.');
+      }
     }
   };
 
-  const handleStatusChange = (id: string, newStatus: BoardingForm['status']) => {
+  const handleStatusChange = async (id: string, newStatus: BoardingForm['status']) => {
     const form = forms.find(f => f.id === id);
     if (!form) return;
 
     const updatedForm = { ...form, status: newStatus, updatedAt: new Date().toISOString() };
-    saveBoardingForm(updatedForm);
-    loadForms();
+    try {
+      await saveFormToFirestore(updatedForm);
+      await loadForms();
+    } catch (error) {
+      console.error('상태 변경 실패:', error);
+      alert('상태 변경에 실패했습니다.');
+    }
   };
 
   const resetForm = () => {
@@ -361,12 +358,12 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
   };
 
   // 상세 보기 열기
-  const handleViewDetails = (form: BoardingForm) => {
+  const handleViewDetails = async (form: BoardingForm) => {
     setViewingForm(form);
     // 사용자가 자신의 신청서를 볼 때 코멘트 읽음 처리
     if (user && form.userId === user.id) {
-      markCommentsAsRead(form.id, user.id);
-      loadForms(); // 읽음 처리 후 목록 새로고침
+      await markCommentsAsRead(form.id, user.id);
+      await loadForms(); // 읽음 처리 후 목록 새로고침
     }
   };
 
@@ -377,7 +374,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
   };
 
   // 코멘트 작성
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (!newComment.trim() || !viewingForm || !user) return;
 
     const comment: BoardingComment = {
@@ -391,15 +388,20 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
       updatedAt: new Date().toISOString(),
     };
 
-    addComment(viewingForm.id, comment);
-    setNewComment('');
-    loadForms();
+    try {
+      await addComment(viewingForm.id, comment);
+      setNewComment('');
+      await loadForms();
 
-    // 상세 보기 업데이트
-    const updatedForms = getBoardingForms();
-    const updatedForm = updatedForms.find(f => f.id === viewingForm.id);
-    if (updatedForm) {
-      setViewingForm(updatedForm);
+      // 상세 보기 업데이트
+      const updatedForms = await getBoardingForms();
+      const updatedForm = updatedForms.find(f => f.id === viewingForm.id);
+      if (updatedForm) {
+        setViewingForm(updatedForm);
+      }
+    } catch (error) {
+      console.error('코멘트 추가 실패:', error);
+      alert('코멘트 추가에 실패했습니다.');
     }
   };
 
@@ -552,14 +554,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     보딩 시작일 *
                   </label>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                    required
-                  />
-                  <div className="flex space-x-2 mt-2">
+                  <div className="flex space-x-2 mb-2">
                     <button
                       type="button"
                       onClick={() => setStartDate(getTodayDate())}
@@ -582,19 +577,19 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       모레
                     </button>
                   </div>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    required
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     보딩 종료일 *
                   </label>
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                    required
-                  />
-                  <div className="flex space-x-2 mt-2">
+                  <div className="flex space-x-2 mb-2">
                     <button
                       type="button"
                       onClick={() => setEndDate(getTodayDate())}
@@ -617,6 +612,13 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       모레
                     </button>
                   </div>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    required
+                  />
                 </div>
               </div>
             </div>

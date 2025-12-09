@@ -8,31 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { getGuideDogs } from '../utils/storage';
 import type { MedicalRecord, MedicalRecordCategory, VaccineType, GuideDog } from '../types/types';
 import { generateId } from '../utils/storage';
-
-const STORAGE_KEY = 'guidedog_medical';
-
-const getMedicalRecords = (): MedicalRecord[] => {
-  const data = localStorage.getItem(STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveMedicalRecord = (record: MedicalRecord): void => {
-  const records = getMedicalRecords();
-  const existingIndex = records.findIndex(r => r.id === record.id);
-
-  if (existingIndex >= 0) {
-    records[existingIndex] = { ...record, updatedAt: new Date().toISOString() };
-  } else {
-    records.unshift(record);
-  }
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-};
-
-const deleteMedicalRecord = (id: string): void => {
-  const records = getMedicalRecords().filter(r => r.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-};
+import { getMedicalRecords, saveMedicalRecord, deleteMedicalRecord } from '../utils/firestoreLectures';
 
 type AdminView = 'general' | 'vaccine';
 type CategoryFilter = '안내견' | '퍼피' | '은퇴견' | '부모견';
@@ -65,8 +41,8 @@ export const MedicalRecordPage = () => {
     loadRecords();
   }, []);
 
-  const loadRecords = () => {
-    const allRecords = getMedicalRecords();
+  const loadRecords = async () => {
+    const allRecords = await getMedicalRecords();
 
     if (user?.role === 'admin') {
       setRecords(allRecords);
@@ -135,7 +111,7 @@ export const MedicalRecordPage = () => {
     setIsWriting(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!visitDate || !hospital) {
@@ -178,15 +154,15 @@ export const MedicalRecordPage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveMedicalRecord(record);
+    await saveMedicalRecord(record);
     resetForm();
-    loadRecords();
+    await loadRecords();
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-      deleteMedicalRecord(id);
-      loadRecords();
+      await deleteMedicalRecord(id);
+      await loadRecords();
       setViewingRecord(null);
     }
   };

@@ -6,47 +6,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import type { Product, ProductOrder, ProductCategory, ProductOption, ProductOptionValue } from '../types/types';
 import { generateId } from '../utils/storage';
-import { saveProduct } from './ProductManagementPage';
+import { getProducts, saveProduct, deleteProduct, getProductOrders, saveProductOrder, deleteProductOrder } from '../utils/firestoreLectures';
 import { ProductExcelImport } from './ProductExcelImport';
-
-const PRODUCTS_KEY = 'guidedog_products';
-const ORDERS_KEY = 'guidedog_orders';
-
-const getProducts = (): Product[] => {
-  const data = localStorage.getItem(PRODUCTS_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const getOrders = (): ProductOrder[] => {
-  const data = localStorage.getItem(ORDERS_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveOrder = (order: ProductOrder): void => {
-  const orders = getOrders();
-  orders.unshift(order);
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-};
-
-const updateOrderStatus = (orderId: string, status: 'pending' | 'approved' | 'shipped' | 'delivered'): void => {
-  const orders = getOrders();
-  const orderIndex = orders.findIndex(o => o.id === orderId);
-  if (orderIndex !== -1) {
-    orders[orderIndex].status = status;
-    orders[orderIndex].updatedAt = new Date().toISOString();
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  }
-};
-
-const deleteOrder = (orderId: string): void => {
-  const orders = getOrders().filter(o => o.id !== orderId);
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-};
-
-const deleteProduct = (id: string): void => {
-  const products = getProducts().filter(p => p.id !== id);
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
-};
 
 export const ProductOrderPage = () => {
   const { user } = useAuth();
@@ -102,8 +63,8 @@ export const ProductOrderPage = () => {
     }
   }, [user]);
 
-  const loadProducts = () => {
-    const allProducts = getProducts();
+  const loadProducts = async () => {
+    const allProducts = await getProducts();
     if (user?.role === 'admin') {
       // 관리자는 모든 물품 표시
       setProducts(allProducts);
@@ -113,40 +74,46 @@ export const ProductOrderPage = () => {
     }
   };
 
-  const loadMyOrders = () => {
+  const loadMyOrders = async () => {
     if (!user) return;
-    const allOrders = getOrders();
+    const allOrders = await getProductOrders();
     const filtered = allOrders.filter(o => o.userId === user.id);
     setMyOrders(filtered);
   };
 
-  const loadAllOrders = () => {
-    const orders = getOrders();
+  const loadAllOrders = async () => {
+    const orders = await getProductOrders();
     setAllOrders(orders);
   };
 
-  const handleStatusChange = (orderId: string, newStatus: 'pending' | 'approved' | 'shipped' | 'delivered') => {
-    updateOrderStatus(orderId, newStatus);
-    loadAllOrders();
-    alert('주문 상태가 변경되었습니다.');
+  const handleStatusChange = async (orderId: string, newStatus: 'pending' | 'approved' | 'shipped' | 'delivered') => {
+    const allOrders = await getProductOrders();
+    const orderIndex = allOrders.findIndex(o => o.id === orderId);
+    if (orderIndex !== -1) {
+      allOrders[orderIndex].status = newStatus;
+      allOrders[orderIndex].updatedAt = new Date().toISOString();
+      await saveProductOrder(allOrders[orderIndex]);
+      await loadAllOrders();
+      alert('주문 상태가 변경되었습니다.');
+    }
   };
 
-  const handleStockUpdate = (productId: string, newStock: number) => {
-    const allProducts = getProducts();
+  const handleStockUpdate = async (productId: string, newStock: number) => {
+    const allProducts = await getProducts();
     const productIndex = allProducts.findIndex(p => p.id === productId);
     if (productIndex !== -1) {
       allProducts[productIndex].stock = newStock;
       allProducts[productIndex].updatedAt = new Date().toISOString();
-      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(allProducts));
-      loadProducts();
+      await saveProduct(allProducts[productIndex]);
+      await loadProducts();
       alert('재고가 업데이트되었습니다.');
     }
   };
 
-  const handleOrderDelete = (orderId: string) => {
+  const handleOrderDelete = async (orderId: string) => {
     if (confirm('정말 이 신청을 삭제하시겠습니까?')) {
-      deleteOrder(orderId);
-      loadAllOrders();
+      await deleteProductOrder(orderId);
+      await loadAllOrders();
       alert('신청이 삭제되었습니다.');
     }
   };
@@ -155,7 +122,7 @@ export const ProductOrderPage = () => {
     setFilterUserName(userName);
   };
 
-  const handleProductSubmit = (e: React.FormEvent) => {
+  const handleProductSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!registerName.trim() || !registerStock) {
@@ -181,9 +148,9 @@ export const ProductOrderPage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveProduct(product);
+    await saveProduct(product);
     resetProductForm();
-    loadProducts();
+    await loadProducts();
     alert(editingProduct ? '물품이 수정되었습니다.' : '물품이 등록되었습니다.');
   };
 
@@ -199,10 +166,10 @@ export const ProductOrderPage = () => {
     setAdminView('register');
   };
 
-  const handleProductDelete = (id: string) => {
+  const handleProductDelete = async (id: string) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-      deleteProduct(id);
-      loadProducts();
+      await deleteProduct(id);
+      await loadProducts();
       alert('물품이 삭제되었습니다.');
     }
   };
@@ -313,7 +280,7 @@ export const ProductOrderPage = () => {
     setSelectedOptions({});
   };
 
-  const handleSubmitOrder = (e: React.FormEvent) => {
+  const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!orderingProduct || !user) return;
@@ -374,7 +341,7 @@ export const ProductOrderPage = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveOrder(order);
+    await saveProductOrder(order);
 
     // 재고 차감
     const updatedProduct: Product = {
@@ -401,12 +368,12 @@ export const ProductOrderPage = () => {
       updatedProduct.stock = orderingProduct.stock - quantityNum;
     }
 
-    saveProduct(updatedProduct);
+    await saveProduct(updatedProduct);
 
     alert('물품 신청이 완료되었습니다.');
     setOrderingProduct(null);
-    loadProducts();
-    loadMyOrders();
+    await loadProducts();
+    await loadMyOrders();
   };
 
   const getCategoryBadge = (cat: ProductCategory) => {

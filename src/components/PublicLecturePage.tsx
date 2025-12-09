@@ -49,9 +49,12 @@ export const PublicLecturePage = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [youtubeUrl, setYoutubeUrl] = useState<string>('');
 
+  // 관리자/준관리자용 카테고리 필터
+  const [selectedCategory, setSelectedCategory] = useState<LectureCategory | '전체'>('전체');
+
   useEffect(() => {
     loadLectures();
-  }, [user]);
+  }, [user, selectedCategory]);
 
   // 강의 상세보기 시 IndexedDB에서 영상 로드
   useEffect(() => {
@@ -117,7 +120,13 @@ export const PublicLecturePage = () => {
 
       // 관리자와 준관리자는 모든 강의 볼 수 있음
       if (user?.role === 'admin' || user?.role === 'moderator') {
-        setLectures(allLectures);
+        // 카테고리 필터 적용
+        if (selectedCategory === '전체') {
+          setLectures(allLectures);
+        } else {
+          const filtered = allLectures.filter(lecture => lecture.category === selectedCategory);
+          setLectures(filtered);
+        }
         return;
       }
 
@@ -629,6 +638,32 @@ export const PublicLecturePage = () => {
         )}
       </div>
 
+      {/* 관리자/준관리자용 카테고리 필터 */}
+      {(user?.role === 'admin' || user?.role === 'moderator') && (
+        <div className="mb-6">
+          <label
+            htmlFor="categoryFilter"
+            className="block text-sm font-semibold text-gray-700 mb-2"
+          >
+            카테고리 필터
+          </label>
+          <select
+            id="categoryFilter"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value as LectureCategory | '전체')}
+            className="w-full md:w-64 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            aria-label="강의 카테고리 필터 선택"
+          >
+            <option value="전체">전체</option>
+            <option value="퍼피">퍼피</option>
+            <option value="안내견">안내견</option>
+            <option value="부모견">부모견</option>
+            <option value="은퇴견">은퇴견</option>
+            <option value="공통">공통</option>
+          </select>
+        </div>
+      )}
+
       {lectures.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
           <p className="text-gray-500">등록된 강의가 없습니다.</p>
@@ -649,19 +684,11 @@ export const PublicLecturePage = () => {
               key={lecture.id}
               onClick={() => setViewingLecture(lecture)}
               className="w-full text-left bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              aria-label={`${lecture.title} 강의 재생. 카테고리: ${lecture.category}`}
+              aria-label={`${lecture.title} 강의 재생`}
             >
-              <div className="flex items-start justify-between mb-2">
-                <h3 className="text-lg font-bold text-blue-600 hover:text-blue-800 flex-1">
-                  {lecture.title}
-                </h3>
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-semibold border ${getCategoryBadge(lecture.category)} ml-2`}
-                  aria-label={`카테고리: ${lecture.category}`}
-                >
-                  {lecture.category}
-                </span>
-              </div>
+              <h3 className="text-lg font-bold text-blue-600 hover:text-blue-800 mb-2">
+                {lecture.title}
+              </h3>
               <p className="text-sm text-gray-600">
                 {formatDate(lecture.createdAt)}
               </p>

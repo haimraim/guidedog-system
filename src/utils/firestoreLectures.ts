@@ -15,7 +15,7 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import type { Lecture, LectureCategory, DiaryPost } from '../types/types';
+import type { Lecture, LectureCategory, DiaryPost, BoardingForm, MedicalRecord, MedicationCheck, Product, ProductOrder } from '../types/types';
 
 // ==================== 일반 강의실 (Public Lectures) ====================
 
@@ -330,6 +330,276 @@ export const deleteDiaryPost = async (id: string): Promise<void> => {
     localStorage.setItem('guidedog_diary', JSON.stringify(filtered));
   } catch (error) {
     console.error('다이어리 삭제 실패:', error);
+    throw error;
+  }
+};
+
+// ==================== 보딩 폼 (Boarding Forms) ====================
+
+const BOARDING_COLLECTION = 'boarding_forms';
+
+export const getBoardingForms = async (): Promise<BoardingForm[]> => {
+  try {
+    const boardingRef = collection(db, BOARDING_COLLECTION);
+    const q = query(boardingRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as BoardingForm[];
+  } catch (error) {
+    console.error('보딩 폼 목록 로드 실패:', error);
+    const data = localStorage.getItem('guidedog_boarding_forms');
+    return data ? JSON.parse(data) : [];
+  }
+};
+
+export const saveBoardingForm = async (form: BoardingForm): Promise<void> => {
+  try {
+    const formRef = doc(db, BOARDING_COLLECTION, form.id);
+    await setDoc(formRef, form);
+
+    const forms = await getBoardingForms();
+    const existingIndex = forms.findIndex(f => f.id === form.id);
+    if (existingIndex >= 0) {
+      forms[existingIndex] = form;
+    } else {
+      forms.unshift(form);
+    }
+    localStorage.setItem('guidedog_boarding_forms', JSON.stringify(forms));
+  } catch (error) {
+    console.error('보딩 폼 저장 실패:', error);
+    throw error;
+  }
+};
+
+export const deleteBoardingForm = async (id: string): Promise<void> => {
+  try {
+    const formRef = doc(db, BOARDING_COLLECTION, id);
+    await deleteDoc(formRef);
+
+    const forms = await getBoardingForms();
+    const filtered = forms.filter(f => f.id !== id);
+    localStorage.setItem('guidedog_boarding_forms', JSON.stringify(filtered));
+  } catch (error) {
+    console.error('보딩 폼 삭제 실패:', error);
+    throw error;
+  }
+};
+
+// ==================== 진료 기록 (Medical Records) ====================
+
+const MEDICAL_COLLECTION = 'medical_records';
+
+export const getMedicalRecords = async (): Promise<MedicalRecord[]> => {
+  try {
+    const medicalRef = collection(db, MEDICAL_COLLECTION);
+    const q = query(medicalRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as MedicalRecord[];
+  } catch (error) {
+    console.error('진료 기록 목록 로드 실패:', error);
+    const data = localStorage.getItem('guidedog_medical');
+    return data ? JSON.parse(data) : [];
+  }
+};
+
+export const saveMedicalRecord = async (record: MedicalRecord): Promise<void> => {
+  try {
+    const recordRef = doc(db, MEDICAL_COLLECTION, record.id);
+    await setDoc(recordRef, record);
+
+    const records = await getMedicalRecords();
+    const existingIndex = records.findIndex(r => r.id === record.id);
+    if (existingIndex >= 0) {
+      records[existingIndex] = record;
+    } else {
+      records.unshift(record);
+    }
+    localStorage.setItem('guidedog_medical', JSON.stringify(records));
+  } catch (error) {
+    console.error('진료 기록 저장 실패:', error);
+    throw error;
+  }
+};
+
+export const deleteMedicalRecord = async (id: string): Promise<void> => {
+  try {
+    const recordRef = doc(db, MEDICAL_COLLECTION, id);
+    await deleteDoc(recordRef);
+
+    const records = await getMedicalRecords();
+    const filtered = records.filter(r => r.id !== id);
+    localStorage.setItem('guidedog_medical', JSON.stringify(filtered));
+  } catch (error) {
+    console.error('진료 기록 삭제 실패:', error);
+    throw error;
+  }
+};
+
+// ==================== 약품 체크 (Medication Checks) ====================
+
+const MEDICATION_COLLECTION = 'medication_checks';
+
+export const getMedicationChecks = async (): Promise<MedicationCheck[]> => {
+  try {
+    const medicationRef = collection(db, MEDICATION_COLLECTION);
+    const q = query(medicationRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as MedicationCheck[];
+  } catch (error) {
+    console.error('약품 체크 목록 로드 실패:', error);
+    const data = localStorage.getItem('guidedog_medication');
+    return data ? JSON.parse(data) : [];
+  }
+};
+
+export const saveMedicationCheck = async (check: MedicationCheck): Promise<void> => {
+  try {
+    const checkRef = doc(db, MEDICATION_COLLECTION, check.id);
+    await setDoc(checkRef, check);
+
+    const checks = await getMedicationChecks();
+    const existingIndex = checks.findIndex(c => c.id === check.id);
+    if (existingIndex >= 0) {
+      checks[existingIndex] = check;
+    } else {
+      checks.unshift(check);
+    }
+    localStorage.setItem('guidedog_medication', JSON.stringify(checks));
+  } catch (error) {
+    console.error('약품 체크 저장 실패:', error);
+    throw error;
+  }
+};
+
+export const deleteMedicationCheck = async (id: string): Promise<void> => {
+  try {
+    const checkRef = doc(db, MEDICATION_COLLECTION, id);
+    await deleteDoc(checkRef);
+
+    const checks = await getMedicationChecks();
+    const filtered = checks.filter(c => c.id !== id);
+    localStorage.setItem('guidedog_medication', JSON.stringify(filtered));
+  } catch (error) {
+    console.error('약품 체크 삭제 실패:', error);
+    throw error;
+  }
+};
+
+// ==================== 물품 관리 (Products) ====================
+
+const PRODUCTS_COLLECTION = 'products';
+
+export const getProducts = async (): Promise<Product[]> => {
+  try {
+    const productsRef = collection(db, PRODUCTS_COLLECTION);
+    const q = query(productsRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as Product[];
+  } catch (error) {
+    console.error('물품 목록 로드 실패:', error);
+    const data = localStorage.getItem('guidedog_products');
+    return data ? JSON.parse(data) : [];
+  }
+};
+
+export const saveProduct = async (product: Product): Promise<void> => {
+  try {
+    const productRef = doc(db, PRODUCTS_COLLECTION, product.id);
+    await setDoc(productRef, product);
+
+    const products = await getProducts();
+    const existingIndex = products.findIndex(p => p.id === product.id);
+    if (existingIndex >= 0) {
+      products[existingIndex] = product;
+    } else {
+      products.unshift(product);
+    }
+    localStorage.setItem('guidedog_products', JSON.stringify(products));
+  } catch (error) {
+    console.error('물품 저장 실패:', error);
+    throw error;
+  }
+};
+
+export const deleteProduct = async (id: string): Promise<void> => {
+  try {
+    const productRef = doc(db, PRODUCTS_COLLECTION, id);
+    await deleteDoc(productRef);
+
+    const products = await getProducts();
+    const filtered = products.filter(p => p.id !== id);
+    localStorage.setItem('guidedog_products', JSON.stringify(filtered));
+  } catch (error) {
+    console.error('물품 삭제 실패:', error);
+    throw error;
+  }
+};
+
+// ==================== 물품 신청 (Product Orders) ====================
+
+const PRODUCT_ORDERS_COLLECTION = 'product_orders';
+
+export const getProductOrders = async (): Promise<ProductOrder[]> => {
+  try {
+    const ordersRef = collection(db, PRODUCT_ORDERS_COLLECTION);
+    const q = query(ordersRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as ProductOrder[];
+  } catch (error) {
+    console.error('물품 신청 목록 로드 실패:', error);
+    const data = localStorage.getItem('guidedog_orders');
+    return data ? JSON.parse(data) : [];
+  }
+};
+
+export const saveProductOrder = async (order: ProductOrder): Promise<void> => {
+  try {
+    const orderRef = doc(db, PRODUCT_ORDERS_COLLECTION, order.id);
+    await setDoc(orderRef, order);
+
+    const orders = await getProductOrders();
+    const existingIndex = orders.findIndex(o => o.id === order.id);
+    if (existingIndex >= 0) {
+      orders[existingIndex] = order;
+    } else {
+      orders.unshift(order);
+    }
+    localStorage.setItem('guidedog_orders', JSON.stringify(orders));
+  } catch (error) {
+    console.error('물품 신청 저장 실패:', error);
+    throw error;
+  }
+};
+
+export const deleteProductOrder = async (id: string): Promise<void> => {
+  try {
+    const orderRef = doc(db, PRODUCT_ORDERS_COLLECTION, id);
+    await deleteDoc(orderRef);
+
+    const orders = await getProductOrders();
+    const filtered = orders.filter(o => o.id !== id);
+    localStorage.setItem('guidedog_orders', JSON.stringify(filtered));
+  } catch (error) {
+    console.error('물품 신청 삭제 실패:', error);
     throw error;
   }
 };
