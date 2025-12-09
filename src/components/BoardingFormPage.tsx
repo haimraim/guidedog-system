@@ -194,9 +194,24 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
       return;
     }
 
-    // 필수 항목: 보딩 시작일과 종료일만 체크
+    // 필수 항목: 보딩 시작일, 종료일, 사료, 급여 시기
     if (!startDate || !endDate) {
       alert('⚠️ 보딩 시작일과 종료일은 필수입니다.');
+      return;
+    }
+
+    if (!foodType) {
+      alert('⚠️ 사료 이름은 필수입니다.');
+      return;
+    }
+
+    if (foodType === '기타' && !foodTypeOther.trim()) {
+      alert('⚠️ 기타 사료 이름을 입력해주세요.');
+      return;
+    }
+
+    if (!feedingSchedule.trim()) {
+      alert('⚠️ 급여량과 급여 시기는 필수입니다.');
       return;
     }
 
@@ -633,12 +648,13 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               <div className="space-y-3">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    사료 이름
+                    사료 이름 *
                   </label>
                   <select
                     value={foodType}
                     onChange={(e) => setFoodType(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    required
                   >
                     <option value="">선택하세요</option>
                     {FOOD_TYPES.map(type => (
@@ -652,12 +668,13 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       onChange={(e) => setFoodTypeOther(e.target.value)}
                       placeholder="사료 이름을 입력하세요"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none mt-2"
+                      required
                     />
                   )}
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    급여량과 급여 시기
+                    급여량과 급여 시기 *
                   </label>
                   <p className="text-xs text-gray-600 mb-2">
                     급여량은 그램(g) 단위로, 현재 급식 시간과 급식량을 적어주세요.<br />
@@ -668,6 +685,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     onChange={(e) => setFeedingSchedule(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                     rows={3}
+                    required
                   />
                 </div>
                 <div>
