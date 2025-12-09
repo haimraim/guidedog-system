@@ -191,11 +191,20 @@ export const StaffLecturePage = () => {
       courseId: selectedCourse.id,
       title: title.trim(),
       content: content.trim(),
-      videoUrl: videoFile ? 'indexed' : editingLecture?.videoUrl,
-      youtubeUrl: youtubeUrl.trim() || undefined,
       createdAt: editingLecture?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+
+    // videoUrl과 youtubeUrl은 값이 있을 때만 추가 (undefined 방지)
+    if (videoFile) {
+      lecture.videoUrl = 'indexed';
+    } else if (editingLecture?.videoUrl) {
+      lecture.videoUrl = editingLecture.videoUrl;
+    }
+
+    if (youtubeUrl.trim()) {
+      lecture.youtubeUrl = youtubeUrl.trim();
+    }
 
     try {
       await saveStaffLecture(lecture);
