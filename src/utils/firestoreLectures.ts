@@ -357,8 +357,13 @@ export const getBoardingForms = async (): Promise<BoardingForm[]> => {
 
 export const saveBoardingForm = async (form: BoardingForm): Promise<void> => {
   try {
+    // Firestore는 undefined를 허용하지 않으므로 undefined 필드 제거
+    const cleanForm = Object.fromEntries(
+      Object.entries(form).filter(([_, value]) => value !== undefined)
+    );
+
     const formRef = doc(db, BOARDING_COLLECTION, form.id);
-    await setDoc(formRef, form);
+    await setDoc(formRef, cleanForm);
 
     const forms = await getBoardingForms();
     const existingIndex = forms.findIndex(f => f.id === form.id);
@@ -411,8 +416,13 @@ export const getMedicalRecords = async (): Promise<MedicalRecord[]> => {
 
 export const saveMedicalRecord = async (record: MedicalRecord): Promise<void> => {
   try {
+    // Firestore는 undefined를 허용하지 않으므로 undefined 필드 제거
+    const cleanRecord = Object.fromEntries(
+      Object.entries(record).filter(([_, value]) => value !== undefined)
+    );
+
     const recordRef = doc(db, MEDICAL_COLLECTION, record.id);
-    await setDoc(recordRef, record);
+    await setDoc(recordRef, cleanRecord);
 
     const records = await getMedicalRecords();
     const existingIndex = records.findIndex(r => r.id === record.id);
@@ -465,8 +475,13 @@ export const getMedicationChecks = async (): Promise<MedicationCheck[]> => {
 
 export const saveMedicationCheck = async (check: MedicationCheck): Promise<void> => {
   try {
+    // Firestore는 undefined를 허용하지 않으므로 undefined 필드 제거
+    const cleanCheck = Object.fromEntries(
+      Object.entries(check).filter(([_, value]) => value !== undefined)
+    );
+
     const checkRef = doc(db, MEDICATION_COLLECTION, check.id);
-    await setDoc(checkRef, check);
+    await setDoc(checkRef, cleanCheck);
 
     const checks = await getMedicationChecks();
     const existingIndex = checks.findIndex(c => c.id === check.id);
@@ -519,8 +534,13 @@ export const getProducts = async (): Promise<Product[]> => {
 
 export const saveProduct = async (product: Product): Promise<void> => {
   try {
+    // Firestore는 undefined를 허용하지 않으므로 undefined 필드 제거
+    const cleanProduct = Object.fromEntries(
+      Object.entries(product).filter(([_, value]) => value !== undefined)
+    );
+
     const productRef = doc(db, PRODUCTS_COLLECTION, product.id);
-    await setDoc(productRef, product);
+    await setDoc(productRef, cleanProduct);
 
     const products = await getProducts();
     const existingIndex = products.findIndex(p => p.id === product.id);
@@ -573,8 +593,13 @@ export const getProductOrders = async (): Promise<ProductOrder[]> => {
 
 export const saveProductOrder = async (order: ProductOrder): Promise<void> => {
   try {
+    // Firestore는 undefined를 허용하지 않으므로 undefined 필드 제거
+    const cleanOrder = Object.fromEntries(
+      Object.entries(order).filter(([_, value]) => value !== undefined)
+    );
+
     const orderRef = doc(db, PRODUCT_ORDERS_COLLECTION, order.id);
-    await setDoc(orderRef, order);
+    await setDoc(orderRef, cleanOrder);
 
     const orders = await getProductOrders();
     const existingIndex = orders.findIndex(o => o.id === order.id);
