@@ -194,14 +194,18 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
       return;
     }
 
+    // 필수 항목: 보딩 시작일과 종료일만 체크
+    if (!startDate || !endDate) {
+      alert('⚠️ 보딩 시작일과 종료일은 필수입니다.');
+      return;
+    }
+
     // 날짜 유효성 검증
-    if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      if (start > end) {
-        alert('⚠️ 보딩 시작일이 종료일보다 늦을 수 없습니다.\n\n시작일과 종료일을 다시 확인해주세요.');
-        return;
-      }
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (start > end) {
+      alert('⚠️ 보딩 시작일이 종료일보다 늦을 수 없습니다.\n\n시작일과 종료일을 다시 확인해주세요.');
+      return;
     }
 
     const finalFoodType = foodType === '기타' ? foodTypeOther : foodType;
@@ -629,13 +633,12 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               <div className="space-y-3">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    사료 이름 *
+                    사료 이름
                   </label>
                   <select
                     value={foodType}
                     onChange={(e) => setFoodType(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                    required
                   >
                     <option value="">선택하세요</option>
                     {FOOD_TYPES.map(type => (
@@ -649,13 +652,12 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       onChange={(e) => setFoodTypeOther(e.target.value)}
                       placeholder="사료 이름을 입력하세요"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none mt-2"
-                      required
                     />
                   )}
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    급여량과 급여 시기 *
+                    급여량과 급여 시기
                   </label>
                   <p className="text-xs text-gray-600 mb-2">
                     급여량은 그램(g) 단위로, 현재 급식 시간과 급식량을 적어주세요.<br />
@@ -666,7 +668,6 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     onChange={(e) => setFeedingSchedule(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                     rows={3}
-                    required
                   />
                 </div>
                 <div>
@@ -786,16 +787,14 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                 <div className="space-y-3">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {boardingReason} 사유 *
-                    </label>
+                      {boardingReason} 사유                    </label>
                     <input
                       type="text"
                       value={medicalReason}
                       onChange={(e) => setMedicalReason(e.target.value)}
                       placeholder={`${boardingReason} 사유를 입력하세요`}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                      required
-                    />
+                      />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -864,8 +863,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             {/* 배변 DT벨트 (모든 견) */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                배변 시 DT밸트를 착용하나요? *
-              </label>
+                배변 시 DT밸트를 착용하나요?              </label>
               <div className="flex space-x-4">
                 <label className="flex items-center space-x-2 cursor-pointer">
                   <input
@@ -875,7 +873,6 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     checked={usesDTBelt === '예'}
                     onChange={(e) => setUsesDTBelt(e.target.value)}
                     className="w-4 h-4 text-blue-600"
-                    required
                   />
                   <span className="text-sm text-gray-700">예</span>
                 </label>
@@ -887,7 +884,6 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     checked={usesDTBelt === '아니오'}
                     onChange={(e) => setUsesDTBelt(e.target.value)}
                     className="w-4 h-4 text-blue-600"
-                    required
                   />
                   <span className="text-sm text-gray-700">아니오</span>
                 </label>
@@ -901,8 +897,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                 <div className="space-y-3">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      발톱 정리가 필요한가요? *
-                    </label>
+                      발톱 정리가 필요한가요?                    </label>
                     <div className="flex space-x-4">
                       <label className="flex items-center space-x-2 cursor-pointer">
                         <input
@@ -912,8 +907,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           checked={needsNailTrim === '예'}
                           onChange={(e) => setNeedsNailTrim(e.target.value)}
                           className="w-4 h-4 text-blue-600"
-                          required
-                        />
+                              />
                         <span className="text-sm text-gray-700">예</span>
                       </label>
                       <label className="flex items-center space-x-2 cursor-pointer">
@@ -924,16 +918,14 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           checked={needsNailTrim === '아니오'}
                           onChange={(e) => setNeedsNailTrim(e.target.value)}
                           className="w-4 h-4 text-blue-600"
-                          required
-                        />
+                              />
                         <span className="text-sm text-gray-700">아니오</span>
                       </label>
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      패드 털 정리가 필요한가요? *
-                    </label>
+                      패드 털 정리가 필요한가요?                    </label>
                     <div className="flex space-x-4">
                       <label className="flex items-center space-x-2 cursor-pointer">
                         <input
@@ -943,8 +935,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           checked={needsPadTrim === '예'}
                           onChange={(e) => setNeedsPadTrim(e.target.value)}
                           className="w-4 h-4 text-blue-600"
-                          required
-                        />
+                              />
                         <span className="text-sm text-gray-700">예</span>
                       </label>
                       <label className="flex items-center space-x-2 cursor-pointer">
@@ -955,8 +946,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           checked={needsPadTrim === '아니오'}
                           onChange={(e) => setNeedsPadTrim(e.target.value)}
                           className="w-4 h-4 text-blue-600"
-                          required
-                        />
+                              />
                         <span className="text-sm text-gray-700">아니오</span>
                       </label>
                     </div>
