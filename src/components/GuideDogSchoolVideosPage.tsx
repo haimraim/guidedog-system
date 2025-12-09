@@ -134,11 +134,20 @@ export const GuideDogSchoolVideosPage = () => {
       id: videoId,
       title: title.trim(),
       content: content.trim(),
-      videoUrl: videoFile ? 'indexed' : editingVideo?.videoUrl,
-      youtubeUrl: youtubeUrl.trim() || undefined,
       createdAt: editingVideo?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+
+    // videoUrl과 youtubeUrl은 값이 있을 때만 추가 (undefined 방지)
+    if (videoFile) {
+      video.videoUrl = 'indexed';
+    } else if (editingVideo?.videoUrl) {
+      video.videoUrl = editingVideo.videoUrl;
+    }
+
+    if (youtubeUrl.trim()) {
+      video.youtubeUrl = youtubeUrl.trim();
+    }
 
     try {
       await saveSchoolVideo(video);

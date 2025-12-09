@@ -179,12 +179,20 @@ export const PublicLecturePage = () => {
       title: title.trim(),
       content: content.trim(),
       attachments: [],
-      // IndexedDB에 저장된 경우 'indexed' 플래그 사용
-      videoUrl: videoFile ? 'indexed' : editingLecture?.videoUrl,
-      youtubeUrl: youtubeUrl.trim() || undefined,
       createdAt: editingLecture?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+
+    // videoUrl과 youtubeUrl은 값이 있을 때만 추가 (undefined 방지)
+    if (videoFile) {
+      lecture.videoUrl = 'indexed';
+    } else if (editingLecture?.videoUrl) {
+      lecture.videoUrl = editingLecture.videoUrl;
+    }
+
+    if (youtubeUrl.trim()) {
+      lecture.youtubeUrl = youtubeUrl.trim();
+    }
 
     try {
       await savePublicLecture(lecture);
