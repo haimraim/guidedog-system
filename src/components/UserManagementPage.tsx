@@ -66,7 +66,26 @@ export const UserManagementPage = () => {
   // 로컬 스토리지 사용자 목록 로드
   const loadUsers = () => {
     const localUsers = getUsers();
-    setUsers(localUsers);
+
+    // 시스템 계정 추가 (하드코딩된 계정들)
+    const systemAccounts: User[] = [
+      {
+        id: 'guidedog',
+        role: 'admin',
+        name: '관리자 (시스템)',
+        password: '8922',
+      },
+      {
+        id: '박태진',
+        role: 'moderator',
+        name: '박태진 (시스템)',
+        password: '8922',
+      },
+    ];
+
+    // 시스템 계정과 로컬 사용자 합치기
+    const allUsers = [...systemAccounts, ...localUsers];
+    setUsers(allUsers);
   };
 
   const initializeSampleUsers = () => {
@@ -453,6 +472,7 @@ export const UserManagementPage = () => {
   const getRoleName = (role: UserRole) => {
     const roleNames = {
       admin: '관리자',
+      moderator: '준관리자',
       partner: '파트너',
       puppyTeacher: '퍼피티처',
       trainer: '훈련사',
@@ -876,43 +896,54 @@ export const UserManagementPage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {users.map((user) => (
-                      <tr key={user.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm text-gray-800">
-                          {user.id}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-800">
-                          {user.name}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-800">
-                          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
-                            {getRoleName(user.role)}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
-                          {user.dogName || '-'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
-                          {formatDate(user.createdAt)}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex justify-center space-x-2">
-                            <button
-                              onClick={() => handleEdit(user)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors text-sm"
-                            >
-                              수정
-                            </button>
-                            <button
-                              onClick={() => handleDelete(user.id)}
-                              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors text-sm"
-                            >
-                              삭제
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                    {users.map((user) => {
+                      const isSystemAccount = user.id === 'guidedog' || user.id === '박태진';
+                      return (
+                        <tr key={user.id} className={`hover:bg-gray-50 ${isSystemAccount ? 'bg-yellow-50' : ''}`}>
+                          <td className="px-6 py-4 text-sm text-gray-800">
+                            {user.id}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-800">
+                            {user.name}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-800">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                              isSystemAccount
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-blue-100 text-blue-800'
+                            }`}>
+                              {getRoleName(user.role)}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-600">
+                            {user.dogName || '-'}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-600">
+                            {formatDate(user.createdAt)}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {isSystemAccount ? (
+                              <span className="text-xs text-yellow-600 font-semibold">시스템 계정</span>
+                            ) : (
+                              <div className="flex justify-center space-x-2">
+                                <button
+                                  onClick={() => handleEdit(user)}
+                                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                >
+                                  수정
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(user.id)}
+                                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                >
+                                  삭제
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

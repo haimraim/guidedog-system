@@ -12,9 +12,11 @@ import {
   saveDiaryPost,
   deleteDiaryPost,
 } from '../utils/firestoreLectures';
+import { MonthlyReportPage } from './MonthlyReportPage';
 
 export const DiaryPage = () => {
   const { user } = useAuth();
+  const [currentTab, setCurrentTab] = useState<'daily' | 'monthly'>('daily');
   const [allPosts, setAllPosts] = useState<DiaryPost[]>([]);
   const [posts, setPosts] = useState<DiaryPost[]>([]);
   const [isWriting, setIsWriting] = useState(false);
@@ -1500,17 +1502,53 @@ export const DiaryPage = () => {
   // 일반 사용자 뷰
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">다이어리</h2>
-        <button
-          onClick={() => setIsWriting(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-        >
-          글쓰기
-        </button>
-      </div>
+      {/* 탭 메뉴 (퍼피티칭만) */}
+      {user?.role === 'puppyTeacher' && (
+        <div className="bg-white rounded-lg shadow-md mb-6">
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => setCurrentTab('daily')}
+              className={`flex-1 px-6 py-4 font-semibold transition-colors ${
+                currentTab === 'daily'
+                  ? 'bg-blue-600 text-white border-b-2 border-blue-600'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              1일 다이어리
+            </button>
+            <button
+              onClick={() => setCurrentTab('monthly')}
+              className={`flex-1 px-6 py-4 font-semibold transition-colors ${
+                currentTab === 'monthly'
+                  ? 'bg-blue-600 text-white border-b-2 border-blue-600'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              월간 보고서
+            </button>
+          </div>
+        </div>
+      )}
 
-      {posts.length === 0 ? (
+      {/* 월간 보고서 */}
+      {currentTab === 'monthly' && user?.role === 'puppyTeacher' ? (
+        <MonthlyReportPage />
+      ) : (
+        <>
+          {/* 1일 다이어리 */}
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {user?.role === 'puppyTeacher' ? '1일 다이어리' : '다이어리'}
+            </h2>
+            <button
+              onClick={() => setIsWriting(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            >
+              글쓰기
+            </button>
+          </div>
+
+          {posts.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
           <p className="text-gray-500">작성된 다이어리가 없습니다.</p>
           <button
@@ -1541,6 +1579,8 @@ export const DiaryPage = () => {
             </div>
           ))}
         </div>
+      )}
+        </>
       )}
     </div>
   );

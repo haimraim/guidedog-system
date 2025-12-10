@@ -421,3 +421,170 @@ export interface BoardingForm {
   createdAt: string; // 신청일시
   updatedAt: string; // 수정일시
 }
+
+/**
+ * 메시지 타입
+ */
+export type MessageType = 'kakao' | 'sms' | 'lms';
+
+/**
+ * 메시지 템플릿 카테고리
+ */
+export type MessageTemplateCategory = '보딩 알림' | '일정 공지' | '강의 안내' | '기타';
+
+/**
+ * 메시지 템플릿
+ */
+export interface MessageTemplate {
+  id: string; // 고유 ID (UUID)
+  category: MessageTemplateCategory; // 카테고리
+  title: string; // 템플릿 제목
+  content: string; // 템플릿 내용 (변수 사용 가능: {name}, {dogName}, {date} 등)
+  messageType: MessageType; // 메시지 타입 (카카오/SMS/LMS)
+  createdAt: string; // 생성일시
+  updatedAt: string; // 수정일시
+}
+
+/**
+ * 메시지 발송 대상
+ */
+export interface MessageRecipient {
+  userId: string; // 사용자 ID
+  userName: string; // 사용자 이름
+  phone: string; // 연락처
+  dogName?: string; // 안내견 이름 (있는 경우)
+  role?: UserRole; // 사용자 역할
+}
+
+/**
+ * 메시지 발송 기록
+ */
+export interface MessageHistory {
+  id: string; // 고유 ID (UUID)
+  messageType: MessageType; // 메시지 타입
+  templateId?: string; // 템플릿 ID (템플릿 사용한 경우)
+  templateCategory?: MessageTemplateCategory; // 템플릿 카테고리
+  subject?: string; // 제목 (LMS인 경우)
+  content: string; // 발송 내용
+  recipients: MessageRecipient[]; // 수신자 목록
+  successCount: number; // 성공 건수
+  failCount: number; // 실패 건수
+  totalCost?: number; // 총 발송 비용
+  senderId: string; // 발송자 ID
+  senderName: string; // 발송자 이름
+  status: 'sending' | 'completed' | 'failed'; // 발송 상태
+  createdAt: string; // 발송일시
+  updatedAt: string; // 수정일시
+}
+
+/**
+ * 월간 보고서 (퍼피티칭 전용)
+ */
+export interface MonthlyReport {
+  id: string; // 고유 ID (UUID)
+  userId: string; // 작성자 ID
+  userName: string; // 작성자 이름
+  dogName: string; // 안내견 이름
+  reportMonth: string; // 보고 월 (YYYY-MM)
+
+  // 1일 다이어리 항목 (외출 제외)
+  diaryDate?: string; // 다이어리 날짜
+  feedings?: Array<{ foodType?: string; time?: string; amount?: string; notes?: string }>;
+  dt1Records?: Array<{ time?: string; place?: string; success?: string; accident?: string; notes?: string }>;
+  dt2Records?: Array<{ time?: string; place?: string; success?: string; accident?: string; notes?: string }>;
+  additionalNotes?: string;
+
+  // 집에서의 품행
+  q1_crate?: string; // 크레이트 안에서의 행동
+  q1_crate_detail?: string; // 시간 또는 기타
+  q2_humanFood?: string; // 사람 음식 반응
+  q2_humanFood_detail?: string;
+  q3_aloneState?: string; // 혼자 있을 때 상태
+  q4_aloneReaction?: string; // 혼자 있을 때 반응
+  q4_aloneReaction_detail?: string;
+  q5_aloneMaxTime?: string; // 최장시간
+  q6_guestReaction?: string; // 손님 반응
+  q6_guestReaction_detail?: string;
+  q7_familyReaction?: string; // 가족 귀가 반응
+  q7_familyReaction_detail?: string;
+  q8_barkingAtHome?: string; // 집에서 짖음
+  q8_barkingAtHome_detail?: string;
+  q9_growling?: string; // 으르렁
+  q9_growling_detail?: string;
+  q10_controlReaction?: string; // 컨트롤 반응
+  q10_controlReaction_detail?: string;
+  q11_toyReaction?: string; // 장난감 반응
+  q11_toyReaction_detail?: string;
+  q12_basicTraining?: string; // 기본훈련 수준
+  q12_basicTraining_detail?: string;
+  q13_bodyHandling?: string; // 바디핸들링
+  q13_bodyHandling_detail?: string;
+  q14_teethBrushing?: string; // 이 닦기
+  q14_teethBrushing_detail?: string;
+  q15_grooming?: string; // 그루밍
+  q15_grooming_detail?: string;
+  q16_nailCare?: string; // 발톱손질
+  q16_nailCare_detail?: string;
+  q17_earCleaning?: string; // 귀청소
+  q17_earCleaning_detail?: string;
+  q18_pawCleaning?: string; // 발닦기
+  q18_pawCleaning_detail?: string;
+  q19_damaged?: string; // 물건 망가뜨림
+  q19_damaged_detail?: string;
+  q20_childrenReaction?: string; // 자녀와의 반응
+  q20_childrenReaction_detail?: string;
+  q21_biggestProblem?: string; // 가장 큰 문제
+
+  // DT 품행 기록
+  dt_responseTime?: string; // 명령어 반응시간
+  dt_indoorBlocked?: string; // 실내 배변 차단
+  dt_indoorType?: string; // 실내 배변 형태
+  dt_beltUsage?: string; // 배변벨트 사용
+  dt_dt1Location?: string; // DT1 장소
+  dt_dt2Location?: string; // DT2 장소
+  dt_walkingAccident?: string; // 보행중 실수
+  dt_beforeWalk?: string; // 보행전 DT
+  dt_signal?: string; // DT 신호
+  dt_signal_detail?: string;
+  dt_currentProblem?: string; // 현재 배변문제
+
+  // 보행 훈련
+  walk_avgTime?: string; // 평균 산책시간
+  walk_schedule?: string; // 산책 시간대
+  walk_coatReaction?: string; // 코트/견줄 착용 반응
+  walk_coatReaction_detail?: string;
+  walk_headCollarUsage?: string; // 헤드칼라 사용
+  walk_treatUsage?: string; // 트릿 사용
+  walk_speed?: string; // 보행 속도
+  walk_speed_detail?: string;
+  walk_behavior?: string; // 보행 행동
+  walk_behavior_detail?: string;
+  walk_animalReaction?: string; // 동물 만났을 때
+  walk_animalReaction_detail?: string;
+  walk_peopleReaction?: string; // 사람 만났을 때
+  walk_peopleReaction_detail?: string;
+  walk_fearObjects?: string; // 두려워하는 대상
+  walk_interests?: string; // 관심 대상
+
+  // 사회화 훈련
+  social_placesVisited?: string; // 방문 장소
+  social_frequency?: string; // 훈련 빈도
+  social_crowdReaction?: string; // 복잡한 곳 반응
+  social_crowdReaction_detail?: string;
+  social_stairs?: string; // 계단
+  social_stairs_detail?: string;
+  social_escalator?: string; // 에스컬레이터
+  social_escalator_detail?: string;
+  social_car?: string; // 승용차
+  social_car_detail?: string;
+  social_bus?: string; // 버스
+  social_bus_detail?: string;
+  social_subway?: string; // 지하철
+  social_subway_detail?: string;
+  social_cafeRestaurant?: string; // 카페/식당
+  social_cafeRestaurant_detail?: string;
+  social_difficulties?: string; // 어려운 점
+
+  createdAt: string; // 작성일시
+  updatedAt: string; // 수정일시
+}
