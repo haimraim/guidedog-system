@@ -43,7 +43,7 @@ export const MonthlyReportPage = () => {
   const [q3, setQ3] = useState('');
 
   // 질문 4
-  const [q4, setQ4] = useState<string[]>([]);
+  const [q4, setQ4] = useState('');
   const [q4_bark_freq, setQ4_bark_freq] = useState(''); // ① 선택 시
   const [q4_other, setQ4_other] = useState('');
 
@@ -56,11 +56,11 @@ export const MonthlyReportPage = () => {
   const [q5_free_state, setQ5_free_state] = useState('');
 
   // 질문 6
-  const [q6, setQ6] = useState<string[]>([]);
+  const [q6, setQ6] = useState('');
   const [q6_other, setQ6_other] = useState('');
 
   // 질문 7
-  const [q7, setQ7] = useState<string[]>([]);
+  const [q7, setQ7] = useState('');
   const [q7_dislike, setQ7_dislike] = useState(''); // ⑦ 선택 시
   const [q7_other, setQ7_other] = useState('');
 
@@ -509,10 +509,10 @@ export const MonthlyReportPage = () => {
               <div className="space-y-2 ml-4">
                 <div>
                   <label className="flex items-start">
-                    <input type="checkbox" checked={q4.includes('1')} onChange={()=>handleCheckboxChange(q4,'1',setQ4)} className="mt-1 mr-2" />
+                    <input type="radio" name="q4" value="1" checked={q4==='1'} onChange={(e)=>setQ4(e.target.value)} className="mt-1 mr-2" />
                     <span>① 짖음 있음</span>
                   </label>
-                  {q4.includes('1') && (
+                  {q4==='1' && (
                     <div className="ml-6 mt-2 space-y-2">
                       <label className="flex items-center">
                         <input type="radio" name="q4_bark_freq" value="한번" checked={q4_bark_freq==='한번'} onChange={(e)=>setQ4_bark_freq(e.target.value)} className="mr-2" />
@@ -530,15 +530,15 @@ export const MonthlyReportPage = () => {
                   )}
                 </div>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q4.includes('2')} onChange={()=>handleCheckboxChange(q4,'2',setQ4)} className="mt-1 mr-2" />
+                  <input type="radio" name="q4" value="2" checked={q4==='2'} onChange={(e)=>setQ4(e.target.value)} className="mt-1 mr-2" />
                   <span>② 낑낑 거림</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q4.includes('3')} onChange={()=>handleCheckboxChange(q4,'3',setQ4)} className="mt-1 mr-2" />
+                  <input type="radio" name="q4" value="3" checked={q4==='3'} onChange={(e)=>setQ4(e.target.value)} className="mt-1 mr-2" />
                   <span>③ 이불이나 크레이트, 다른 물건 등을 뜯는다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q4.includes('4')} onChange={()=>handleCheckboxChange(q4,'4',setQ4)} className="mt-1 mr-2" />
+                  <input type="radio" name="q4" value="4" checked={q4==='4'} onChange={(e)=>setQ4(e.target.value)} className="mt-1 mr-2" />
                   <span>④ 편안하게 쉼</span>
                 </label>
                 <div className="mt-2">
@@ -636,31 +636,31 @@ export const MonthlyReportPage = () => {
               <h4 id="q6-title" className="font-semibold text-gray-800 mb-3">6. 손님이 왔을 때의 반응</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q6.includes('1')} onChange={()=>handleCheckboxChange(q6,'1',setQ6)} className="mt-1 mr-2" />
+                  <input type="radio" name="q6" value="1" checked={q6==='1'} onChange={(e)=>setQ6(e.target.value)} className="mt-1 mr-2" />
                   <span>① 흥분하며 점프 한다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q6.includes('2')} onChange={()=>handleCheckboxChange(q6,'2',setQ6)} className="mt-1 mr-2" />
+                  <input type="radio" name="q6" value="2" checked={q6==='2'} onChange={(e)=>setQ6(e.target.value)} className="mt-1 mr-2" />
                   <span>② 흥분해서 짖는다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q6.includes('3')} onChange={()=>handleCheckboxChange(q6,'3',setQ6)} className="mt-1 mr-2" />
+                  <input type="radio" name="q6" value="3" checked={q6==='3'} onChange={(e)=>setQ6(e.target.value)} className="mt-1 mr-2" />
                   <span>③ 흥분하고 좋아하나 점프는 하지 않는다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q6.includes('4')} onChange={()=>handleCheckboxChange(q6,'4',setQ6)} className="mt-1 mr-2" />
+                  <input type="radio" name="q6" value="4" checked={q6==='4'} onChange={(e)=>setQ6(e.target.value)} className="mt-1 mr-2" />
                   <span>④ 옷이나 손 등에 입질을 한다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q6.includes('5')} onChange={()=>handleCheckboxChange(q6,'5',setQ6)} className="mt-1 mr-2" />
+                  <input type="radio" name="q6" value="5" checked={q6==='5'} onChange={(e)=>setQ6(e.target.value)} className="mt-1 mr-2" />
                   <span>⑤ 소변을 지린다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q6.includes('6')} onChange={()=>handleCheckboxChange(q6,'6',setQ6)} className="mt-1 mr-2" />
+                  <input type="radio" name="q6" value="6" checked={q6==='6'} onChange={(e)=>setQ6(e.target.value)} className="mt-1 mr-2" />
                   <span>⑥ 별로 관심 없다</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q6.includes('7')} onChange={()=>handleCheckboxChange(q6,'7',setQ6)} className="mt-1 mr-2" />
+                  <input type="radio" name="q6" value="7" checked={q6==='7'} onChange={(e)=>setQ6(e.target.value)} className="mt-1 mr-2" />
                   <span>⑦ 별로 좋아하지 않는다. (크레이트로 들어감, 털을 세우며 경계, 으르렁)</span>
                 </label>
                 <div className="mt-2">
@@ -676,35 +676,35 @@ export const MonthlyReportPage = () => {
               <h4 id="q7-title" className="font-semibold text-gray-800 mb-3">7. 가족이 귀가했을 때의 반응</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q7.includes('1')} onChange={()=>handleCheckboxChange(q7,'1',setQ7)} className="mt-1 mr-2" />
+                  <input type="radio" name="q7" value="1" checked={q7==='1'} onChange={(e)=>setQ7(e.target.value)} className="mt-1 mr-2" />
                   <span>① 흥분하며 점프 한다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q7.includes('2')} onChange={()=>handleCheckboxChange(q7,'2',setQ7)} className="mt-1 mr-2" />
+                  <input type="radio" name="q7" value="2" checked={q7==='2'} onChange={(e)=>setQ7(e.target.value)} className="mt-1 mr-2" />
                   <span>② 흥분해서 짖는다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q7.includes('3')} onChange={()=>handleCheckboxChange(q7,'3',setQ7)} className="mt-1 mr-2" />
+                  <input type="radio" name="q7" value="3" checked={q7==='3'} onChange={(e)=>setQ7(e.target.value)} className="mt-1 mr-2" />
                   <span>③ 흥분하고 좋아하나 점프는 하지 않는다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q7.includes('4')} onChange={()=>handleCheckboxChange(q7,'4',setQ7)} className="mt-1 mr-2" />
+                  <input type="radio" name="q7" value="4" checked={q7==='4'} onChange={(e)=>setQ7(e.target.value)} className="mt-1 mr-2" />
                   <span>④ 옷이나 손 등에 입질을 한다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q7.includes('5')} onChange={()=>handleCheckboxChange(q7,'5',setQ7)} className="mt-1 mr-2" />
+                  <input type="radio" name="q7" value="5" checked={q7==='5'} onChange={(e)=>setQ7(e.target.value)} className="mt-1 mr-2" />
                   <span>⑤ 소변을 지린다.</span>
                 </label>
                 <label className="flex items-start">
-                  <input type="checkbox" checked={q7.includes('6')} onChange={()=>handleCheckboxChange(q7,'6',setQ7)} className="mt-1 mr-2" />
+                  <input type="radio" name="q7" value="6" checked={q7==='6'} onChange={(e)=>setQ7(e.target.value)} className="mt-1 mr-2" />
                   <span>⑥ 별로 관심 없다</span>
                 </label>
                 <div>
                   <label className="flex items-start">
-                    <input type="checkbox" checked={q7.includes('7')} onChange={()=>handleCheckboxChange(q7,'7',setQ7)} className="mt-1 mr-2" />
+                    <input type="radio" name="q7" value="7" checked={q7==='7'} onChange={(e)=>setQ7(e.target.value)} className="mt-1 mr-2" />
                     <span>⑦ 별로 좋아하지 않는다.</span>
                   </label>
-                  {q7.includes('7') && (
+                  {q7==='7' && (
                     <div className="ml-6 mt-2 space-y-2">
                       <label className="flex items-center">
                         <input type="radio" name="q7_dislike" value="크레이트로 들어감" checked={q7_dislike==='크레이트로 들어감'} onChange={(e)=>setQ7_dislike(e.target.value)} className="mr-2" />
