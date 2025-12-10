@@ -8,10 +8,14 @@ import { useAuth } from '../contexts/AuthContext';
 export const MonthlyReportPage = () => {
   const { user } = useAuth();
 
-  // 보고 월 (자동으로 현재 월 설정)
-  const [reportMonth, setReportMonth] = useState(() => {
+  // 폼 상태
+  const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 집에서의 품행
+  const [status, setStatus] = useState<'draft' | 'completed'>('draft'); // 상태: 임시저장/완료
+
+  // 보고 일자 (자동으로 오늘 날짜 설정)
+  const [reportDate, setReportDate] = useState(() => {
     const today = new Date();
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   });
 
   // 급식
@@ -141,71 +145,126 @@ export const MonthlyReportPage = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const createReportData = () => ({
+    userId: user?.id || '',
+    userName: user?.name || '',
+    dogName: user?.dogName || '',
+    reportDate,
+    status,
+    // 급식
+    foodType, dailyFeedingCount, feedingAmountPerMeal,
+    // 건강
+    weight, healthNotes,
+    // 집에서의 품행 답변 데이터
+    q1, q1_time, q1_type, q1_other,
+    q2, q2_food, q2_other,
+    q3,
+    q4, q4_bark_freq, q4_other,
+    q5_crate_time, q5_crate_state, q5_fence_time, q5_fence_state, q5_free_time, q5_free_state,
+    q6, q6_other,
+    q7, q7_dislike, q7_other,
+    q8, q8_situation, q8_count,
+    q9, q9_situation, q9_count,
+    q10, q10_other,
+    q11, q11_other,
+    q12_option, q12_commands, q12_wait_state, q12_wait_time, q12_wait_levels,
+    q13, q13_other,
+    q14_posture, q14_frequency, q14, q14_other,
+    q15_posture, q15_frequency, q15, q15_other,
+    q16_posture, q16_frequency, q16_comfortable, q16_uncomfortable, q16_options, q16_bleeding, q16_other,
+    q17_posture, q17, q17_reason, q17_other,
+    q18, q18_treat, q18_bites, q18_other,
+    q19, q19_count,
+    q20, q20_other,
+    q21,
+    updatedAt: new Date().toISOString(),
+  });
 
-    if (!reportMonth) {
-      alert('보고 월을 선택해주세요.');
+  const handleSaveDraft = () => {
+    if (!reportDate) {
+      alert('보고 일자를 선택해주세요.');
       return;
     }
 
-    const monthlyReport = {
-      userId: user?.id || '',
-      userName: user?.name || '',
-      dogName: user?.dogName || '',
-      reportMonth,
-      // 급식
-      foodType, dailyFeedingCount, feedingAmountPerMeal,
-      // 건강
-      weight, healthNotes,
-      // 집에서의 품행 답변 데이터
-      q1, q1_time, q1_type, q1_other,
-      q2, q2_food, q2_other,
-      q3,
-      q4, q4_bark_freq, q4_other,
-      q5_crate_time, q5_crate_state, q5_fence_time, q5_fence_state, q5_free_time, q5_free_state,
-      q6, q6_other,
-      q7, q7_dislike, q7_other,
-      q8, q8_situation, q8_count,
-      q9, q9_situation, q9_count,
-      q10, q10_other,
-      q11, q11_other,
-      q12_option, q12_commands, q12_wait_state, q12_wait_time, q12_wait_levels,
-      q13, q13_other,
-      q14_posture, q14_frequency, q14, q14_other,
-      q15_posture, q15_frequency, q15, q15_other,
-      q16_posture, q16_frequency, q16_comfortable, q16_uncomfortable, q16_options, q16_bleeding, q16_other,
-      q17_posture, q17, q17_reason, q17_other,
-      q18, q18_treat, q18_bites, q18_other,
-      q19, q19_count,
-      q20, q20_other,
-      q21,
-      createdAt: new Date().toISOString(),
-    };
+    const monthlyReport = createReportData();
+    console.log('임시 저장:', monthlyReport);
+    alert('임시 저장되었습니다. 나중에 이어서 작성할 수 있습니다.');
+  };
 
-    console.log('월간 보고서:', monthlyReport);
-    alert('월간 보고서가 저장되었습니다.');
+  const handleComplete = () => {
+    if (!reportDate) {
+      alert('보고 일자를 선택해주세요.');
+      return;
+    }
+
+    if (window.confirm('완료하시겠습니까? 완료 후에는 수정할 수 없습니다.')) {
+      setStatus('completed');
+      const monthlyReport = { ...createReportData(), status: 'completed' };
+      console.log('완료된 월간 보고서:', monthlyReport);
+      alert('월간 보고서가 완료되었습니다. 더 이상 수정할 수 없습니다.');
+    }
+  };
+
+  const handleNextStep = () => {
+    if (currentStep === 1) {
+      setCurrentStep(2);
+      window.scrollTo(0, 0);
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (currentStep === 2) {
+      setCurrentStep(1);
+      window.scrollTo(0, 0);
+    }
   };
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">월간 보고서 작성</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          월간 보고서 작성
+          {status === 'completed' && <span className="ml-4 text-sm bg-green-100 text-green-800 px-3 py-1 rounded-full">완료됨</span>}
+          {status === 'draft' && <span className="ml-4 text-sm bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">작성 중</span>}
+        </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* 보고 월 선택 */}
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              보고 월 *
-            </label>
-            <input
-              type="month"
-              value={reportMonth}
-              onChange={(e) => setReportMonth(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              required
-            />
+        {/* 단계 표시 */}
+        <div className="flex items-center justify-center mb-8">
+          <div className="flex items-center">
+            <div className={`flex items-center justify-center w-10 h-10 rounded-full ${currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'} font-semibold`}>
+              1
+            </div>
+            <span className="ml-2 text-sm font-semibold text-gray-700">기본 정보</span>
           </div>
+          <div className="w-20 h-1 mx-4 bg-gray-300">
+            <div className={`h-full ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
+          </div>
+          <div className="flex items-center">
+            <div className={`flex items-center justify-center w-10 h-10 rounded-full ${currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'} font-semibold`}>
+              2
+            </div>
+            <span className="ml-2 text-sm font-semibold text-gray-700">집에서의 품행</span>
+          </div>
+        </div>
+
+        <div className="space-y-8">
+          {/* 1단계: 기본 정보 */}
+          {currentStep === 1 && (
+            <>
+              {/* 보고 일자 선택 */}
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  보고 일자 *
+                </label>
+                <input
+                  type="date"
+                  value={reportDate}
+                  onChange={(e) => setReportDate(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  required
+                  disabled={status === 'completed'}
+                />
+              </div>
 
           {/* 급식 */}
           <div className="border-t pt-6">
@@ -223,6 +282,7 @@ export const MonthlyReportPage = () => {
                     onChange={(e) => setFoodType(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="예: 로얄캐닌 퍼피"
+                    disabled={status === 'completed'}
                   />
                 </div>
                 <div>
@@ -235,6 +295,7 @@ export const MonthlyReportPage = () => {
                     onChange={(e) => setDailyFeedingCount(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="예: 3회"
+                    disabled={status === 'completed'}
                   />
                 </div>
                 <div>
@@ -247,6 +308,7 @@ export const MonthlyReportPage = () => {
                     onChange={(e) => setFeedingAmountPerMeal(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="예: 150g"
+                    disabled={status === 'completed'}
                   />
                 </div>
               </div>
@@ -269,6 +331,7 @@ export const MonthlyReportPage = () => {
                     onChange={(e) => setWeight(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     placeholder="예: 15.5kg"
+                    disabled={status === 'completed'}
                   />
                 </div>
                 <div>
@@ -281,12 +344,18 @@ export const MonthlyReportPage = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     rows={4}
                     placeholder="건강 관련 특이사항이나 변화를 자유롭게 작성해주세요. (예: 예방접종, 병원 방문, 피부/귀 상태, 식욕 변화 등)"
+                    disabled={status === 'completed'}
                   />
                 </div>
               </div>
             </div>
           </div>
+            </>
+          )}
 
+          {/* 2단계: 집에서의 품행 */}
+          {currentStep === 2 && (
+            <>
           {/* 집에서의 품행 */}
           <div className="border-t pt-6">
             <h3 className="text-xl font-bold text-gray-800 mb-4 bg-gray-100 p-3 rounded">집에서의 품행</h3>
@@ -1351,17 +1420,69 @@ export const MonthlyReportPage = () => {
               </div>
             </div>
           </div>
+            </>
+          )}
 
-          {/* 저장 버튼 */}
-          <div className="flex justify-end space-x-4 sticky bottom-0 bg-white pt-4 border-t">
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors"
-            >
-              저장하기
-            </button>
+          {/* 버튼 영역 */}
+          <div className="flex justify-between items-center sticky bottom-0 bg-white pt-6 border-t mt-8">
+            <div className="flex space-x-4">
+              {currentStep === 2 && (
+                <button
+                  type="button"
+                  onClick={handlePrevStep}
+                  disabled={status === 'completed'}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  ← 이전
+                </button>
+              )}
+            </div>
+
+            <div className="flex space-x-4">
+              {currentStep === 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleSaveDraft}
+                    disabled={status === 'completed'}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    중간 저장
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    disabled={status === 'completed'}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    다음 →
+                  </button>
+                </>
+              )}
+
+              {currentStep === 2 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleSaveDraft}
+                    disabled={status === 'completed'}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    중간 저장
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleComplete}
+                    disabled={status === 'completed'}
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    완료
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
