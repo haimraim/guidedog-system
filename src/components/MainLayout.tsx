@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { DiaryPage } from './DiaryPage';
+import { MonthlyReportPage } from './MonthlyReportPage';
 import { BoardingFormPage } from './BoardingFormPage';
 import { ProductOrderPage } from './ProductOrderPage';
 import { MedicalRecordPage } from './MedicalRecordPage';
@@ -20,7 +21,7 @@ import { MessageSendPage } from './MessageSendPage';
 import { getCombinedData, calculateAgeWithMonths } from '../utils/storage';
 import type { CombinedData } from '../types/types';
 
-type MenuItem = 'home' | 'diary' | 'lecture' | 'videoroom' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'users' | 'message' | 'privacy' | 'terms';
+type MenuItem = 'home' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'users' | 'message' | 'privacy' | 'terms';
 
 export const MainLayout = () => {
   const { user, logout } = useAuth();
@@ -32,7 +33,7 @@ export const MainLayout = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = urlParams.get('page') as MenuItem;
 
-    if (pageParam && ['home', 'diary', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'users', 'message', 'privacy', 'terms'].includes(pageParam)) {
+    if (pageParam && ['home', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'users', 'message', 'privacy', 'terms'].includes(pageParam)) {
       setCurrentPage(pageParam);
       window.history.replaceState({ page: pageParam }, '', `?page=${pageParam}`);
     } else {
@@ -131,6 +132,8 @@ export const MainLayout = () => {
         );
       case 'diary':
         return <DiaryPage />;
+      case 'monthlyReport':
+        return <MonthlyReportPage />;
       case 'lecture':
         return <LecturePage />;
       case 'videoroom':
@@ -233,6 +236,7 @@ export const MainLayout = () => {
             <div className="flex-1 text-center">
               <span className="text-lg font-bold text-gray-800">
                 {currentPage === 'diary' && '다이어리'}
+                {currentPage === 'monthlyReport' && '월간 보고서'}
                 {currentPage === 'lecture' && '강의실'}
                 {currentPage === 'videoroom' && '영상 시청실 📹'}
                 {currentPage === 'boarding' && (user?.role === 'admin' || user?.role === 'moderator' ? '보딩 폼 확인' : '보딩 폼 작성')}
@@ -281,6 +285,21 @@ export const MainLayout = () => {
                   다이어리
                 </button>
               </li>
+              {(user?.role === 'puppyTeacher' || user?.role === 'admin') && (
+                <li>
+                  <button
+                    onClick={() => navigateToPage('monthlyReport')}
+                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                      currentPage === 'monthlyReport'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                    aria-current={currentPage === 'monthlyReport' ? 'page' : undefined}
+                  >
+                    월간 보고서
+                  </button>
+                </li>
+              )}
               <li>
                 <button
                   onClick={() => navigateToPage('lecture')}
