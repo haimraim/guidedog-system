@@ -10,7 +10,10 @@ import { generateId } from '../utils/storage';
 
 export const MonthlyReportPage = () => {
   const { user } = useAuth();
-  const [reportMonth, setReportMonth] = useState('');
+  const [reportMonth, setReportMonth] = useState(() => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  });
 
   // 집에서의 품행
   const [q1, setQ1] = useState('');
