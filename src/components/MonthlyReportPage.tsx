@@ -20,6 +20,14 @@ export const MonthlyReportPage = () => {
   const [reports, setReports] = useState<MonthlyReport[]>([]);
   const [viewingReport, setViewingReport] = useState<MonthlyReport | null>(null);
 
+  // 관리자 전용 상태
+  const [selectedReportIds, setSelectedReportIds] = useState<string[]>([]); // 비교용 다중 선택
+  const [isComparing, setIsComparing] = useState(false); // 비교 모드
+  const [filterYear, setFilterYear] = useState<string>('all');
+  const [filterMonth, setFilterMonth] = useState<string>('all');
+  const [filterStartDate, setFilterStartDate] = useState<string>('');
+  const [filterEndDate, setFilterEndDate] = useState<string>('');
+
   // 폼 상태
   const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 집에서의 품행, 3: DT 품행 기록, 4: 보행 훈련, 5: 사회화 훈련
   const [status, setStatus] = useState<'draft' | 'completed'>('draft'); // 상태: 임시저장/완료
@@ -280,11 +288,42 @@ export const MonthlyReportPage = () => {
     loadReports();
   }, []);
 
+  // 필터 변경 시 재로드
+  useEffect(() => {
+    if (user?.role === 'admin') {
+      loadReports();
+    }
+  }, [filterYear, filterMonth, filterStartDate, filterEndDate]);
+
   const loadReports = async () => {
     try {
       const loadedReports = await getMonthlyReports();
-      // 본인이 작성한 월간 보고서만 표시
-      const filteredReports = loadedReports.filter(r => r.userId === user?.id);
+
+      let filteredReports = loadedReports;
+
+      // 퍼피티처: 본인이 작성한 보고서만
+      if (user?.role === 'puppyTeacher') {
+        filteredReports = loadedReports.filter(r => r.userId === user?.id);
+      }
+      // 관리자: 필터 적용
+      else if (user?.role === 'admin') {
+        // 년도 필터
+        if (filterYear !== 'all') {
+          filteredReports = filteredReports.filter(r => r.reportMonth.startsWith(filterYear));
+        }
+        // 월 필터
+        if (filterMonth !== 'all') {
+          filteredReports = filteredReports.filter(r => r.reportMonth === filterMonth);
+        }
+        // 일자 범위 필터
+        if (filterStartDate && filterEndDate) {
+          filteredReports = filteredReports.filter(r => {
+            const reportDate = r.createdAt.substring(0, 10); // YYYY-MM-DD
+            return reportDate >= filterStartDate && reportDate <= filterEndDate;
+          });
+        }
+      }
+
       setReports(filteredReports);
     } catch (error) {
       console.error('월간 보고서 로드 실패:', error);
@@ -3477,7 +3516,192 @@ export const MonthlyReportPage = () => {
     );
   }
 
-  // 목록 뷰
+  // 상세보기 모달 닫기
+  const closeDetailView = () => {
+    setViewingReport(null);
+  };
+
+  // 비교 모드 토글
+  const toggleCompareMode = () => {
+    if (isComparing) {
+      setSelectedReportIds([]);
+    }
+    setIsComparing(!isComparing);
+  };
+
+  // 체크박스 토글
+  const toggleReportSelection = (reportId: string) => {
+    if (selectedReportIds.includes(reportId)) {
+      setSelectedReportIds(selectedReportIds.filter(id => id !== reportId));
+    } else {
+      setSelectedReportIds([...selectedReportIds, reportId]);
+    }
+  };
+
+  // 관리자 목록 뷰
+  if (user?.role === 'admin') {
+    return (
+      <div className="max-w-7xl mx-auto">
+        {/* 필터 */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">필터</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* 년도 필터 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">년도</label>
+              <select
+                value={filterYear}
+                onChange={(e) => setFilterYear(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">전체</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+              </select>
+            </div>
+
+            {/* 월 필터 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">월</label>
+              <select
+                value={filterMonth}
+                onChange={(e) => setFilterMonth(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">전체</option>
+                {Array.from({ length: 12 }, (_, i) => {
+                  const month = String(i + 1).padStart(2, '0');
+                  return (
+                    <option key={month} value={`${filterYear !== 'all' ? filterYear : '2025'}-${month}`}>
+                      {i + 1}월
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            {/* 시작 날짜 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">시작 날짜</label>
+              <input
+                type="date"
+                value={filterStartDate}
+                onChange={(e) => setFilterStartDate(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            {/* 종료 날짜 */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">종료 날짜</label>
+              <input
+                type="date"
+                value={filterEndDate}
+                onChange={(e) => setFilterEndDate(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 비교 버튼 */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">
+            월간 보고서 목록 ({reports.length}건)
+          </h2>
+          <div className="space-x-4">
+            <button
+              onClick={toggleCompareMode}
+              className={`${
+                isComparing ? 'bg-gray-600' : 'bg-blue-600'
+              } hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors`}
+            >
+              {isComparing ? '비교 취소' : '비교 모드'}
+            </button>
+            {isComparing && selectedReportIds.length >= 2 && (
+              <button
+                onClick={() => {
+                  // TODO: 비교 테이블 표시
+                  alert(`${selectedReportIds.length}개 보고서 비교 (구현 예정)`);
+                }}
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                비교하기 ({selectedReportIds.length}개)
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* 목록 */}
+        {reports.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-md p-12 text-center">
+            <p className="text-gray-500">작성된 월간 보고서가 없습니다.</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {reports.map((report) => (
+              <div
+                key={report.id}
+                className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+              >
+                <div className="flex items-start space-x-4">
+                  {/* 체크박스 (비교 모드) */}
+                  {isComparing && (
+                    <input
+                      type="checkbox"
+                      checked={selectedReportIds.includes(report.id)}
+                      onChange={() => toggleReportSelection(report.id)}
+                      className="mt-1 w-5 h-5"
+                    />
+                  )}
+
+                  {/* 내용 */}
+                  <div className="flex-1">
+                    <button
+                      onClick={() => setViewingReport(report)}
+                      className="text-xl font-bold text-blue-600 hover:text-blue-800 underline text-left"
+                    >
+                      {report.dogName}_{report.userName}
+                    </button>
+                    <div className="flex items-center text-sm text-gray-600 space-x-4 mt-2">
+                      <span>{report.reportMonth}</span>
+                      <span>작성일: {formatDate(report.createdAt)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 상세보기 모달 */}
+        {viewingReport && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
+                <h3 className="text-2xl font-bold text-gray-800">
+                  {viewingReport.dogName}_{viewingReport.userName} - {viewingReport.reportMonth}
+                </h3>
+                <button
+                  onClick={closeDetailView}
+                  className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="p-6">
+                <p className="text-gray-500">상세 내용 표시 (구현 예정)</p>
+                {/* TODO: 상세 내용 표시 */}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // 퍼피티처 목록 뷰
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">

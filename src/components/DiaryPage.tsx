@@ -1434,8 +1434,8 @@ export const DiaryPage = () => {
   // 일반 사용자 뷰
   return (
     <div className="max-w-4xl mx-auto">
-      {/* 탭 메뉴 (퍼피티칭만) */}
-      {user?.role === 'puppyTeacher' && (
+      {/* 탭 메뉴 (퍼피티처 및 관리자) */}
+      {(user?.role === 'puppyTeacher' || user?.role === 'admin') && (
         <div className="bg-white rounded-lg shadow-md mb-6">
           <div className="flex border-b border-gray-200">
             <button
@@ -1463,12 +1463,12 @@ export const DiaryPage = () => {
       )}
 
       {/* 월간 보고서 */}
-      {currentTab === 'monthly' && user?.role === 'puppyTeacher' && (
+      {currentTab === 'monthly' && (user?.role === 'puppyTeacher' || user?.role === 'admin') && (
         <MonthlyReportPage />
       )}
 
       {/* 1일 다이어리 */}
-      {(currentTab === 'daily' || user?.role !== 'puppyTeacher') && (
+      {(currentTab === 'daily' || (user?.role !== 'puppyTeacher' && user?.role !== 'admin')) && (
         <>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800">
