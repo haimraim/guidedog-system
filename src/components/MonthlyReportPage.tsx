@@ -23,6 +23,7 @@ export const MonthlyReportPage = () => {
   // 관리자 전용 상태
   const [selectedReportIds, setSelectedReportIds] = useState<string[]>([]); // 비교용 다중 선택
   const [isComparing, setIsComparing] = useState(false); // 비교 모드
+  const [showComparisonTable, setShowComparisonTable] = useState(false); // 비교 테이블 모달
   const [filterYear, setFilterYear] = useState<string>('all');
   const [filterMonth, setFilterMonth] = useState<string>('all');
   const [filterStartDate, setFilterStartDate] = useState<string>('');
@@ -3621,10 +3622,7 @@ export const MonthlyReportPage = () => {
             </button>
             {isComparing && selectedReportIds.length >= 2 && (
               <button
-                onClick={() => {
-                  // TODO: 비교 테이블 표시
-                  alert(`${selectedReportIds.length}개 보고서 비교 (구현 예정)`);
-                }}
+                onClick={() => setShowComparisonTable(true)}
                 className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 비교하기 ({selectedReportIds.length}개)
@@ -3675,6 +3673,86 @@ export const MonthlyReportPage = () => {
           </div>
         )}
 
+        {/* 비교 테이블 모달 */}
+        {showComparisonTable && (() => {
+          const selectedReports = reports.filter(r => selectedReportIds.includes(r.id));
+          // 모든 필드 수집
+          const allFields = new Set<string>();
+          selectedReports.forEach(report => {
+            Object.keys(report).forEach(key => {
+              if (key !== 'id' && key !== 'userId' && key !== 'createdAt' && key !== 'updatedAt') {
+                allFields.add(key);
+              }
+            });
+          });
+
+          return (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] overflow-auto">
+                <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
+                  <h3 className="text-2xl font-bold text-gray-800">
+                    보고서 비교 ({selectedReports.length}개)
+                  </h3>
+                  <button
+                    onClick={() => setShowComparisonTable(false)}
+                    className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="p-6">
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse text-sm">
+                      <thead>
+                        <tr className="bg-gray-100">
+                          <th className="border border-gray-300 p-3 text-left font-semibold sticky left-0 bg-gray-100">
+                            항목
+                          </th>
+                          {selectedReports.map(report => (
+                            <th key={report.id} className="border border-gray-300 p-3 text-left font-semibold min-w-[200px]">
+                              {report.dogName}_{report.userName}
+                              <div className="text-xs font-normal text-gray-600 mt-1">
+                                {report.reportMonth}
+                              </div>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Array.from(allFields).sort().map(field => {
+                          const hasValue = selectedReports.some(report => {
+                            const value = (report as any)[field];
+                            return value && value !== '';
+                          });
+
+                          if (!hasValue) return null;
+
+                          return (
+                            <tr key={field} className="hover:bg-gray-50">
+                              <td className="border border-gray-300 p-3 font-semibold bg-gray-50 sticky left-0">
+                                {field}
+                              </td>
+                              {selectedReports.map(report => {
+                                const value = (report as any)[field];
+                                const displayValue = Array.isArray(value) ? value.join(', ') : value || '-';
+                                return (
+                                  <td key={report.id} className="border border-gray-300 p-3">
+                                    {displayValue}
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* 상세보기 모달 */}
         {viewingReport && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -3690,9 +3768,103 @@ export const MonthlyReportPage = () => {
                   ×
                 </button>
               </div>
-              <div className="p-6">
-                <p className="text-gray-500">상세 내용 표시 (구현 예정)</p>
-                {/* TODO: 상세 내용 표시 */}
+              <div className="p-6 space-y-6">
+                {/* 기본 정보 */}
+                <div className="border-b pb-4">
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">기본 정보</h4>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div><span className="font-semibold">보고 월:</span> {viewingReport.reportMonth}</div>
+                    <div><span className="font-semibold">작성일:</span> {formatDate(viewingReport.createdAt)}</div>
+                    <div><span className="font-semibold">견명:</span> {viewingReport.dogName}</div>
+                    <div><span className="font-semibold">퍼피티처:</span> {viewingReport.userName}</div>
+                  </div>
+                </div>
+
+                {/* 급식 및 건강 */}
+                {(viewingReport as any).foodType && (
+                  <div className="border-b pb-4">
+                    <h4 className="text-lg font-bold text-gray-800 mb-3">급식 및 건강</h4>
+                    <div className="space-y-2 text-sm">
+                      {(viewingReport as any).foodType && <div><span className="font-semibold">사료 종류:</span> {(viewingReport as any).foodType}</div>}
+                      {(viewingReport as any).dailyFeedingCount && <div><span className="font-semibold">1일 급식 횟수:</span> {(viewingReport as any).dailyFeedingCount}</div>}
+                      {(viewingReport as any).feedingAmountPerMeal && <div><span className="font-semibold">1회 급식량:</span> {(viewingReport as any).feedingAmountPerMeal}</div>}
+                      {(viewingReport as any).weight && <div><span className="font-semibold">체중:</span> {(viewingReport as any).weight}</div>}
+                      {(viewingReport as any).healthNotes && <div><span className="font-semibold">건강 특이사항:</span> {(viewingReport as any).healthNotes}</div>}
+                    </div>
+                  </div>
+                )}
+
+                {/* 집에서의 품행 */}
+                <div className="border-b pb-4">
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">집에서의 품행</h4>
+                  <div className="space-y-3 text-sm">
+                    {Object.entries(viewingReport as any).filter(([key]) => key.startsWith('q') && key.match(/^q\d+/)).map(([key, value]) => {
+                      if (value && typeof value === 'string' && value.trim()) {
+                        const questionNum = key.match(/^q(\d+)/)?.[1];
+                        return (
+                          <div key={key} className="bg-gray-50 p-3 rounded">
+                            <span className="font-semibold">{key}:</span> {value}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                </div>
+
+                {/* DT 품행 기록 */}
+                <div className="border-b pb-4">
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">DT 품행 기록</h4>
+                  <div className="space-y-3 text-sm">
+                    {Object.entries(viewingReport as any).filter(([key]) => key.startsWith('dt')).map(([key, value]) => {
+                      if (value && typeof value === 'string' && value.trim()) {
+                        return (
+                          <div key={key} className="bg-gray-50 p-3 rounded">
+                            <span className="font-semibold">{key}:</span> {value}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                </div>
+
+                {/* 보행 훈련 */}
+                <div className="border-b pb-4">
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">보행 훈련</h4>
+                  <div className="space-y-3 text-sm">
+                    {Object.entries(viewingReport as any).filter(([key]) => key.startsWith('walk_')).map(([key, value]) => {
+                      if (value && typeof value === 'string' && value.trim()) {
+                        return (
+                          <div key={key} className="bg-gray-50 p-3 rounded">
+                            <span className="font-semibold">{key}:</span> {value}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                </div>
+
+                {/* 사회화 훈련 */}
+                <div className="pb-4">
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">사회화 훈련</h4>
+                  <div className="space-y-3 text-sm">
+                    {Object.entries(viewingReport as any).filter(([key]) => key.startsWith('social_')).map(([key, value]) => {
+                      if (value) {
+                        const displayValue = Array.isArray(value) ? value.join(', ') : value;
+                        if (typeof displayValue === 'string' && displayValue.trim()) {
+                          return (
+                            <div key={key} className="bg-gray-50 p-3 rounded">
+                              <span className="font-semibold">{key}:</span> {displayValue}
+                            </div>
+                          );
+                        }
+                      }
+                      return null;
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
