@@ -14,6 +14,17 @@ export const MonthlyReportPage = () => {
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
   });
 
+  // 급식
+  const [foodType, setFoodType] = useState(''); // 사료 종류
+  const [dailyFeedingCount, setDailyFeedingCount] = useState(''); // 1일 급식 횟수
+  const [feedingAmountPerMeal, setFeedingAmountPerMeal] = useState(''); // 1회 급식량
+
+  // 배변
+  const [dt1SuccessRate, setDt1SuccessRate] = useState(''); // DT1(소변) 성공률
+  const [dt2SuccessRate, setDt2SuccessRate] = useState(''); // DT2(대변) 성공률
+  const [mainBathroomPlace, setMainBathroomPlace] = useState(''); // 주요 배변 장소
+  const [bathroomNotes, setBathroomNotes] = useState(''); // 특이사항
+
   // 집에서의 품행
   // 질문 1
   const [q1, setQ1] = useState('');
@@ -145,7 +156,11 @@ export const MonthlyReportPage = () => {
       userName: user?.name || '',
       dogName: user?.dogName || '',
       reportMonth,
-      // 모든 답변 데이터
+      // 급식
+      foodType, dailyFeedingCount, feedingAmountPerMeal,
+      // 배변
+      dt1SuccessRate, dt2SuccessRate, mainBathroomPlace, bathroomNotes,
+      // 집에서의 품행 답변 데이터
       q1, q1_time, q1_type, q1_other,
       q2, q2_food, q2_other,
       q3,
@@ -192,6 +207,110 @@ export const MonthlyReportPage = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               required
             />
+          </div>
+
+          {/* 급식 */}
+          <div className="border-t pt-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-4 bg-gray-100 p-3 rounded">급식</h3>
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="feeding-title">
+              <h4 id="feeding-title" className="font-semibold text-gray-800 mb-3">월간 급식 현황</h4>
+              <div className="space-y-4 ml-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    사료 종류
+                  </label>
+                  <input
+                    type="text"
+                    value={foodType}
+                    onChange={(e) => setFoodType(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="예: 로얄캐닌 퍼피"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    1일 급식 횟수
+                  </label>
+                  <input
+                    type="text"
+                    value={dailyFeedingCount}
+                    onChange={(e) => setDailyFeedingCount(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="예: 3회"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    1회 급식량 (그램)
+                  </label>
+                  <input
+                    type="text"
+                    value={feedingAmountPerMeal}
+                    onChange={(e) => setFeedingAmountPerMeal(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="예: 150g"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 배변 */}
+          <div className="border-t pt-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-4 bg-gray-100 p-3 rounded">배변</h3>
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="bathroom-title">
+              <h4 id="bathroom-title" className="font-semibold text-gray-800 mb-3">월간 배변 현황</h4>
+              <div className="space-y-4 ml-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    DT1 (소변) 성공률
+                  </label>
+                  <input
+                    type="text"
+                    value={dt1SuccessRate}
+                    onChange={(e) => setDt1SuccessRate(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="예: 90%"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    DT2 (대변) 성공률
+                  </label>
+                  <input
+                    type="text"
+                    value={dt2SuccessRate}
+                    onChange={(e) => setDt2SuccessRate(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="예: 95%"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    주요 배변 장소
+                  </label>
+                  <input
+                    type="text"
+                    value={mainBathroomPlace}
+                    onChange={(e) => setMainBathroomPlace(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="예: 집 앞마당, 산책로"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    특이사항
+                  </label>
+                  <textarea
+                    value={bathroomNotes}
+                    onChange={(e) => setBathroomNotes(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    rows={3}
+                    placeholder="배변 관련 특이사항이나 변화를 자유롭게 작성해주세요."
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* 집에서의 품행 */}
