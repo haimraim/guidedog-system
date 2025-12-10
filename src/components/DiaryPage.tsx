@@ -27,7 +27,13 @@ export const DiaryPage = () => {
   const [selectedDog, setSelectedDog] = useState<string>('all');
 
   // 퍼피티칭 전용 필드 (배열 기반)
-  const [diaryDate, setDiaryDate] = useState('');
+  const [diaryDate, setDiaryDate] = useState(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  });
   const [feedings, setFeedings] = useState([{ foodType: '', time: '', amount: '', notes: '' }]);
   const [dt1Records, setDt1Records] = useState([{ time: '', place: '', success: '', accident: '', notes: '' }]);
   const [dt2Records, setDt2Records] = useState([{ time: '', place: '', success: '', accident: '', notes: '' }]);
@@ -222,24 +228,6 @@ export const DiaryPage = () => {
         return localDateStr === date;
       }) || null;
     }
-  };
-
-  // 날짜 설정 함수 (퍼피티칭용)
-  const setTodayDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    setDiaryDate(`${year}-${month}-${day}`);
-  };
-
-  const setYesterdayDate = () => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const year = yesterday.getFullYear();
-    const month = String(yesterday.getMonth() + 1).padStart(2, '0');
-    const day = String(yesterday.getDate()).padStart(2, '0');
-    setDiaryDate(`${year}-${month}-${day}`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -711,36 +699,6 @@ export const DiaryPage = () => {
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* 날짜 */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  날짜 *
-                </label>
-                <div className="flex gap-3 mb-2">
-                  <button
-                    type="button"
-                    onClick={setTodayDate}
-                    className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-semibold transition-colors"
-                  >
-                    오늘
-                  </button>
-                  <button
-                    type="button"
-                    onClick={setYesterdayDate}
-                    className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-semibold transition-colors"
-                  >
-                    어제
-                  </button>
-                </div>
-                <input
-                  type="date"
-                  value={diaryDate}
-                  onChange={(e) => setDiaryDate(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  required
-                />
-              </div>
-
               {/* 급식 */}
               <div className="border-t pt-6">
                 <button
@@ -1248,32 +1206,6 @@ export const DiaryPage = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                htmlFor="diaryDate"
-                className="block text-sm font-semibold text-gray-700 mb-2"
-              >
-                다이어리 날짜
-              </label>
-              <div className="flex space-x-2">
-                <input
-                  type="date"
-                  id="diaryDate"
-                  value={diaryDate}
-                  onChange={(e) => setDiaryDate(e.target.value)}
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={setTodayDate}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors"
-                >
-                  오늘
-                </button>
-              </div>
-            </div>
-
             <div>
               <label
                 htmlFor="title"
