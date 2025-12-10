@@ -9,7 +9,7 @@ export const MonthlyReportPage = () => {
   const { user } = useAuth();
 
   // 폼 상태
-  const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 집에서의 품행, 3: DT 품행 기록, 4: 보행 훈련
+  const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 집에서의 품행, 3: DT 품행 기록, 4: 보행 훈련, 5: 사회화 훈련
   const [status, setStatus] = useState<'draft' | 'completed'>('draft'); // 상태: 임시저장/완료
 
   // 보고 일자 (자동으로 오늘 날짜 설정)
@@ -216,6 +216,46 @@ export const MonthlyReportPage = () => {
   // 보행 질문 11
   const [walk_q11, setWalk_q11] = useState(''); // 관심을 보이는 대상
 
+  // 사회화 훈련
+  // 사회화 질문 1
+  const [social_q1, setSocial_q1] = useState(''); // 지난 한 달간 가본 곳
+
+  // 사회화 질문 2
+  const [social_q2, setSocial_q2] = useState(''); // 사회화 훈련 횟수
+
+  // 사회화 질문 3
+  const [social_q3, setSocial_q3] = useState(''); // 복잡한 곳에서 반응
+  const [social_q3_other, setSocial_q3_other] = useState(''); // 기타
+
+  // 사회화 질문 4
+  const [social_q4, setSocial_q4] = useState(''); // 계단
+  const [social_q4_other, setSocial_q4_other] = useState(''); // 기타
+
+  // 사회화 질문 5
+  const [social_q5, setSocial_q5] = useState(''); // 에스컬레이터
+  const [social_q5_direction, setSocial_q5_direction] = useState(''); // ② 선택 시 (상행선/하행선)
+  const [social_q5_other, setSocial_q5_other] = useState(''); // 기타
+
+  // 사회화 질문 6
+  const [social_q6, setSocial_q6] = useState(''); // 승용차
+  const [social_q6_other, setSocial_q6_other] = useState(''); // 기타
+
+  // 사회화 질문 7
+  const [social_q7, setSocial_q7] = useState(''); // 버스
+  const [social_q7_when, setSocial_q7_when] = useState(''); // ② 선택 시 (탈 때/내릴 때)
+  const [social_q7_other, setSocial_q7_other] = useState(''); // 기타
+
+  // 사회화 질문 8
+  const [social_q8, setSocial_q8] = useState<string[]>([]); // 지하철 (복수 선택)
+  const [social_q8_other, setSocial_q8_other] = useState(''); // 기타
+
+  // 사회화 질문 9
+  const [social_q9, setSocial_q9] = useState<string[]>([]); // 카페/식당 (복수 선택)
+  const [social_q9_other, setSocial_q9_other] = useState(''); // 기타
+
+  // 사회화 질문 10
+  const [social_q10, setSocial_q10] = useState(''); // 어려운 점
+
   const handleCheckboxChange = (currentArray: string[], value: string, setter: (val: string[]) => void) => {
     if (currentArray.includes(value)) {
       setter(currentArray.filter(v => v !== value));
@@ -278,6 +318,16 @@ export const MonthlyReportPage = () => {
     walk_q8, walk_q8_other,
     walk_q9, walk_q9_target, walk_q9_other,
     walk_q10, walk_q11,
+    // 사회화 훈련
+    social_q1, social_q2,
+    social_q3, social_q3_other,
+    social_q4, social_q4_other,
+    social_q5, social_q5_direction, social_q5_other,
+    social_q6, social_q6_other,
+    social_q7, social_q7_when, social_q7_other,
+    social_q8, social_q8_other,
+    social_q9, social_q9_other,
+    social_q10,
     updatedAt: new Date().toISOString(),
   });
 
@@ -307,7 +357,7 @@ export const MonthlyReportPage = () => {
   };
 
   const handleNextStep = () => {
-    if (currentStep < 4) {
+    if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
     }
@@ -2544,10 +2594,704 @@ export const MonthlyReportPage = () => {
             </>
           )}
 
+          {/* Step 5: 사회화 훈련 */}
+          {currentStep === 5 && (
+            <>
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-blue-500">사회화 훈련</h3>
+
+            {/* 사회화 질문 1 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q1-title">
+              <h4 id="social-q1-title" className="font-semibold text-gray-800 mb-3">1. 지난 한 달간 가본 곳을 모두 적어 주세요</h4>
+              <div className="ml-4">
+                <textarea
+                  value={social_q1}
+                  onChange={(e)=>setSocial_q1(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  rows={4}
+                  placeholder="지난 한 달간 방문한 장소를 자유롭게 작성해주세요."
+                />
+              </div>
+            </div>
+
+            {/* 사회화 질문 2 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q2-title">
+              <h4 id="social-q2-title" className="font-semibold text-gray-800 mb-3">2. 매일 하는 산책 이외에 일주일에 몇 번 정도 사회화 훈련을 하나요?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q2"
+                    value="1"
+                    checked={social_q2 === '1'}
+                    onChange={(e)=>setSocial_q2(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 1회 미만</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q2"
+                    value="2"
+                    checked={social_q2 === '2'}
+                    onChange={(e)=>setSocial_q2(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 2~3 회</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q2"
+                    value="3"
+                    checked={social_q2 === '3'}
+                    onChange={(e)=>setSocial_q2(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 4~5 회</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q2"
+                    value="4"
+                    checked={social_q2 === '4'}
+                    onChange={(e)=>setSocial_q2(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 6회 이상</span>
+                </label>
+              </div>
+            </div>
+
+            {/* 사회화 질문 3 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q3-title">
+              <h4 id="social-q3-title" className="font-semibold text-gray-800 mb-3">3. 사람이 많고 복잡한 곳에 방문했을 때 강아지의 반응은?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q3"
+                    value="1"
+                    checked={social_q3 === '1'}
+                    onChange={(e)=>setSocial_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 평소와 크게 다르지 않다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q3"
+                    value="2"
+                    checked={social_q3 === '2'}
+                    onChange={(e)=>setSocial_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 평소보다 많이 흥분하며 지나가는 사람들에게 관심을 많이 보인다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q3"
+                    value="3"
+                    checked={social_q3 === '3'}
+                    onChange={(e)=>setSocial_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 여유없이 서두르며 직진한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q3"
+                    value="4"
+                    checked={social_q3 === '4'}
+                    onChange={(e)=>setSocial_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 평소보다 유난히 행동이 줄어들어 보인다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q3"
+                    value="5"
+                    checked={social_q3 === '5'}
+                    onChange={(e)=>setSocial_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>⑤ 벽으로 붙어서 걸으려고 한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q3"
+                    value="6"
+                    checked={social_q3 === '6'}
+                    onChange={(e)=>setSocial_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>⑥ DT1 실수가 잦다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q3"
+                    value="기타"
+                    checked={social_q3 === '기타'}
+                    onChange={(e)=>setSocial_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {social_q3 === '기타' && (
+                      <input
+                        type="text"
+                        value={social_q3_other}
+                        onChange={(e)=>setSocial_q3_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 반응을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 사회화 질문 4 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q4-title">
+              <h4 id="social-q4-title" className="font-semibold text-gray-800 mb-3">4. 계단을 오르내릴 때 특징이 있나요?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q4"
+                    value="1"
+                    checked={social_q4 === '1'}
+                    onChange={(e)=>setSocial_q4(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 특별히 문제 없이 보조를 맞춰 잘 다닌다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q4"
+                    value="2"
+                    checked={social_q4 === '2'}
+                    onChange={(e)=>setSocial_q4(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 항상 너무 서두른다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q4"
+                    value="3"
+                    checked={social_q4 === '3'}
+                    onChange={(e)=>setSocial_q4(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 거의 끝에 가서는 서둘러 걷는다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q4"
+                    value="4"
+                    checked={social_q4 === '4'}
+                    onChange={(e)=>setSocial_q4(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 사람 뒤쪽에서 걸으려고 한다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q4"
+                    value="기타"
+                    checked={social_q4 === '기타'}
+                    onChange={(e)=>setSocial_q4(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {social_q4 === '기타' && (
+                      <input
+                        type="text"
+                        value={social_q4_other}
+                        onChange={(e)=>setSocial_q4_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 특징을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 사회화 질문 5 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q5-title">
+              <h4 id="social-q5-title" className="font-semibold text-gray-800 mb-3">5. 에스컬레이터를 이용할 때 특징이 있나요? (이용한 경험이 있을 때만 체크)</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q5"
+                    value="1"
+                    checked={social_q5 === '1'}
+                    onChange={(e)=>setSocial_q5(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 편안하게 잘 탄다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q5"
+                    value="2"
+                    checked={social_q5 === '2'}
+                    onChange={(e)=>setSocial_q5(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>②</span>
+                    {social_q5 === '2' && (
+                      <input
+                        type="text"
+                        value={social_q5_direction}
+                        onChange={(e)=>setSocial_q5_direction(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-48 inline-block"
+                        placeholder="상행선/하행선"
+                      />
+                    )}
+                    <span className="ml-1">을 두려워 한다.</span>
+                  </div>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q5"
+                    value="3"
+                    checked={social_q5 === '3'}
+                    onChange={(e)=>setSocial_q5(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 안정적으로 타나 내릴 때는 서두른다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q5"
+                    value="4"
+                    checked={social_q5 === '4'}
+                    onChange={(e)=>setSocial_q5(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 잘 타지만, 타 있는 동안 움직인다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q5"
+                    value="5"
+                    checked={social_q5 === '5'}
+                    onChange={(e)=>setSocial_q5(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>⑤ 안타려고 버틴다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q5"
+                    value="기타"
+                    checked={social_q5 === '기타'}
+                    onChange={(e)=>setSocial_q5(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {social_q5 === '기타' && (
+                      <input
+                        type="text"
+                        value={social_q5_other}
+                        onChange={(e)=>setSocial_q5_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 특징을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 사회화 질문 6 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q6-title">
+              <h4 id="social-q6-title" className="font-semibold text-gray-800 mb-3">6. 승용차를 이용할 때 특징이 있나요?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q6"
+                    value="1"
+                    checked={social_q6 === '1'}
+                    onChange={(e)=>setSocial_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 편안하게 잘 타고 내리고, 운행중에도 편안하게 쉰다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q6"
+                    value="2"
+                    checked={social_q6 === '2'}
+                    onChange={(e)=>setSocial_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 편안하게 잘 타고 내리지만, 운행중에는 쉬지 못하고 자꾸 일어난다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q6"
+                    value="3"
+                    checked={social_q6 === '3'}
+                    onChange={(e)=>setSocial_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 운행중에는 편안하게 잘 있지만, 타고 내릴때 주저하거나 도와줘야 한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q6"
+                    value="4"
+                    checked={social_q6 === '4'}
+                    onChange={(e)=>setSocial_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 타고 내릴때 주저하거나 도와줘야 하고, 운행중에도 편안하게 쉬지 못한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q6"
+                    value="5"
+                    checked={social_q6 === '5'}
+                    onChange={(e)=>setSocial_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>⑤ 시트 위로 올라가려고 한다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q6"
+                    value="기타"
+                    checked={social_q6 === '기타'}
+                    onChange={(e)=>setSocial_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {social_q6 === '기타' && (
+                      <input
+                        type="text"
+                        value={social_q6_other}
+                        onChange={(e)=>setSocial_q6_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 특징을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 사회화 질문 7 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q7-title">
+              <h4 id="social-q7-title" className="font-semibold text-gray-800 mb-3">7. 버스를 이용할 때 특징이 있나요? (이용한 경험이 있을 때만 체크)</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q7"
+                    value="1"
+                    checked={social_q7 === '1'}
+                    onChange={(e)=>setSocial_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 편안하게 잘 탄다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q7"
+                    value="2"
+                    checked={social_q7 === '2'}
+                    onChange={(e)=>setSocial_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>②</span>
+                    {social_q7 === '2' && (
+                      <input
+                        type="text"
+                        value={social_q7_when}
+                        onChange={(e)=>setSocial_q7_when(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-48 inline-block"
+                        placeholder="탈 때/내릴 때"
+                      />
+                    )}
+                    <span className="ml-1">두려워 한다.</span>
+                  </div>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q7"
+                    value="3"
+                    checked={social_q7 === '3'}
+                    onChange={(e)=>setSocial_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 타는 건 문제 없으나 버스가 흔들리면 불안해 한다. (낑낑, 자꾸 일어남, 혀쩝쩝 등)</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q7"
+                    value="4"
+                    checked={social_q7 === '4'}
+                    onChange={(e)=>setSocial_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 문이 열릴때마다 움직인다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q7"
+                    value="5"
+                    checked={social_q7 === '5'}
+                    onChange={(e)=>setSocial_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>⑤ 무서워서 안타려고 한다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="social_q7"
+                    value="기타"
+                    checked={social_q7 === '기타'}
+                    onChange={(e)=>setSocial_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {social_q7 === '기타' && (
+                      <input
+                        type="text"
+                        value={social_q7_other}
+                        onChange={(e)=>setSocial_q7_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 특징을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 사회화 질문 8 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q8-title">
+              <h4 id="social-q8-title" className="font-semibold text-gray-800 mb-3">8. 지하철을 이용할 때 특징이 있나요? (이용한 경험이 있을 때만 체크)</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q8.includes('1')}
+                    onChange={(e)=>handleCheckboxChange(social_q8, '1', setSocial_q8)}
+                    className="mt-1"
+                  />
+                  <span>① 개찰구 통과할때 주저함이나 싫어함이 있다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q8.includes('2')}
+                    onChange={(e)=>handleCheckboxChange(social_q8, '2', setSocial_q8)}
+                    className="mt-1"
+                  />
+                  <span>② 편안하게 잘 탄다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q8.includes('3')}
+                    onChange={(e)=>handleCheckboxChange(social_q8, '3', setSocial_q8)}
+                    className="mt-1"
+                  />
+                  <span>③ 지하철이 들어올 때 나는 소음에 긴장한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q8.includes('4')}
+                    onChange={(e)=>handleCheckboxChange(social_q8, '4', setSocial_q8)}
+                    className="mt-1"
+                  />
+                  <span>④ 타는 건 문제 없으나 지하철의 흔들림에 불안해 한다. (낑낑, 자꾸 일어남, 혀쩝쩝 등)</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q8.includes('5')}
+                    onChange={(e)=>handleCheckboxChange(social_q8, '5', setSocial_q8)}
+                    className="mt-1"
+                  />
+                  <span>⑤ 문이 열릴때마다 움직인다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q8.includes('6')}
+                    onChange={(e)=>handleCheckboxChange(social_q8, '6', setSocial_q8)}
+                    className="mt-1"
+                  />
+                  <span>⑥ 무서워서 안타려고 한다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q8.includes('기타')}
+                    onChange={(e)=>handleCheckboxChange(social_q8, '기타', setSocial_q8)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {social_q8.includes('기타') && (
+                      <input
+                        type="text"
+                        value={social_q8_other}
+                        onChange={(e)=>setSocial_q8_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 특징을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 사회화 질문 9 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q9-title">
+              <h4 id="social-q9-title" className="font-semibold text-gray-800 mb-3">9. 카페나 식당에서 기다릴때 특징이 있나요?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q9.includes('1')}
+                    onChange={(e)=>handleCheckboxChange(social_q9, '1', setSocial_q9)}
+                    className="mt-1"
+                  />
+                  <span>① 지정된 자리에서 움직임 없이 잘 쉬면서 기다린다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q9.includes('2')}
+                    onChange={(e)=>handleCheckboxChange(social_q9, '2', setSocial_q9)}
+                    className="mt-1"
+                  />
+                  <span>② 지정된 자리에 있으나 바닥 냄새를 맡거나 핥는다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q9.includes('3')}
+                    onChange={(e)=>handleCheckboxChange(social_q9, '3', setSocial_q9)}
+                    className="mt-1"
+                  />
+                  <span>③ 나를 보고 요구하듯 짖는다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q9.includes('4')}
+                    onChange={(e)=>handleCheckboxChange(social_q9, '4', setSocial_q9)}
+                    className="mt-1"
+                  />
+                  <span>④ 테이블 위 냄새를 맡는 등의 행동을 보인다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q9.includes('5')}
+                    onChange={(e)=>handleCheckboxChange(social_q9, '5', setSocial_q9)}
+                    className="mt-1"
+                  />
+                  <span>⑤ 잘 기다리지 못하고 움직여서 자세를 잡아줘야 한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q9.includes('6')}
+                    onChange={(e)=>handleCheckboxChange(social_q9, '6', setSocial_q9)}
+                    className="mt-1"
+                  />
+                  <span>⑥ 계속 트릿을 요구한다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={social_q9.includes('기타')}
+                    onChange={(e)=>handleCheckboxChange(social_q9, '기타', setSocial_q9)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {social_q9.includes('기타') && (
+                      <input
+                        type="text"
+                        value={social_q9_other}
+                        onChange={(e)=>setSocial_q9_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 특징을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 사회화 질문 10 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q10-title">
+              <h4 id="social-q10-title" className="font-semibold text-gray-800 mb-3">10. 사회화 훈련을 하며 어려운 점이 있었나요?</h4>
+              <div className="ml-4">
+                <textarea
+                  value={social_q10}
+                  onChange={(e)=>setSocial_q10(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  rows={4}
+                  placeholder="사회화 훈련 중 어려운 점을 자유롭게 작성해주세요."
+                />
+              </div>
+            </div>
+          </div>
+            </>
+          )}
+
           {/* 버튼 영역 */}
           <div className="flex justify-between items-center sticky bottom-0 bg-white pt-6 border-t mt-8">
             <div className="flex space-x-4">
-              {(currentStep === 2 || currentStep === 3 || currentStep === 4) && (
+              {(currentStep === 2 || currentStep === 3 || currentStep === 4 || currentStep === 5) && (
                 <button
                   type="button"
                   onClick={handlePrevStep}
@@ -2624,6 +3368,27 @@ export const MonthlyReportPage = () => {
               )}
 
               {currentStep === 4 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleSaveDraft}
+                    disabled={status === 'completed'}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    중간 저장
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    disabled={status === 'completed'}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    다음 →
+                  </button>
+                </>
+              )}
+
+              {currentStep === 5 && (
                 <>
                   <button
                     type="button"
