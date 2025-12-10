@@ -258,15 +258,15 @@ export const MonthlyReportPage = () => {
   };
 
   const handleNextStep = () => {
-    if (currentStep === 1) {
-      setCurrentStep(2);
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
     }
   };
 
   const handlePrevStep = () => {
-    if (currentStep === 2) {
-      setCurrentStep(1);
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
       window.scrollTo(0, 0);
     }
   };
