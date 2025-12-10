@@ -9,7 +9,7 @@ export const MonthlyReportPage = () => {
   const { user } = useAuth();
 
   // 폼 상태
-  const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 집에서의 품행, 3: DT 품행 기록
+  const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 집에서의 품행, 3: DT 품행 기록, 4: 보행 훈련
   const [status, setStatus] = useState<'draft' | 'completed'>('draft'); // 상태: 임시저장/완료
 
   // 보고 일자 (자동으로 오늘 날짜 설정)
@@ -176,6 +176,46 @@ export const MonthlyReportPage = () => {
   // DT 질문 9
   const [dt_problems, setDt_problems] = useState(''); // 배변 문제 자유 텍스트
 
+  // 보행 훈련
+  // 보행 질문 1
+  const [walk_q1, setWalk_q1] = useState(''); // 하루 평균 산책 시간
+
+  // 보행 질문 2
+  const [walk_q2, setWalk_q2] = useState(''); // 주로 산책하는 시간
+
+  // 보행 질문 3
+  const [walk_q3, setWalk_q3] = useState(''); // 코트/견줄 착용시 반응
+  const [walk_q3_other, setWalk_q3_other] = useState(''); // 기타
+
+  // 보행 질문 4
+  const [walk_q4, setWalk_q4] = useState(''); // 헤드칼라 사용 여부
+
+  // 보행 질문 5
+  const [walk_q5, setWalk_q5] = useState(''); // 트릿 사용 여부
+
+  // 보행 질문 6
+  const [walk_q6, setWalk_q6] = useState(''); // 강아지의 빠르기
+  const [walk_q6_other, setWalk_q6_other] = useState(''); // 기타
+
+  // 보행 질문 7
+  const [walk_q7, setWalk_q7] = useState(''); // 강아지의 행동
+  const [walk_q7_other, setWalk_q7_other] = useState(''); // 기타
+
+  // 보행 질문 8
+  const [walk_q8, setWalk_q8] = useState<string[]>([]); // 동물 만났을 때 (복수 선택)
+  const [walk_q8_other, setWalk_q8_other] = useState(''); // 기타
+
+  // 보행 질문 9
+  const [walk_q9, setWalk_q9] = useState<string[]>([]); // 사람 만났을 때 (복수 선택)
+  const [walk_q9_target, setWalk_q9_target] = useState(''); // ⑤ 선택 시 대상
+  const [walk_q9_other, setWalk_q9_other] = useState(''); // 기타
+
+  // 보행 질문 10
+  const [walk_q10, setWalk_q10] = useState(''); // 반응을 보인 물체/소리
+
+  // 보행 질문 11
+  const [walk_q11, setWalk_q11] = useState(''); // 관심을 보이는 대상
+
   const handleCheckboxChange = (currentArray: string[], value: string, setter: (val: string[]) => void) => {
     if (currentArray.includes(value)) {
       setter(currentArray.filter(v => v !== value));
@@ -229,6 +269,15 @@ export const MonthlyReportPage = () => {
     dt_before_walk_dt1, dt_before_walk_dt2,
     dt_signal, dt_signal_other,
     dt_problems,
+    // 보행 훈련
+    walk_q1, walk_q2,
+    walk_q3, walk_q3_other,
+    walk_q4, walk_q5,
+    walk_q6, walk_q6_other,
+    walk_q7, walk_q7_other,
+    walk_q8, walk_q8_other,
+    walk_q9, walk_q9_target, walk_q9_other,
+    walk_q10, walk_q11,
     updatedAt: new Date().toISOString(),
   });
 
@@ -258,7 +307,7 @@ export const MonthlyReportPage = () => {
   };
 
   const handleNextStep = () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
     }
@@ -1896,10 +1945,609 @@ export const MonthlyReportPage = () => {
             </>
           )}
 
+          {/* Step 4: 보행 훈련 */}
+          {currentStep === 4 && (
+            <>
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-blue-500">보행 훈련</h3>
+
+            {/* 보행 질문 1 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q1-title">
+              <h4 id="walk-q1-title" className="font-semibold text-gray-800 mb-3">1. 하루 평균 산책 시간은?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q1"
+                    value="1"
+                    checked={walk_q1 === '1'}
+                    onChange={(e)=>setWalk_q1(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 2시간 이상</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q1"
+                    value="2"
+                    checked={walk_q1 === '2'}
+                    onChange={(e)=>setWalk_q1(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 1시간 이상</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q1"
+                    value="3"
+                    checked={walk_q1 === '3'}
+                    onChange={(e)=>setWalk_q1(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 30분 이상</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q1"
+                    value="4"
+                    checked={walk_q1 === '4'}
+                    onChange={(e)=>setWalk_q1(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 안 하는 날도 있다.</span>
+                </label>
+              </div>
+            </div>
+
+            {/* 보행 질문 2 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q2-title">
+              <h4 id="walk-q2-title" className="font-semibold text-gray-800 mb-3">2. 주로 산책하는 시간을 적어주세요(예: 아침, 점심, 10시 등)</h4>
+              <div className="ml-4">
+                <input
+                  type="text"
+                  value={walk_q2}
+                  onChange={(e)=>setWalk_q2(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  placeholder="예: 아침 7시, 저녁 6시"
+                />
+              </div>
+            </div>
+
+            {/* 보행 질문 3 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q3-title">
+              <h4 id="walk-q3-title" className="font-semibold text-gray-800 mb-3">3. 코트/견줄 착용시 강아지의 반응은?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q3"
+                    value="1"
+                    checked={walk_q3 === '1'}
+                    onChange={(e)=>setWalk_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 코트와 견줄을 착용할 때까지 가만히 앉아서 잘 기다린다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q3"
+                    value="2"
+                    checked={walk_q3 === '2'}
+                    onChange={(e)=>setWalk_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 흥분하고 점프하여 얌전히 입히기 힘들다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q3"
+                    value="3"
+                    checked={walk_q3 === '3'}
+                    onChange={(e)=>setWalk_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 코트/견줄 착용에는 거부감이 있으나 나가서는 잘 걷는다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q3"
+                    value="4"
+                    checked={walk_q3 === '4'}
+                    onChange={(e)=>setWalk_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 코트/견줄 착용에 거부감이 있고 나가서도 좋아하지 않는다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q3"
+                    value="기타"
+                    checked={walk_q3 === '기타'}
+                    onChange={(e)=>setWalk_q3(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {walk_q3 === '기타' && (
+                      <input
+                        type="text"
+                        value={walk_q3_other}
+                        onChange={(e)=>setWalk_q3_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 반응을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 보행 질문 4 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q4-title">
+              <h4 id="walk-q4-title" className="font-semibold text-gray-800 mb-3">4. 현재 헤드칼라를 사용하고 있나요?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q4"
+                    value="1"
+                    checked={walk_q4 === '1'}
+                    onChange={(e)=>setWalk_q4(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 매번 사용</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q4"
+                    value="2"
+                    checked={walk_q4 === '2'}
+                    onChange={(e)=>setWalk_q4(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 가끔 사용</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q4"
+                    value="3"
+                    checked={walk_q4 === '3'}
+                    onChange={(e)=>setWalk_q4(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 사용하지 않는다.</span>
+                </label>
+              </div>
+            </div>
+
+            {/* 보행 질문 5 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q5-title">
+              <h4 id="walk-q5-title" className="font-semibold text-gray-800 mb-3">5. 보행 시 트릿 사용 여부</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q5"
+                    value="1"
+                    checked={walk_q5 === '1'}
+                    onChange={(e)=>setWalk_q5(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 보행도중 지속적으로 사용한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q5"
+                    value="2"
+                    checked={walk_q5 === '2'}
+                    onChange={(e)=>setWalk_q5(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 특별한 경우에만 사용한다. (에스컬레이터, 견유혹 컨트롤 등)</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q5"
+                    value="3"
+                    checked={walk_q5 === '3'}
+                    onChange={(e)=>setWalk_q5(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 사용하지 않는다.</span>
+                </label>
+              </div>
+            </div>
+
+            {/* 보행 질문 6 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q6-title">
+              <h4 id="walk-q6-title" className="font-semibold text-gray-800 mb-3">6. 산책 시 강아지의 빠르기는?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q6"
+                    value="1"
+                    checked={walk_q6 === '1'}
+                    onChange={(e)=>setWalk_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 나보다 앞서 걷지만 줄은 느슨하게 나와 보조를 맞추려고 노력한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q6"
+                    value="2"
+                    checked={walk_q6 === '2'}
+                    onChange={(e)=>setWalk_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 나를 고려하지 않고 줄이 팽팽할 정도로 앞으로 당긴다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q6"
+                    value="3"
+                    checked={walk_q6 === '3'}
+                    onChange={(e)=>setWalk_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 내 옆에 바로 붙어 보행한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q6"
+                    value="4"
+                    checked={walk_q6 === '4'}
+                    onChange={(e)=>setWalk_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 뒤쪽으로 자꾸 쳐진다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q6"
+                    value="5"
+                    checked={walk_q6 === '5'}
+                    onChange={(e)=>setWalk_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>⑤ 속도가 일정하지 않다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q6"
+                    value="기타"
+                    checked={walk_q6 === '기타'}
+                    onChange={(e)=>setWalk_q6(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {walk_q6 === '기타' && (
+                      <input
+                        type="text"
+                        value={walk_q6_other}
+                        onChange={(e)=>setWalk_q6_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 반응을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 보행 질문 7 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q7-title">
+              <h4 id="walk-q7-title" className="font-semibold text-gray-800 mb-3">7. 산책 시 강아지의 행동은?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q7"
+                    value="1"
+                    checked={walk_q7 === '1'}
+                    onChange={(e)=>setWalk_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 이따금 나를 살피며 똑바로 잘 걷는다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q7"
+                    value="2"
+                    checked={walk_q7 === '2'}
+                    onChange={(e)=>setWalk_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 나에게 너무 집중해서 몸이 사선으로 치우친다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q7"
+                    value="3"
+                    checked={walk_q7 === '3'}
+                    onChange={(e)=>setWalk_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 나에게 전혀 관심이 없고 계속 주변을 두리번 거린다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q7"
+                    value="4"
+                    checked={walk_q7 === '4'}
+                    onChange={(e)=>setWalk_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 나에게 전혀 관심이 없고 계속 냄새만 맡으려고 한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q7"
+                    value="5"
+                    checked={walk_q7 === '5'}
+                    onChange={(e)=>setWalk_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>⑤ 땅에 떨어져있는 것을 계속 주워먹으려고 한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q7"
+                    value="6"
+                    checked={walk_q7 === '6'}
+                    onChange={(e)=>setWalk_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>⑥ 보행도중 앉거나 서서 안가려고 버틴다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="walk_q7"
+                    value="기타"
+                    checked={walk_q7 === '기타'}
+                    onChange={(e)=>setWalk_q7(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {walk_q7 === '기타' && (
+                      <input
+                        type="text"
+                        value={walk_q7_other}
+                        onChange={(e)=>setWalk_q7_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 행동을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 보행 질문 8 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q8-title">
+              <h4 id="walk-q8-title" className="font-semibold text-gray-800 mb-3">8. 강아지나 고양이, 새 등을 만났을 때의 행동은? (유혹 순위별로 표시)</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q8.includes('1')}
+                    onChange={(e)=>handleCheckboxChange(walk_q8, '1', setWalk_q8)}
+                    className="mt-1"
+                  />
+                  <span>① 전혀 관심 없다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q8.includes('2')}
+                    onChange={(e)=>handleCheckboxChange(walk_q8, '2', setWalk_q8)}
+                    className="mt-1"
+                  />
+                  <span>② 관심을 보이나 우두커니 서 있다가 곧 나에게 관심을 돌린다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q8.includes('3')}
+                    onChange={(e)=>handleCheckboxChange(walk_q8, '3', setWalk_q8)}
+                    className="mt-1"
+                  />
+                  <span>③ 마구 흥분하며 무조건 다가가려고 힘을 쓴다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q8.includes('4')}
+                    onChange={(e)=>handleCheckboxChange(walk_q8, '4', setWalk_q8)}
+                    className="mt-1"
+                  />
+                  <span>④ 멀리서 발견하면 앞다리 자세를 낮추며 플레이 하려는 자세를 취한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q8.includes('5')}
+                    onChange={(e)=>handleCheckboxChange(walk_q8, '5', setWalk_q8)}
+                    className="mt-1"
+                  />
+                  <span>⑤ 다가오면 무서워서 도망가려 한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q8.includes('6')}
+                    onChange={(e)=>handleCheckboxChange(walk_q8, '6', setWalk_q8)}
+                    className="mt-1"
+                  />
+                  <span>⑥ 다가오면 털을 세우고 약간 공격적으로 행동한다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q8.includes('기타')}
+                    onChange={(e)=>handleCheckboxChange(walk_q8, '기타', setWalk_q8)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {walk_q8.includes('기타') && (
+                      <input
+                        type="text"
+                        value={walk_q8_other}
+                        onChange={(e)=>setWalk_q8_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 행동을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 보행 질문 9 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q9-title">
+              <h4 id="walk-q9-title" className="font-semibold text-gray-800 mb-3">9. 산책 시 사람을 만났을 때 행동은?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q9.includes('1')}
+                    onChange={(e)=>handleCheckboxChange(walk_q9, '1', setWalk_q9)}
+                    className="mt-1"
+                  />
+                  <span>① 전혀 관심 없다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q9.includes('2')}
+                    onChange={(e)=>handleCheckboxChange(walk_q9, '2', setWalk_q9)}
+                    className="mt-1"
+                  />
+                  <span>② 개에게 관심을 보이는 사람에게 흥분하거나 점프한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q9.includes('3')}
+                    onChange={(e)=>handleCheckboxChange(walk_q9, '3', setWalk_q9)}
+                    className="mt-1"
+                  />
+                  <span>③ 지나가는 사람의 손이나 들고있는 물건에 입을 대려고 한다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q9.includes('4')}
+                    onChange={(e)=>handleCheckboxChange(walk_q9, '4', setWalk_q9)}
+                    className="mt-1"
+                  />
+                  <span>④ 아이들에게 관심을 많이 보인다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q9.includes('5')}
+                    onChange={(e)=>handleCheckboxChange(walk_q9, '5', setWalk_q9)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>⑤ 특정 사람에게 무서워하는 반응을 보인다. (대상:</span>
+                    {walk_q9.includes('5') && (
+                      <input
+                        type="text"
+                        value={walk_q9_target}
+                        onChange={(e)=>setWalk_q9_target(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-48 inline-block"
+                        placeholder="예: 노인, 어린이 등"
+                      />
+                    )}
+                    <span>)</span>
+                  </div>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={walk_q9.includes('기타')}
+                    onChange={(e)=>handleCheckboxChange(walk_q9, '기타', setWalk_q9)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {walk_q9.includes('기타') && (
+                      <input
+                        type="text"
+                        value={walk_q9_other}
+                        onChange={(e)=>setWalk_q9_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 행동을 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 보행 질문 10 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q10-title">
+              <h4 id="walk-q10-title" className="font-semibold text-gray-800 mb-3">10. 산책 시 짖거나 으르렁 거림, 꼬리 내림, 자세 낮춤, 갑자기 날뜀 등의 반응을 보인 물체 혹은 소리가 있다면 기록해 주세요.</h4>
+              <div className="ml-4">
+                <textarea
+                  value={walk_q10}
+                  onChange={(e)=>setWalk_q10(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  rows={4}
+                  placeholder="반응을 보인 물체나 소리를 자유롭게 작성해주세요."
+                />
+              </div>
+            </div>
+
+            {/* 보행 질문 11 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q11-title">
+              <h4 id="walk-q11-title" className="font-semibold text-gray-800 mb-3">11. 산책 시 강아지가 크게 관심을 보이는 대상을 모두 적어 주세요.</h4>
+              <div className="ml-4">
+                <textarea
+                  value={walk_q11}
+                  onChange={(e)=>setWalk_q11(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  rows={4}
+                  placeholder="강아지가 관심을 보이는 대상을 자유롭게 작성해주세요."
+                />
+              </div>
+            </div>
+          </div>
+            </>
+          )}
+
           {/* 버튼 영역 */}
           <div className="flex justify-between items-center sticky bottom-0 bg-white pt-6 border-t mt-8">
             <div className="flex space-x-4">
-              {(currentStep === 2 || currentStep === 3) && (
+              {(currentStep === 2 || currentStep === 3 || currentStep === 4) && (
                 <button
                   type="button"
                   onClick={handlePrevStep}
@@ -1955,6 +2603,27 @@ export const MonthlyReportPage = () => {
               )}
 
               {currentStep === 3 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleSaveDraft}
+                    disabled={status === 'completed'}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    중간 저장
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    disabled={status === 'completed'}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    다음 →
+                  </button>
+                </>
+              )}
+
+              {currentStep === 4 && (
                 <>
                   <button
                     type="button"
