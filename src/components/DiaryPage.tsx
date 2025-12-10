@@ -1463,11 +1463,13 @@ export const DiaryPage = () => {
       )}
 
       {/* 월간 보고서 */}
-      {currentTab === 'monthly' && user?.role === 'puppyTeacher' ? (
+      {currentTab === 'monthly' && user?.role === 'puppyTeacher' && (
         <MonthlyReportPage />
-      ) : (
+      )}
+
+      {/* 1일 다이어리 */}
+      {(currentTab === 'daily' || user?.role !== 'puppyTeacher') && (
         <>
-          {/* 1일 다이어리 */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800">
               {user?.role === 'puppyTeacher' ? '1일 다이어리' : '다이어리'}
@@ -1481,37 +1483,37 @@ export const DiaryPage = () => {
           </div>
 
           {posts.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-500">작성된 다이어리가 없습니다.</p>
-          <button
-            onClick={() => setIsWriting(true)}
-            className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
-          >
-            첫 다이어리 작성하기
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {posts.map((post) => (
-            <div
-              key={post.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
-            >
+            <div className="bg-white rounded-lg shadow-md p-12 text-center">
+              <p className="text-gray-500">작성된 다이어리가 없습니다.</p>
               <button
-                onClick={() => setViewingPost(post)}
-                className="text-xl font-bold text-blue-600 hover:text-blue-800 underline mb-2 text-left w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+                onClick={() => setIsWriting(true)}
+                className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
               >
-                {post.title}
+                첫 다이어리 작성하기
               </button>
-              <div className="flex items-center text-sm text-gray-600 space-x-4">
-                <span>{post.userName}</span>
-                {post.dogName && <span>{post.dogName}</span>}
-                <span>{formatDate(post.createdAt)}</span>
-              </div>
             </div>
-          ))}
-        </div>
-      )}
+          ) : (
+            <div className="space-y-4">
+              {posts.map((post) => (
+                <div
+                  key={post.id}
+                  className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+                >
+                  <button
+                    onClick={() => setViewingPost(post)}
+                    className="text-xl font-bold text-blue-600 hover:text-blue-800 underline mb-2 text-left w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+                  >
+                    {post.title}
+                  </button>
+                  <div className="flex items-center text-sm text-gray-600 space-x-4">
+                    <span>{post.userName}</span>
+                    {post.dogName && <span>{post.dogName}</span>}
+                    <span>{formatDate(post.createdAt)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </>
       )}
     </div>

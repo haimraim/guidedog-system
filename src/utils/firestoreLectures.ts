@@ -15,7 +15,7 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import type { Lecture, LectureCategory, DiaryPost, BoardingForm, MedicalRecord, MedicationCheck, Product, ProductOrder } from '../types/types';
+import type { Lecture, LectureCategory, DiaryPost, BoardingForm, MedicalRecord, MedicationCheck, Product, ProductOrder, MonthlyReport } from '../types/types';
 
 // ==================== 일반 강의실 (Public Lectures) ====================
 
@@ -625,6 +625,60 @@ export const deleteProductOrder = async (id: string): Promise<void> => {
     localStorage.setItem('guidedog_orders', JSON.stringify(filtered));
   } catch (error) {
     console.error('물품 신청 삭제 실패:', error);
+    throw error;
+  }
+};
+
+// ==================== 월간 보고서 (Monthly Reports) ====================
+
+const MONTHLY_REPORTS_COLLECTION = 'monthly_reports';
+
+export const getMonthlyReports = async (): Promise<MonthlyReport[]> => {
+  try {
+    const reportsRef = collection(db, MONTHLY_REPORTS_COLLECTION);
+    const q = query(reportsRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as MonthlyReport[];
+  } catch (error) {
+    console.error('월간 보고서 목록 로드 실패:', error);
+    const data = localStorage.getItem('guidedog_monthly_reports');
+    return data ? JSON.parse(data) : [];
+  }
+};
+
+export const saveMonthlyReport = async (report: MonthlyReport): Promise<void> => {
+  try {
+    const reportRef = doc(db, MONTHLY_REPORTS_COLLECTION, report.id);
+    await setDoc(reportRef, report);
+
+    const reports = await getMonthlyReports();
+    const existingIndex = reports.findIndex(r => r.id === report.id);
+    if (existingIndex >= 0) {
+      reports[existingIndex] = report;
+    } else {
+      reports.unshift(report);
+    }
+    localStorage.setItem('guidedog_monthly_reports', JSON.stringify(reports));
+  } catch (error) {
+    console.error('월간 보고서 저장 실패:', error);
+    throw error;
+  }
+};
+
+export const deleteMonthlyReport = async (id: string): Promise<void> => {
+  try {
+    const reportRef = doc(db, MONTHLY_REPORTS_COLLECTION, id);
+    await deleteDoc(reportRef);
+
+    const reports = await getMonthlyReports();
+    const filtered = reports.filter(r => r.id !== id);
+    localStorage.setItem('guidedog_monthly_reports', JSON.stringify(filtered));
+  } catch (error) {
+    console.error('월간 보고서 삭제 실패:', error);
     throw error;
   }
 };

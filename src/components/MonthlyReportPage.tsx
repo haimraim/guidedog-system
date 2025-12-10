@@ -2,11 +2,23 @@
  * 월간 보고서 작성 페이지 (퍼피티칭 전용)
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import type { MonthlyReport } from '../types/types';
+import { generateId } from '../utils/storage';
+import {
+  getMonthlyReports,
+  saveMonthlyReport,
+  deleteMonthlyReport,
+} from '../utils/firestoreLectures';
 
 export const MonthlyReportPage = () => {
   const { user } = useAuth();
+
+  // 목록/작성 모드
+  const [isWriting, setIsWriting] = useState(false);
+  const [reports, setReports] = useState<MonthlyReport[]>([]);
+  const [viewingReport, setViewingReport] = useState<MonthlyReport | null>(null);
 
   // 폼 상태
   const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 집에서의 품행, 3: DT 품행 기록, 4: 보행 훈련, 5: 사회화 훈련
@@ -264,12 +276,29 @@ export const MonthlyReportPage = () => {
     }
   };
 
-  const createReportData = () => ({
+  useEffect(() => {
+    loadReports();
+  }, []);
+
+  const loadReports = async () => {
+    try {
+      const loadedReports = await getMonthlyReports();
+      // 본인이 작성한 월간 보고서만 표시
+      const filteredReports = loadedReports.filter(r => r.userId === user?.id);
+      setReports(filteredReports);
+    } catch (error) {
+      console.error('월간 보고서 로드 실패:', error);
+      alert('월간 보고서를 불러오는데 실패했습니다.');
+    }
+  };
+
+  const createReportData = (): MonthlyReport => ({
+    id: generateId(),
     userId: user?.id || '',
     userName: user?.name || '',
     dogName: user?.dogName || '',
-    reportDate,
-    status,
+    reportMonth: reportDate.substring(0, 7), // YYYY-MM 형식으로 변환
+    createdAt: new Date().toISOString(),
     // 급식
     foodType, dailyFeedingCount, feedingAmountPerMeal,
     // 건강
@@ -331,28 +360,43 @@ export const MonthlyReportPage = () => {
     updatedAt: new Date().toISOString(),
   });
 
-  const handleSaveDraft = () => {
+  const handleSaveDraft = async () => {
     if (!reportDate) {
       alert('보고 일자를 선택해주세요.');
       return;
     }
 
-    const monthlyReport = createReportData();
-    console.log('임시 저장:', monthlyReport);
-    alert('임시 저장되었습니다. 나중에 이어서 작성할 수 있습니다.');
+    try {
+      const monthlyReport = createReportData();
+      await saveMonthlyReport(monthlyReport);
+      await loadReports();
+      alert('임시 저장되었습니다.');
+      setIsWriting(false);
+      setCurrentStep(1);
+    } catch (error) {
+      console.error('저장 실패:', error);
+      alert('저장에 실패했습니다.');
+    }
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     if (!reportDate) {
       alert('보고 일자를 선택해주세요.');
       return;
     }
 
-    if (window.confirm('완료하시겠습니까? 완료 후에는 수정할 수 없습니다.')) {
-      setStatus('completed');
-      const monthlyReport = { ...createReportData(), status: 'completed' };
-      console.log('완료된 월간 보고서:', monthlyReport);
-      alert('월간 보고서가 완료되었습니다. 더 이상 수정할 수 없습니다.');
+    if (window.confirm('제출하시겠습니까?')) {
+      try {
+        const monthlyReport = createReportData();
+        await saveMonthlyReport(monthlyReport);
+        await loadReports();
+        alert('월간 보고서가 제출되었습니다.');
+        setIsWriting(false);
+        setCurrentStep(1);
+      } catch (error) {
+        console.error('제출 실패:', error);
+        alert('제출에 실패했습니다.');
+      }
     }
   };
 
@@ -370,14 +414,31 @@ export const MonthlyReportPage = () => {
     }
   };
 
-  return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          월간 보고서 작성
-          {status === 'completed' && <span className="ml-4 text-sm bg-green-100 text-green-800 px-3 py-1 rounded-full">완료됨</span>}
-          {status === 'draft' && <span className="ml-4 text-sm bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">작성 중</span>}
-        </h2>
+  // 날짜 포맷 함수
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  };
+
+  // 작성 중일 때
+  if (isWriting) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">
+              월간 보고서 작성
+            </h2>
+            <button
+              onClick={() => {
+                setIsWriting(false);
+                setCurrentStep(1);
+              }}
+              className="text-gray-600 hover:text-gray-800"
+            >
+              ← 목록으로
+            </button>
+          </div>
 
         {/* 단계 표시 */}
         <div className="flex items-center justify-center mb-8">
@@ -3412,6 +3473,73 @@ export const MonthlyReportPage = () => {
           </div>
         </div>
       </div>
+    </div>
+    );
+  }
+
+  // 목록 뷰
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">월간 보고서</h2>
+        <button
+          onClick={() => setIsWriting(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+        >
+          글쓰기
+        </button>
+      </div>
+
+      {reports.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-md p-12 text-center">
+          <p className="text-gray-500">작성된 월간 보고서가 없습니다.</p>
+          <button
+            onClick={() => setIsWriting(true)}
+            className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+          >
+            첫 보고서 작성하기
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {reports.map((report) => (
+            <div
+              key={report.id}
+              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    {report.reportMonth} 월간 보고서
+                  </h3>
+                  <div className="flex items-center text-sm text-gray-600 space-x-4">
+                    <span>{report.userName}</span>
+                    <span>{report.dogName}</span>
+                    <span>{formatDate(report.createdAt)}</span>
+                  </div>
+                </div>
+                <button
+                  onClick={async () => {
+                    if (window.confirm('이 보고서를 삭제하시겠습니까?')) {
+                      try {
+                        await deleteMonthlyReport(report.id);
+                        await loadReports();
+                        alert('삭제되었습니다.');
+                      } catch (error) {
+                        console.error('삭제 실패:', error);
+                        alert('삭제에 실패했습니다.');
+                      }
+                    }
+                  }}
+                  className="text-red-600 hover:text-red-800 ml-4"
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
