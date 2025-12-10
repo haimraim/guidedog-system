@@ -9,7 +9,7 @@ export const MonthlyReportPage = () => {
   const { user } = useAuth();
 
   // 폼 상태
-  const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 집에서의 품행
+  const [currentStep, setCurrentStep] = useState(1); // 1: 기본정보, 2: 집에서의 품행, 3: DT 품행 기록
   const [status, setStatus] = useState<'draft' | 'completed'>('draft'); // 상태: 임시저장/완료
 
   // 보고 일자 (자동으로 오늘 날짜 설정)
@@ -137,6 +137,45 @@ export const MonthlyReportPage = () => {
   // 질문 21
   const [q21, setQ21] = useState('');
 
+  // DT 품행 기록
+  // DT 질문 1
+  const [dt1_time, setDt1_time] = useState(''); // DT1(소변) 반응 시간
+  const [dt2_time, setDt2_time] = useState(''); // DT2(대변) 반응 시간
+
+  // DT 질문 2
+  const [dt_indoor_blocked, setDt_indoor_blocked] = useState(''); // 실내 배변 장소 차단 여부
+
+  // DT 질문 3
+  const [dt_indoor_type, setDt_indoor_type] = useState(''); // 실내배변 형태
+
+  // DT 질문 4
+  const [dt_belt_type, setDt_belt_type] = useState(''); // 배변벨트 사용 여부
+
+  // DT 질문 5
+  const [dt1_location, setDt1_location] = useState(''); // DT1 배변 장소 (실내/실외)
+  const [dt2_location, setDt2_location] = useState(''); // DT2 배변 장소 (실내/실외)
+
+  // DT 질문 6
+  const [dt_mistake_1_dt1, setDt_mistake_1_dt1] = useState(false); // ① 안 한다 - DT1
+  const [dt_mistake_1_dt2, setDt_mistake_1_dt2] = useState(false); // ① 안 한다 - DT2
+  const [dt_mistake_2_dt1, setDt_mistake_2_dt1] = useState(false); // ② 주 1회 정도 - DT1
+  const [dt_mistake_2_dt2, setDt_mistake_2_dt2] = useState(false); // ② 주 1회 정도 - DT2
+  const [dt_mistake_3_dt1, setDt_mistake_3_dt1] = useState(false); // ③ 주 2~3회 정도 - DT1
+  const [dt_mistake_3_dt2, setDt_mistake_3_dt2] = useState(false); // ③ 주 2~3회 정도 - DT2
+  const [dt_mistake_4_dt1, setDt_mistake_4_dt1] = useState(false); // ④ 주 4~5회 이상 - DT1
+  const [dt_mistake_4_dt2, setDt_mistake_4_dt2] = useState(false); // ④ 주 4~5회 이상 - DT2
+
+  // DT 질문 7
+  const [dt_before_walk_dt1, setDt_before_walk_dt1] = useState(false); // DT1
+  const [dt_before_walk_dt2, setDt_before_walk_dt2] = useState(false); // DT2
+
+  // DT 질문 8
+  const [dt_signal, setDt_signal] = useState(''); // 신호 선택
+  const [dt_signal_other, setDt_signal_other] = useState(''); // 기타 입력
+
+  // DT 질문 9
+  const [dt_problems, setDt_problems] = useState(''); // 배변 문제 자유 텍스트
+
   const handleCheckboxChange = (currentArray: string[], value: string, setter: (val: string[]) => void) => {
     if (currentArray.includes(value)) {
       setter(currentArray.filter(v => v !== value));
@@ -177,6 +216,19 @@ export const MonthlyReportPage = () => {
     q19, q19_count,
     q20, q20_other,
     q21,
+    // DT 품행 기록
+    dt1_time, dt2_time,
+    dt_indoor_blocked,
+    dt_indoor_type,
+    dt_belt_type,
+    dt1_location, dt2_location,
+    dt_mistake_1_dt1, dt_mistake_1_dt2,
+    dt_mistake_2_dt1, dt_mistake_2_dt2,
+    dt_mistake_3_dt1, dt_mistake_3_dt2,
+    dt_mistake_4_dt1, dt_mistake_4_dt2,
+    dt_before_walk_dt1, dt_before_walk_dt2,
+    dt_signal, dt_signal_other,
+    dt_problems,
     updatedAt: new Date().toISOString(),
   });
 
@@ -1423,10 +1475,431 @@ export const MonthlyReportPage = () => {
             </>
           )}
 
+          {/* Step 3: DT 품행 기록 */}
+          {currentStep === 3 && (
+            <>
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-blue-500">DT 품행 기록</h3>
+
+            {/* DT 질문 1 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q1-title">
+              <h4 id="dt-q1-title" className="font-semibold text-gray-800 mb-3">1. '하나둘,하나둘' 명령어에 몇분안에 반응하나요?</h4>
+              <div className="ml-4 space-y-3">
+                <div className="flex items-center space-x-3">
+                  <label className="font-medium text-gray-700">DT1(소변)</label>
+                  <input
+                    type="number"
+                    value={dt1_time}
+                    onChange={(e)=>setDt1_time(e.target.value)}
+                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="분"
+                    min="0"
+                  />
+                  <span className="text-gray-600">분</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <label className="font-medium text-gray-700">DT2(대변)</label>
+                  <input
+                    type="number"
+                    value={dt2_time}
+                    onChange={(e)=>setDt2_time(e.target.value)}
+                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    placeholder="분"
+                    min="0"
+                  />
+                  <span className="text-gray-600">분</span>
+                </div>
+              </div>
+            </div>
+
+            {/* DT 질문 2 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q2-title">
+              <h4 id="dt-q2-title" className="font-semibold text-gray-800 mb-3">2. 실내 배변 장소는 차단해 두었나요?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_indoor_blocked"
+                    value="예"
+                    checked={dt_indoor_blocked === '예'}
+                    onChange={(e)=>setDt_indoor_blocked(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>예</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_indoor_blocked"
+                    value="아니오"
+                    checked={dt_indoor_blocked === '아니오'}
+                    onChange={(e)=>setDt_indoor_blocked(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>아니오</span>
+                </label>
+              </div>
+            </div>
+
+            {/* DT 질문 3 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q3-title">
+              <h4 id="dt-q3-title" className="font-semibold text-gray-800 mb-3">3. 실내배변은 어떤 형태로 하고 있나요?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_indoor_type"
+                    value="배변매트"
+                    checked={dt_indoor_type === '배변매트'}
+                    onChange={(e)=>setDt_indoor_type(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>배변매트</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_indoor_type"
+                    value="배변패드"
+                    checked={dt_indoor_type === '배변패드'}
+                    onChange={(e)=>setDt_indoor_type(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>배변패드</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_indoor_type"
+                    value="기타"
+                    checked={dt_indoor_type === '기타'}
+                    onChange={(e)=>setDt_indoor_type(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>기타</span>
+                </label>
+              </div>
+            </div>
+
+            {/* DT 질문 4 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q4-title">
+              <h4 id="dt-q4-title" className="font-semibold text-gray-800 mb-3">4. 배변벨트 사용 여부</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_belt_type"
+                    value="사용안함"
+                    checked={dt_belt_type === '사용안함'}
+                    onChange={(e)=>setDt_belt_type(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>사용안함</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_belt_type"
+                    value="벨트만"
+                    checked={dt_belt_type === '벨트만'}
+                    onChange={(e)=>setDt_belt_type(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>벨트만</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_belt_type"
+                    value="벨트+봉투"
+                    checked={dt_belt_type === '벨트+봉투'}
+                    onChange={(e)=>setDt_belt_type(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>벨트+봉투</span>
+                </label>
+              </div>
+            </div>
+
+            {/* DT 질문 5 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q5-title">
+              <h4 id="dt-q5-title" className="font-semibold text-gray-800 mb-3">5. 배변 장소</h4>
+              <div className="ml-4 space-y-4">
+                <div>
+                  <p className="font-medium text-gray-700 mb-2">DT1</p>
+                  <div className="ml-4 space-y-2">
+                    <label className="flex items-center space-x-3">
+                      <input
+                        type="radio"
+                        name="dt1_location"
+                        value="실내"
+                        checked={dt1_location === '실내'}
+                        onChange={(e)=>setDt1_location(e.target.value)}
+                        className="mt-1"
+                      />
+                      <span>실내</span>
+                    </label>
+                    <label className="flex items-center space-x-3">
+                      <input
+                        type="radio"
+                        name="dt1_location"
+                        value="실외"
+                        checked={dt1_location === '실외'}
+                        onChange={(e)=>setDt1_location(e.target.value)}
+                        className="mt-1"
+                      />
+                      <span>실외</span>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-medium text-gray-700 mb-2">DT2</p>
+                  <div className="ml-4 space-y-2">
+                    <label className="flex items-center space-x-3">
+                      <input
+                        type="radio"
+                        name="dt2_location"
+                        value="실내"
+                        checked={dt2_location === '실내'}
+                        onChange={(e)=>setDt2_location(e.target.value)}
+                        className="mt-1"
+                      />
+                      <span>실내</span>
+                    </label>
+                    <label className="flex items-center space-x-3">
+                      <input
+                        type="radio"
+                        name="dt2_location"
+                        value="실외"
+                        checked={dt2_location === '실외'}
+                        onChange={(e)=>setDt2_location(e.target.value)}
+                        className="mt-1"
+                      />
+                      <span>실외</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* DT 질문 6 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q6-title">
+              <h4 id="dt-q6-title" className="font-semibold text-gray-800 mb-3">6. 보행 도중에 DT 실수를 할 때가 있나요?</h4>
+              <div className="ml-4 space-y-3">
+                <div className="flex items-start space-x-4">
+                  <span className="whitespace-nowrap">① 안 한다.</span>
+                  <div className="space-x-4">
+                    <label className="inline-flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={dt_mistake_1_dt1}
+                        onChange={(e)=>setDt_mistake_1_dt1(e.target.checked)}
+                        className="mt-1"
+                      />
+                      <span>DT1</span>
+                    </label>
+                    <label className="inline-flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={dt_mistake_1_dt2}
+                        onChange={(e)=>setDt_mistake_1_dt2(e.target.checked)}
+                        className="mt-1"
+                      />
+                      <span>DT2</span>
+                    </label>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <span className="whitespace-nowrap">② 주 1회 정도 한다.</span>
+                  <div className="space-x-4">
+                    <label className="inline-flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={dt_mistake_2_dt1}
+                        onChange={(e)=>setDt_mistake_2_dt1(e.target.checked)}
+                        className="mt-1"
+                      />
+                      <span>DT1</span>
+                    </label>
+                    <label className="inline-flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={dt_mistake_2_dt2}
+                        onChange={(e)=>setDt_mistake_2_dt2(e.target.checked)}
+                        className="mt-1"
+                      />
+                      <span>DT2</span>
+                    </label>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <span className="whitespace-nowrap">③ 주 2~3회 정도 한다.</span>
+                  <div className="space-x-4">
+                    <label className="inline-flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={dt_mistake_3_dt1}
+                        onChange={(e)=>setDt_mistake_3_dt1(e.target.checked)}
+                        className="mt-1"
+                      />
+                      <span>DT1</span>
+                    </label>
+                    <label className="inline-flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={dt_mistake_3_dt2}
+                        onChange={(e)=>setDt_mistake_3_dt2(e.target.checked)}
+                        className="mt-1"
+                      />
+                      <span>DT2</span>
+                    </label>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <span className="whitespace-nowrap">④ 주 4~5회 이상 한다.</span>
+                  <div className="space-x-4">
+                    <label className="inline-flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={dt_mistake_4_dt1}
+                        onChange={(e)=>setDt_mistake_4_dt1(e.target.checked)}
+                        className="mt-1"
+                      />
+                      <span>DT1</span>
+                    </label>
+                    <label className="inline-flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={dt_mistake_4_dt2}
+                        onChange={(e)=>setDt_mistake_4_dt2(e.target.checked)}
+                        className="mt-1"
+                      />
+                      <span>DT2</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* DT 질문 7 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q7-title">
+              <h4 id="dt-q7-title" className="font-semibold text-gray-800 mb-3">7. 보행 전에 반드시 DT를 하고 걷나요?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={dt_before_walk_dt1}
+                    onChange={(e)=>setDt_before_walk_dt1(e.target.checked)}
+                    className="mt-1"
+                  />
+                  <span>DT1</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={dt_before_walk_dt2}
+                    onChange={(e)=>setDt_before_walk_dt2(e.target.checked)}
+                    className="mt-1"
+                  />
+                  <span>DT2</span>
+                </label>
+              </div>
+            </div>
+
+            {/* DT 질문 8 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q8-title">
+              <h4 id="dt-q8-title" className="font-semibold text-gray-800 mb-3">8. 보행 도중 DT를 하고 싶어할 때 특별히 보내는 신호가 있나요?</h4>
+              <div className="ml-4 space-y-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_signal"
+                    value="1"
+                    checked={dt_signal === '1'}
+                    onChange={(e)=>setDt_signal(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>① 안 걸으려고 멈춰 선다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_signal"
+                    value="2"
+                    checked={dt_signal === '2'}
+                    onChange={(e)=>setDt_signal(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>② 길 가 쪽으로 냄새를 맡으며 사람을 끌고 간다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_signal"
+                    value="3"
+                    checked={dt_signal === '3'}
+                    onChange={(e)=>setDt_signal(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>③ 걸음이 느려진다.</span>
+                </label>
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_signal"
+                    value="4"
+                    checked={dt_signal === '4'}
+                    onChange={(e)=>setDt_signal(e.target.value)}
+                    className="mt-1"
+                  />
+                  <span>④ 걸어가면서 자연스럽게 해 버린다.</span>
+                </label>
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="radio"
+                    name="dt_signal"
+                    value="기타"
+                    checked={dt_signal === '기타'}
+                    onChange={(e)=>setDt_signal(e.target.value)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <span>기타:</span>
+                    {dt_signal === '기타' && (
+                      <input
+                        type="text"
+                        value={dt_signal_other}
+                        onChange={(e)=>setDt_signal_other(e.target.value)}
+                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        placeholder="기타 신호를 입력해주세요"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* DT 질문 9 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q9-title">
+              <h4 id="dt-q9-title" className="font-semibold text-gray-800 mb-3">9. 현재 배변문제가 있다면 어떤 것이 있나요?</h4>
+              <div className="ml-4">
+                <textarea
+                  value={dt_problems}
+                  onChange={(e)=>setDt_problems(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  rows={4}
+                  placeholder="현재 배변과 관련된 문제점을 자유롭게 작성해주세요."
+                />
+              </div>
+            </div>
+          </div>
+            </>
+          )}
+
           {/* 버튼 영역 */}
           <div className="flex justify-between items-center sticky bottom-0 bg-white pt-6 border-t mt-8">
             <div className="flex space-x-4">
-              {currentStep === 2 && (
+              {(currentStep === 2 || currentStep === 3) && (
                 <button
                   type="button"
                   onClick={handlePrevStep}
@@ -1461,6 +1934,27 @@ export const MonthlyReportPage = () => {
               )}
 
               {currentStep === 2 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleSaveDraft}
+                    disabled={status === 'completed'}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    중간 저장
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    disabled={status === 'completed'}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    다음 →
+                  </button>
+                </>
+              )}
+
+              {currentStep === 3 && (
                 <>
                   <button
                     type="button"
