@@ -717,9 +717,545 @@ export const MonthlyReportPage = () => {
               </div>
             </div>
 
-            {/* 질문 12 - 계속... */}
-            <div className="text-center text-gray-500 py-8">
-              <p>질문 12-21 작성 중...</p>
+            {/* 질문 12 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q12-title">
+              <h4 id="q12-title" className="font-semibold text-gray-800 mb-3">12. 집안에서 기본훈련(앉아 / 엎드려 / 서 )에 대한 강아지의 수준은?</h4>
+              <div className="space-y-2 ml-4">
+                <div>
+                  <label className="flex items-start">
+                    <input type="radio" name="q12_option" value="1" checked={q12_option==='1'} onChange={(e)=>setQ12_option(e.target.value)} className="mt-1 mr-2" />
+                    <span>① 한번 명령어에 바로 실시한다.</span>
+                  </label>
+                  {q12_option==='1' && (
+                    <div className="ml-6 mt-2 space-y-2">
+                      <p className="text-sm text-gray-700 mb-2">해당하는 것에 체크:</p>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_commands.includes('앉아')} onChange={()=>handleCheckboxChange(q12_commands,'앉아',setQ12_commands)} className="mr-2" />
+                        <span>앉아</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_commands.includes('엎드려')} onChange={()=>handleCheckboxChange(q12_commands,'엎드려',setQ12_commands)} className="mr-2" />
+                        <span>엎드려</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_commands.includes('서')} onChange={()=>handleCheckboxChange(q12_commands,'서',setQ12_commands)} className="mr-2" />
+                        <span>서</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_commands.includes('기다려')} onChange={()=>handleCheckboxChange(q12_commands,'기다려',setQ12_commands)} className="mr-2" />
+                        <span>기다려</span>
+                      </label>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="flex items-start">
+                    <input type="radio" name="q12_option" value="2" checked={q12_option==='2'} onChange={(e)=>setQ12_option(e.target.value)} className="mt-1 mr-2" />
+                    <span>② 명령어를 아직 잘 모르는것 같다.</span>
+                  </label>
+                  {q12_option==='2' && (
+                    <div className="ml-6 mt-2 space-y-2">
+                      <p className="text-sm text-gray-700 mb-2">해당하는 것에 체크:</p>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_commands.includes('앉아')} onChange={()=>handleCheckboxChange(q12_commands,'앉아',setQ12_commands)} className="mr-2" />
+                        <span>앉아</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_commands.includes('엎드려')} onChange={()=>handleCheckboxChange(q12_commands,'엎드려',setQ12_commands)} className="mr-2" />
+                        <span>엎드려</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_commands.includes('서')} onChange={()=>handleCheckboxChange(q12_commands,'서',setQ12_commands)} className="mr-2" />
+                        <span>서</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_commands.includes('기다려')} onChange={()=>handleCheckboxChange(q12_commands,'기다려',setQ12_commands)} className="mr-2" />
+                        <span>기다려</span>
+                      </label>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="flex items-start">
+                    <input type="radio" name="q12_option" value="3" checked={q12_option==='3'} onChange={(e)=>setQ12_option(e.target.value)} className="mt-1 mr-2" />
+                    <span>③ '기다려' 할 수 있는 시간</span>
+                  </label>
+                  {q12_option==='3' && (
+                    <div className="ml-6 mt-2 space-y-2">
+                      <div>
+                        <label className="text-sm text-gray-700">상태</label>
+                        <input
+                          type="text"
+                          value={q12_wait_state}
+                          onChange={(e)=>setQ12_wait_state(e.target.value)}
+                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-full max-w-md"
+                          placeholder="예: 편안하게 앉아있음"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm text-gray-700">시간</label>
+                        <input
+                          type="text"
+                          value={q12_wait_time}
+                          onChange={(e)=>setQ12_wait_time(e.target.value)}
+                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-48"
+                          placeholder="예: 5분"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="flex items-start">
+                    <input type="radio" name="q12_option" value="4" checked={q12_option==='4'} onChange={(e)=>setQ12_option(e.target.value)} className="mt-1 mr-2" />
+                    <span>④ '기다려' 할 수 있는 수준</span>
+                  </label>
+                  {q12_option==='4' && (
+                    <div className="ml-6 mt-2 space-y-2">
+                      <p className="text-sm text-gray-700 mb-2">해당하는 것에 체크:</p>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_wait_levels.includes('바로옆')} onChange={()=>handleCheckboxChange(q12_wait_levels,'바로옆',setQ12_wait_levels)} className="mr-2" />
+                        <span>바로옆</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_wait_levels.includes('몇발자국 떨어져서')} onChange={()=>handleCheckboxChange(q12_wait_levels,'몇발자국 떨어져서',setQ12_wait_levels)} className="mr-2" />
+                        <span>몇발자국 떨어져서</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_wait_levels.includes('사람이 왔다갔다 함')} onChange={()=>handleCheckboxChange(q12_wait_levels,'사람이 왔다갔다 함',setQ12_wait_levels)} className="mr-2" />
+                        <span>사람이 왔다갔다 함</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_wait_levels.includes('개의 몸을 넘어다님')} onChange={()=>handleCheckboxChange(q12_wait_levels,'개의 몸을 넘어다님',setQ12_wait_levels)} className="mr-2" />
+                        <span>개의 몸을 넘어다님</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q12_wait_levels.includes('사람이 안보이는 곳으로 사라짐')} onChange={()=>handleCheckboxChange(q12_wait_levels,'사람이 안보이는 곳으로 사라짐',setQ12_wait_levels)} className="mr-2" />
+                        <span>사람이 안보이는 곳으로 사라짐</span>
+                      </label>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* 질문 13 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q13-title">
+              <h4 id="q13-title" className="font-semibold text-gray-800 mb-3">13. 바디핸들링이나 배를 보이며 눕히기를 했을때 강아지의 행동은?</h4>
+              <div className="space-y-2 ml-4">
+                <label className="flex items-start">
+                  <input type="radio" name="q13" value="1" checked={q13==='1'} onChange={(e)=>setQ13(e.target.value)} className="mt-1 mr-2" />
+                  <span>① 바로 편안하게 눕고 잠을 잘 때도 있다.</span>
+                </label>
+                <label className="flex items-start">
+                  <input type="radio" name="q13" value="2" checked={q13==='2'} onChange={(e)=>setQ13(e.target.value)} className="mt-1 mr-2" />
+                  <span>② 누워는 있으나 몸이 경직된 채로 긴장한다.</span>
+                </label>
+                <label className="flex items-start">
+                  <input type="radio" name="q13" value="3" checked={q13==='3'} onChange={(e)=>setQ13(e.target.value)} className="mt-1 mr-2" />
+                  <span>③ 발버둥 치며 일어나려고 한다.</span>
+                </label>
+                <label className="flex items-start">
+                  <input type="radio" name="q13" value="4" checked={q13==='4'} onChange={(e)=>setQ13(e.target.value)} className="mt-1 mr-2" />
+                  <span>④ 입질을 하며 일어나려고 한다.</span>
+                </label>
+                <label className="flex items-start">
+                  <input type="radio" name="q13" value="5" checked={q13==='5'} onChange={(e)=>setQ13(e.target.value)} className="mt-1 mr-2" />
+                  <span>⑤ 잘 누워 있다가 무언가 하려고 하면(귀청소 or 발톱손질) 빠져나가려 한다.</span>
+                </label>
+                <div className="mt-2">
+                  <span className="text-sm">(기타: </span>
+                  <input type="text" value={q13_other} onChange={(e)=>setQ13_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <span className="text-sm">)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 질문 14 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q14-title">
+              <h4 id="q14-title" className="font-semibold text-gray-800 mb-3">14. 이를 닦을 때 품행</h4>
+              <div className="ml-4 space-y-3">
+                <div className="flex gap-4 items-center">
+                  <div>
+                    <span className="text-sm text-gray-700 mr-2">자세:</span>
+                    <label className="mr-4">
+                      <input type="radio" name="q14_posture" value="누워서" checked={q14_posture==='누워서'} onChange={(e)=>setQ14_posture(e.target.value)} className="mr-1" />
+                      누워서
+                    </label>
+                    <label>
+                      <input type="radio" name="q14_posture" value="앉아서" checked={q14_posture==='앉아서'} onChange={(e)=>setQ14_posture(e.target.value)} className="mr-1" />
+                      앉아서
+                    </label>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-700">주별 횟수</label>
+                    <input
+                      type="text"
+                      value={q14_frequency}
+                      onChange={(e)=>setQ14_frequency(e.target.value)}
+                      className="ml-2 px-3 py-1 border border-gray-300 rounded w-24"
+                      placeholder="주 __회"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="flex items-start">
+                    <input type="radio" name="q14" value="1" checked={q14==='1'} onChange={(e)=>setQ14(e.target.value)} className="mt-1 mr-2" />
+                    <span>① 이 닦는 것을 좋아하며 편안히 있는다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="radio" name="q14" value="2" checked={q14==='2'} onChange={(e)=>setQ14(e.target.value)} className="mt-1 mr-2" />
+                    <span>② 이 닦는 것을 좋아하지만 칫솔을 씹는다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="radio" name="q14" value="3" checked={q14==='3'} onChange={(e)=>setQ14(e.target.value)} className="mt-1 mr-2" />
+                    <span>③ 칫솔을 가까이하면 고개를 돌린다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="radio" name="q14" value="4" checked={q14==='4'} onChange={(e)=>setQ14(e.target.value)} className="mt-1 mr-2" />
+                    <span>④ 이 닦는 것을 싫어해서 도망 다닌다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="radio" name="q14" value="5" checked={q14==='5'} onChange={(e)=>setQ14(e.target.value)} className="mt-1 mr-2" />
+                    <span>⑤ 이를 닦으려고 하면 털을 세우고 공격적인 반응을 보인다.</span>
+                  </label>
+                  <div className="mt-2">
+                    <span className="text-sm">(기타: </span>
+                    <input type="text" value={q14_other} onChange={(e)=>setQ14_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                    <span className="text-sm">)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 질문 15 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q15-title">
+              <h4 id="q15-title" className="font-semibold text-gray-800 mb-3">15. 그루밍(빗질) 할 때의 품행</h4>
+              <div className="ml-4 space-y-3">
+                <div className="flex gap-4 items-center">
+                  <div>
+                    <label className="text-sm text-gray-700">자세</label>
+                    <input
+                      type="text"
+                      value={q15_posture}
+                      onChange={(e)=>setQ15_posture(e.target.value)}
+                      className="ml-2 px-3 py-1 border border-gray-300 rounded w-48"
+                      placeholder="예: 누워서, 서서 등"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-700">주별 횟수</label>
+                    <input
+                      type="text"
+                      value={q15_frequency}
+                      onChange={(e)=>setQ15_frequency(e.target.value)}
+                      className="ml-2 px-3 py-1 border border-gray-300 rounded w-24"
+                      placeholder="주 __회"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="flex items-start">
+                    <input type="radio" name="q15" value="1" checked={q15==='1'} onChange={(e)=>setQ15(e.target.value)} className="mt-1 mr-2" />
+                    <span>① 그루밍 하는 것을 좋아하며 편안히 잘 있는다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="radio" name="q15" value="2" checked={q15==='2'} onChange={(e)=>setQ15(e.target.value)} className="mt-1 mr-2" />
+                    <span>② 그루밍 하는 것을 좋아하지만 가만히 있지 못하고 자꾸 움직인다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="radio" name="q15" value="3" checked={q15==='3'} onChange={(e)=>setQ15(e.target.value)} className="mt-1 mr-2" />
+                    <span>③ 고무빗을 가지고 놀려고 한다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="radio" name="q15" value="4" checked={q15==='4'} onChange={(e)=>setQ15(e.target.value)} className="mt-1 mr-2" />
+                    <span>④ 반대로 자세를 바꾸는 것에 대해 거부감을 보인다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="radio" name="q15" value="5" checked={q15==='5'} onChange={(e)=>setQ15(e.target.value)} className="mt-1 mr-2" />
+                    <span>⑤ 그루밍 하는 것을 싫어해서 불러도 잘 오지 않고 도망 다닌다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="radio" name="q15" value="6" checked={q15==='6'} onChange={(e)=>setQ15(e.target.value)} className="mt-1 mr-2" />
+                    <span>⑥ 그루밍 하는 것을 싫어해서 빗질 도중에 이를 드러내며 입질을 한다.</span>
+                  </label>
+                  <div className="mt-2">
+                    <span className="text-sm">(기타: </span>
+                    <input type="text" value={q15_other} onChange={(e)=>setQ15_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                    <span className="text-sm">)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 질문 16 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q16-title">
+              <h4 id="q16-title" className="font-semibold text-gray-800 mb-3">16. 발톱/발털손질 할 때의 품행</h4>
+              <div className="ml-4 space-y-3">
+                <div className="flex gap-4 items-center">
+                  <div>
+                    <span className="text-sm text-gray-700 mr-2">자세:</span>
+                    <label className="mr-4">
+                      <input type="radio" name="q16_posture" value="옆으로 누워" checked={q16_posture==='옆으로 누워'} onChange={(e)=>setQ16_posture(e.target.value)} className="mr-1" />
+                      옆으로 누워
+                    </label>
+                    <label>
+                      <input type="radio" name="q16_posture" value="배를 위로 향해" checked={q16_posture==='배를 위로 향해'} onChange={(e)=>setQ16_posture(e.target.value)} className="mr-1" />
+                      배를 위로 향해
+                    </label>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-700">주별 횟수</label>
+                    <input
+                      type="text"
+                      value={q16_frequency}
+                      onChange={(e)=>setQ16_frequency(e.target.value)}
+                      className="ml-2 px-3 py-1 border border-gray-300 rounded w-24"
+                      placeholder="주 __회"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div>
+                    <p className="text-sm text-gray-700 mb-2">① 편안하게 잘 하는 것에 표시하세요:</p>
+                    <div className="ml-4 space-y-1">
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q16_comfortable.includes('발톱손질')} onChange={()=>handleCheckboxChange(q16_comfortable,'발톱손질',setQ16_comfortable)} className="mr-2" />
+                        <span>발톱손질</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q16_comfortable.includes('발털손질')} onChange={()=>handleCheckboxChange(q16_comfortable,'발털손질',setQ16_comfortable)} className="mr-2" />
+                        <span>발털손질</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-700 mb-2">② 불편해하는 부위에 표시하세요:</p>
+                    <div className="ml-4 space-y-1">
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q16_uncomfortable.includes('앞발')} onChange={()=>handleCheckboxChange(q16_uncomfortable,'앞발',setQ16_uncomfortable)} className="mr-2" />
+                        <span>앞발</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q16_uncomfortable.includes('뒷발')} onChange={()=>handleCheckboxChange(q16_uncomfortable,'뒷발',setQ16_uncomfortable)} className="mr-2" />
+                        <span>뒷발</span>
+                      </label>
+                    </div>
+                  </div>
+                  <label className="flex items-start">
+                    <input type="checkbox" checked={q16_options.includes('입질')} onChange={()=>handleCheckboxChange(q16_options,'입질',setQ16_options)} className="mt-1 mr-2" />
+                    <span>③ 누워는 있으나 입질을 하려고 한다.</span>
+                  </label>
+                  <label className="flex items-start">
+                    <input type="checkbox" checked={q16_options.includes('발을빼거나밀어냄')} onChange={()=>handleCheckboxChange(q16_options,'발을빼거나밀어냄',setQ16_options)} className="mt-1 mr-2" />
+                    <span>④ 몸이 경직된 상태로 누워서 발을 빼거나 밀어내려고 한다.</span>
+                  </label>
+                  <div>
+                    <label className="flex items-start">
+                      <input type="checkbox" checked={q16_options.includes('도망가려함')} onChange={()=>handleCheckboxChange(q16_options,'도망가려함',setQ16_options)} className="mt-1 mr-2" />
+                      <span>⑤ 불러도 잘 오지 않고 도망 가려고 한다.</span>
+                    </label>
+                    {q16_options.includes('도망가려함') && (
+                      <div className="ml-6 mt-2">
+                        <span className="text-sm text-gray-700 mr-2">과거에 피가 난 적이 있나요?</span>
+                        <label className="mr-4">
+                          <input type="radio" name="q16_bleeding" value="Y" checked={q16_bleeding==='Y'} onChange={(e)=>setQ16_bleeding(e.target.value)} className="mr-1" />
+                          예
+                        </label>
+                        <label>
+                          <input type="radio" name="q16_bleeding" value="N" checked={q16_bleeding==='N'} onChange={(e)=>setQ16_bleeding(e.target.value)} className="mr-1" />
+                          아니오
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-2">
+                    <span className="text-sm">(기타: </span>
+                    <input type="text" value={q16_other} onChange={(e)=>setQ16_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                    <span className="text-sm">)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 질문 17 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q17-title">
+              <h4 id="q17-title" className="font-semibold text-gray-800 mb-3">17. 귀청소 할 때의 품행</h4>
+              <div className="ml-4 space-y-3">
+                <div>
+                  <span className="text-sm text-gray-700 mr-2">자세:</span>
+                  <label className="mr-4">
+                    <input type="radio" name="q17_posture" value="누워서" checked={q17_posture==='누워서'} onChange={(e)=>setQ17_posture(e.target.value)} className="mr-1" />
+                    누워서
+                  </label>
+                  <label>
+                    <input type="radio" name="q17_posture" value="앉아서" checked={q17_posture==='앉아서'} onChange={(e)=>setQ17_posture(e.target.value)} className="mr-1" />
+                    앉아서
+                  </label>
+                </div>
+                <div className="space-y-2">
+                  <label className="flex items-start">
+                    <input type="radio" name="q17" value="1" checked={q17==='1'} onChange={(e)=>setQ17(e.target.value)} className="mt-1 mr-2" />
+                    <span>① 편안하게 잘 받아들인다.</span>
+                  </label>
+                  <div>
+                    <label className="flex items-start">
+                      <input type="radio" name="q17" value="2" checked={q17==='2'} onChange={(e)=>setQ17(e.target.value)} className="mt-1 mr-2" />
+                      <span>② 귀세정제를 가져오면 거부감을 보인다.</span>
+                    </label>
+                    {q17==='2' && (
+                      <div className="ml-6 mt-2">
+                        <label className="text-sm text-gray-700">계기가 있나요?</label>
+                        <input
+                          type="text"
+                          value={q17_reason}
+                          onChange={(e)=>setQ17_reason(e.target.value)}
+                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-full max-w-md"
+                          placeholder="계기를 입력하세요"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-2">
+                    <span className="text-sm">(기타: </span>
+                    <input type="text" value={q17_other} onChange={(e)=>setQ17_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                    <span className="text-sm">)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 질문 18 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q18-title">
+              <h4 id="q18-title" className="font-semibold text-gray-800 mb-3">18. 외출 후 발을 닦을 때의 품행</h4>
+              <div className="space-y-2 ml-4">
+                <div>
+                  <label className="flex items-start">
+                    <input type="radio" name="q18" value="1" checked={q18==='1'} onChange={(e)=>setQ18(e.target.value)} className="mt-1 mr-2" />
+                    <span>① 가만히 앉아서 잘 기다린다.</span>
+                  </label>
+                  {q18==='1' && (
+                    <div className="ml-6 mt-2">
+                      <span className="text-sm text-gray-700 mr-2">트릿 사용 여부:</span>
+                      <label className="mr-4">
+                        <input type="radio" name="q18_treat" value="예" checked={q18_treat==='예'} onChange={(e)=>setQ18_treat(e.target.value)} className="mr-1" />
+                        예
+                      </label>
+                      <label>
+                        <input type="radio" name="q18_treat" value="아니오" checked={q18_treat==='아니오'} onChange={(e)=>setQ18_treat(e.target.value)} className="mr-1" />
+                        아니오
+                      </label>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="flex items-start">
+                    <input type="radio" name="q18" value="2" checked={q18==='2'} onChange={(e)=>setQ18(e.target.value)} className="mt-1 mr-2" />
+                    <span>② 가만 앉아는 있으나 입질을 하려고 한다.</span>
+                  </label>
+                  {q18==='2' && (
+                    <div className="ml-6 mt-2 space-y-1">
+                      <p className="text-sm text-gray-700 mb-2">입질 대상:</p>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q18_bites.includes('손')} onChange={()=>handleCheckboxChange(q18_bites,'손',setQ18_bites)} className="mr-2" />
+                        <span>손</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" checked={q18_bites.includes('물티슈')} onChange={()=>handleCheckboxChange(q18_bites,'물티슈',setQ18_bites)} className="mr-2" />
+                        <span>물티슈</span>
+                      </label>
+                    </div>
+                  )}
+                </div>
+                <label className="flex items-start">
+                  <input type="radio" name="q18" value="3" checked={q18==='3'} onChange={(e)=>setQ18(e.target.value)} className="mt-1 mr-2" />
+                  <span>③ 닦기 싫어서 도망가거나 숨어 버린다.</span>
+                </label>
+                <label className="flex items-start">
+                  <input type="radio" name="q18" value="4" checked={q18==='4'} onChange={(e)=>setQ18(e.target.value)} className="mt-1 mr-2" />
+                  <span>④ 으르렁 거리며 이를 드러낸다.</span>
+                </label>
+                <div className="mt-2">
+                  <span className="text-sm">(기타: </span>
+                  <input type="text" value={q18_other} onChange={(e)=>setQ18_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <span className="text-sm">)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 질문 19 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q19-title">
+              <h4 id="q19-title" className="font-semibold text-gray-800 mb-3">19. 집안의 물건을 망가뜨린 적이 있나요?</h4>
+              <div className="space-y-2 ml-4">
+                <div>
+                  <label className="flex items-start">
+                    <input type="radio" name="q19" value="1" checked={q19==='1'} onChange={(e)=>setQ19(e.target.value)} className="mt-1 mr-2" />
+                    <span>① 있다.</span>
+                  </label>
+                  {q19==='1' && (
+                    <div className="ml-6 mt-2">
+                      <label className="text-sm text-gray-700">지난 한달간 횟수</label>
+                      <input
+                        type="text"
+                        value={q19_count}
+                        onChange={(e)=>setQ19_count(e.target.value)}
+                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-32"
+                        placeholder="예: 3회"
+                      />
+                    </div>
+                  )}
+                </div>
+                <label className="flex items-start">
+                  <input type="radio" name="q19" value="2" checked={q19==='2'} onChange={(e)=>setQ19(e.target.value)} className="mt-1 mr-2" />
+                  <span>② 없다.</span>
+                </label>
+              </div>
+            </div>
+
+            {/* 질문 20 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q20-title">
+              <h4 id="q20-title" className="font-semibold text-gray-800 mb-3">20. 집에서 자녀들과 있을 때의 반응</h4>
+              <div className="space-y-2 ml-4">
+                <label className="flex items-start">
+                  <input type="radio" name="q20" value="1" checked={q20==='1'} onChange={(e)=>setQ20(e.target.value)} className="mt-1 mr-2" />
+                  <span>① 아이들이 신나서 뛰어 놀면 같이 흥분하며 뛰려고 한다.</span>
+                </label>
+                <label className="flex items-start">
+                  <input type="radio" name="q20" value="2" checked={q20==='2'} onChange={(e)=>setQ20(e.target.value)} className="mt-1 mr-2" />
+                  <span>② 아이들이 신나서 뛰어 놀면 관심은 보이나 얌전히 있는다.</span>
+                </label>
+                <label className="flex items-start">
+                  <input type="radio" name="q20" value="3" checked={q20==='3'} onChange={(e)=>setQ20(e.target.value)} className="mt-1 mr-2" />
+                  <span>③ 아이들에게 크게 관심 없다.</span>
+                </label>
+                <label className="flex items-start">
+                  <input type="radio" name="q20" value="4" checked={q20==='4'} onChange={(e)=>setQ20(e.target.value)} className="mt-1 mr-2" />
+                  <span>④ 아이들이 가까이 와서 만지는 것을 별로 좋아하지 않는다.</span>
+                </label>
+                <label className="flex items-start">
+                  <input type="radio" name="q20" value="5" checked={q20==='5'} onChange={(e)=>setQ20(e.target.value)} className="mt-1 mr-2" />
+                  <span>⑤ 아이들이 가까이 오면 피하며 구석으로 숨으려고 한다.</span>
+                </label>
+                <div className="mt-2">
+                  <span className="text-sm">(기타: </span>
+                  <input type="text" value={q20_other} onChange={(e)=>setQ20_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <span className="text-sm">)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 질문 21 */}
+            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q21-title">
+              <h4 id="q21-title" className="font-semibold text-gray-800 mb-3">21. 현재 품행에 있어 가장 큰 문제는?</h4>
+              <div className="ml-4">
+                <textarea
+                  value={q21}
+                  onChange={(e)=>setQ21(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  rows={4}
+                  placeholder="현재 품행에서 가장 큰 문제점을 자유롭게 작성해주세요."
+                />
+              </div>
             </div>
           </div>
 
