@@ -27,6 +27,29 @@ export const NoticeBoardPage = () => {
     loadNotices();
   }, []);
 
+  // URL hash로 공지사항 열기
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#notice-')) {
+        const noticeId = hash.replace('#notice-', '');
+        const notice = notices.find(n => n.id === noticeId);
+        if (notice) {
+          setViewingNotice(notice);
+        }
+      } else {
+        setViewingNotice(null);
+      }
+    };
+
+    // 초기 로드 시 hash 확인
+    handleHashChange();
+
+    // hash 변경 이벤트 리스너
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [notices]);
+
   const loadNotices = async () => {
     try {
       const allNotices = await getNotices();
@@ -385,7 +408,10 @@ export const NoticeBoardPage = () => {
               </div>
             </div>
             <button
-              onClick={() => setViewingNotice(null)}
+              onClick={() => {
+                window.location.hash = '';
+                setViewingNotice(null);
+              }}
               className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
             >
               ×
@@ -402,6 +428,7 @@ export const NoticeBoardPage = () => {
             <div className="flex space-x-3 mt-6 pt-6 border-t border-gray-200">
               <button
                 onClick={() => {
+                  window.location.hash = '';
                   setViewingNotice(null);
                   openEditForm(viewingNotice);
                 }}
@@ -411,6 +438,7 @@ export const NoticeBoardPage = () => {
               </button>
               <button
                 onClick={() => {
+                  window.location.hash = '';
                   setViewingNotice(null);
                   handleDelete(viewingNotice.id);
                 }}
@@ -466,11 +494,7 @@ export const NoticeBoardPage = () => {
                     </span>
                   </div>
                   <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setViewingNotice(notice);
-                    }}
+                    href={`#notice-${notice.id}`}
                     className="text-xl font-bold text-blue-600 hover:text-blue-800 underline block mb-2 focus:ring-2 focus:ring-blue-500 outline-none"
                   >
                     {notice.title}
