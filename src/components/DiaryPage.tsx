@@ -637,44 +637,59 @@ export const DiaryPage = () => {
             )}
           </div>
 
-          {/* 파트너 설문 상세보기 (partnerSurvey가 있으면 먼저 표시) */}
+          {/* 파트너 설문 상세보기 (partnerSurvey가 있으면 먼저 표시) - 월간보고서 스타일 테이블 */}
           {viewingPost.partnerSurvey ? (
             <div className="space-y-6">
-              {[
-                { key: 'dtPattern', noteKey: 'dtPatternNote', label: '1. 전반적인 DT 패턴' },
-                { key: 'dtWalking', noteKey: 'dtWalkingNote', label: '2. 보행 중 DT 패턴' },
-                { key: 'externalStimulus', noteKey: 'externalStimulusNote', label: '3. 외부 자극 반응' },
-                { key: 'droppedFood', noteKey: 'droppedFoodNote', label: '4. 떨어진 음식 반응' },
-                { key: 'aloneState', noteKey: 'aloneStateNote', label: '5. 혼자 있을 때 상태' },
-                { key: 'visitorResponse', noteKey: 'visitorResponseNote', label: '6. 방문자 대응 태도' },
-                { key: 'walkingFocus', noteKey: 'walkingFocusNote', label: '7. 보행 중 집중력' },
-                { key: 'obstacleAvoidance', noteKey: 'obstacleAvoidanceNote', label: '8. 장애물 회피 능력' },
-                { key: 'targetGuidance', noteKey: 'targetGuidanceNote', label: '9. 목표 지점 안내 능력' },
-                { key: 'otherDogsReaction', noteKey: 'otherDogsReactionNote', label: '10. 다른 동물과의 만남 반응' },
-                { key: 'commandPerformance', noteKey: 'commandPerformanceNote', label: '11. 일상 명령 수행' },
-                { key: 'harnessFeeling', noteKey: 'harnessFeelingNote', label: '12. 하네스 안내 느낌' },
-                { key: 'healthStatus', noteKey: 'healthStatusNote', label: '13. 건강 상태' },
-                { key: 'partnerBond', noteKey: 'partnerBondNote', label: '14. 파트너와의 유대감' },
-              ].map(({ key, noteKey, label }) => {
-                const value = viewingPost.partnerSurvey?.[key as keyof typeof viewingPost.partnerSurvey];
-                const note = viewingPost.partnerSurvey?.[noteKey as keyof typeof viewingPost.partnerSurvey];
-                if (!value) return null;
-                return (
-                  <div key={key} className="border-b pb-4">
-                    <h3 className="font-semibold text-gray-800 mb-2">{label}</h3>
-                    <p className="text-gray-700 bg-gray-50 px-4 py-2 rounded-lg">{value}</p>
-                    {note && (
-                      <p className="text-sm text-gray-600 mt-2 pl-4 border-l-2 border-blue-300">
-                        {note}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
+              {/* 설문 응답 테이블 */}
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-blue-600 text-white">
+                      <th className="border border-blue-700 px-4 py-3 text-left font-semibold w-1/2">질문</th>
+                      <th className="border border-blue-700 px-4 py-3 text-left font-semibold w-1/2">응답</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { key: 'dtPattern', noteKey: 'dtPatternNote', label: '1. 전반적인 DT 패턴은 어떻습니까?' },
+                      { key: 'dtWalking', noteKey: 'dtWalkingNote', label: '2. 보행 중 DT 패턴은 어떻습니까?' },
+                      { key: 'externalStimulus', noteKey: 'externalStimulusNote', label: '3. 보행 중 외부 자극에 대한 반응은 어떻습니까?' },
+                      { key: 'droppedFood', noteKey: 'droppedFoodNote', label: '4. 떨어진 음식에 어느 정도 반응합니까?' },
+                      { key: 'aloneState', noteKey: 'aloneStateNote', label: '5. 혼자 있을 때의 상태는 어떻습니까?' },
+                      { key: 'visitorResponse', noteKey: 'visitorResponseNote', label: '6. 방문자 대응 태도는 어떻습니까?' },
+                      { key: 'walkingFocus', noteKey: 'walkingFocusNote', label: '7. 보행 중 집중력은 어떻습니까?' },
+                      { key: 'obstacleAvoidance', noteKey: 'obstacleAvoidanceNote', label: '8. 보행 중 장애물 회피 능력은 어떻습니까?' },
+                      { key: 'targetGuidance', noteKey: 'targetGuidanceNote', label: '9. 목표 지점 안내 능력은 어떻습니까?' },
+                      { key: 'otherDogsReaction', noteKey: 'otherDogsReactionNote', label: '10. 다른 동물과의 만남에서 반응은 어떻습니까?' },
+                      { key: 'commandPerformance', noteKey: 'commandPerformanceNote', label: '11. 일상 명령 수행은 어떻습니까?' },
+                      { key: 'harnessFeeling', noteKey: 'harnessFeelingNote', label: '12. 하네스 잡았을 때의 안내는 어떻습니까?' },
+                      { key: 'healthStatus', noteKey: 'healthStatusNote', label: '13. 최근 한 달간 건강 상태 전반은 어떻습니까?' },
+                      { key: 'partnerBond', noteKey: 'partnerBondNote', label: '14. 파트너와의 유대감·보행 관계는 어떻습니까?' },
+                    ].map(({ key, noteKey, label }, index) => {
+                      const value = viewingPost.partnerSurvey?.[key as keyof typeof viewingPost.partnerSurvey];
+                      const note = viewingPost.partnerSurvey?.[noteKey as keyof typeof viewingPost.partnerSurvey];
+                      if (!value) return null;
+                      return (
+                        <tr key={key} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                          <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">{label}</td>
+                          <td className="border border-gray-300 px-4 py-3">
+                            <span className="text-gray-700">{value}</span>
+                            {note && (
+                              <p className="text-sm text-blue-600 mt-2 italic">※ {note}</p>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* 추가 의견 */}
               {viewingPost.partnerSurvey.additionalComment && (
-                <div className="border-t pt-4">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <h3 className="text-lg font-bold text-gray-800 mb-3">추가 의견</h3>
-                  <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-wrap">
                     {viewingPost.partnerSurvey.additionalComment}
                   </p>
                 </div>
