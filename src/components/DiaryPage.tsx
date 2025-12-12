@@ -5,13 +5,14 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import type { DiaryPost, DogCategory } from '../types/types';
-import { generateId, getGuideDogs } from '../utils/storage';
+import type { DiaryPost, DogCategory, GuideDog } from '../types/types';
+import { generateId } from '../utils/storage';
 import {
   getDiaryPosts,
   saveDiaryPost,
   deleteDiaryPost,
 } from '../utils/firestoreLectures';
+import { getDogs as getDogsFromFirestore } from '../services/firestoreService';
 import { MonthlyReportPage } from './MonthlyReportPage';
 
 export const DiaryPage = () => {
@@ -47,6 +48,39 @@ export const DiaryPage = () => {
   const [isOutingOpen, setIsOutingOpen] = useState(true);
   const [isAdditionalOpen, setIsAdditionalOpen] = useState(true);
 
+  // 파트너(안내견) 전용 설문 상태
+  const [partnerSurvey, setPartnerSurvey] = useState({
+    dtPattern: '',
+    dtPatternNote: '',
+    dtWalking: '',
+    dtWalkingNote: '',
+    externalStimulus: '',
+    externalStimulusNote: '',
+    droppedFood: '',
+    droppedFoodNote: '',
+    aloneState: '',
+    aloneStateNote: '',
+    visitorResponse: '',
+    visitorResponseNote: '',
+    walkingFocus: '',
+    walkingFocusNote: '',
+    obstacleAvoidance: '',
+    obstacleAvoidanceNote: '',
+    targetGuidance: '',
+    targetGuidanceNote: '',
+    otherDogsReaction: '',
+    otherDogsReactionNote: '',
+    commandPerformance: '',
+    commandPerformanceNote: '',
+    harnessFeeling: '',
+    harnessFeelingNote: '',
+    healthStatus: '',
+    healthStatusNote: '',
+    partnerBond: '',
+    partnerBondNote: '',
+    additionalComment: '',
+  });
+
   // 관리자 필터 상태
   const [adminCategory, setAdminCategory] = useState<DogCategory | 'all'>('퍼피티칭');
   const [periodFilter, setPeriodFilter] = useState<'today' | '3days' | 'week' | 'month' | '3months' | 'custom' | 'all'>('week');
@@ -56,9 +90,22 @@ export const DiaryPage = () => {
   const [selectedDogForOther, setSelectedDogForOther] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<DogCategory | null>(null);
 
+  // Firestore에서 가져온 개 목록 상태
+  const [firestoreDogs, setFirestoreDogs] = useState<GuideDog[]>([]);
+
   useEffect(() => {
     loadPosts();
+    loadDogs();
   }, []);
+
+  const loadDogs = async () => {
+    try {
+      const dogs = await getDogsFromFirestore();
+      setFirestoreDogs(dogs);
+    } catch (error) {
+      console.error('개 목록 로드 실패:', error);
+    }
+  };
 
   useEffect(() => {
     // 필터 적용
@@ -101,11 +148,10 @@ export const DiaryPage = () => {
     return Array.from(uniqueDogs).sort();
   };
 
-  // 관리자: 카테고리별 개 목록 가져오기
+  // 관리자: 카테고리별 개 목록 가져오기 (Firestore 데이터 사용)
   const getDogsByAdminCategory = () => {
-    const allDogs = getGuideDogs();
-    if (adminCategory === 'all') return allDogs;
-    return allDogs.filter(dog => dog.category === adminCategory);
+    if (adminCategory === 'all') return firestoreDogs;
+    return firestoreDogs.filter(dog => dog.category === adminCategory);
   };
 
   // 관리자: 특정 개가 다른 카테고리에 기록이 있는지 확인
@@ -209,8 +255,8 @@ export const DiaryPage = () => {
       return allPosts.find(post => {
         if (post.dogName !== dogName) return false;
 
-        // 현재 개의 카테고리를 실시간으로 확인하여 필터링
-        const currentDog = getGuideDogs().find(d => d.name === post.dogName);
+        // 현재 개의 카테고리를 Firestore 데이터에서 확인하여 필터링
+        const currentDog = firestoreDogs.find(d => d.name === post.dogName);
         if (currentDog && currentDog.category !== adminCategory) return false;
 
         // diaryDate가 있으면 diaryDate로 매칭 (새 형식)
@@ -242,6 +288,8 @@ export const DiaryPage = () => {
     // 퍼피티칭 사용자 검증
     if (user?.role === 'puppyTeacher') {
       // 퍼피티칭은 제목/내용 자동 생성되므로 추가 검증 불필요
+    } else if (user?.role === 'partner') {
+      // 파트너는 설문 형식이므로 추가 검증 불필요
     } else {
       if (!title.trim() || !content.trim()) {
         alert('제목과 내용을 모두 입력해주세요.');
@@ -249,9 +297,9 @@ export const DiaryPage = () => {
       }
     }
 
-    // 개의 현재 카테고리 정보 가져오기
+    // 개의 현재 카테고리 정보 가져오기 (Firestore 데이터 사용)
     const dogCategory = user?.dogName
-      ? getGuideDogs().find(dog => dog.name === user.dogName)?.category
+      ? firestoreDogs.find(dog => dog.name === user.dogName)?.category
       : undefined;
 
     const post: DiaryPost = {
@@ -260,8 +308,8 @@ export const DiaryPage = () => {
       userName: user!.name,
       dogName: user?.dogName,
       dogCategory: dogCategory,
-      title: user?.role === 'puppyTeacher' ? `${diaryDate} 일지` : title.trim(),
-      content: user?.role === 'puppyTeacher' ? '퍼피티칭 일지' : content.trim(),
+      title: user?.role === 'puppyTeacher' ? `${diaryDate} 일지` : user?.role === 'partner' ? `${diaryDate} 설문` : title.trim(),
+      content: user?.role === 'puppyTeacher' ? '퍼피티칭 일지' : user?.role === 'partner' ? '안내견 파트너 설문' : content.trim(),
       createdAt: editingPost?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       diaryDate, // 모든 사용자에게 diaryDate 저장
@@ -272,6 +320,10 @@ export const DiaryPage = () => {
         dt2Records: dt2Records.filter(d => d.time || d.place || d.success || d.accident || d.notes),
         outings: outings.filter(o => o.place || o.duration || o.notes),
         additionalNotes: additionalNotes || undefined,
+      }),
+      // 파트너(안내견) 전용 설문 필드
+      ...(user?.role === 'partner' && {
+        partnerSurvey: partnerSurvey,
       }),
     };
 
@@ -343,6 +395,41 @@ export const DiaryPage = () => {
       setAdditionalNotes(post.additionalNotes || '');
     }
 
+    // 파트너 설문 데이터 로드
+    if (post.partnerSurvey) {
+      setPartnerSurvey({
+        dtPattern: post.partnerSurvey.dtPattern || '',
+        dtPatternNote: post.partnerSurvey.dtPatternNote || '',
+        dtWalking: post.partnerSurvey.dtWalking || '',
+        dtWalkingNote: post.partnerSurvey.dtWalkingNote || '',
+        externalStimulus: post.partnerSurvey.externalStimulus || '',
+        externalStimulusNote: post.partnerSurvey.externalStimulusNote || '',
+        droppedFood: post.partnerSurvey.droppedFood || '',
+        droppedFoodNote: post.partnerSurvey.droppedFoodNote || '',
+        aloneState: post.partnerSurvey.aloneState || '',
+        aloneStateNote: post.partnerSurvey.aloneStateNote || '',
+        visitorResponse: post.partnerSurvey.visitorResponse || '',
+        visitorResponseNote: post.partnerSurvey.visitorResponseNote || '',
+        walkingFocus: post.partnerSurvey.walkingFocus || '',
+        walkingFocusNote: post.partnerSurvey.walkingFocusNote || '',
+        obstacleAvoidance: post.partnerSurvey.obstacleAvoidance || '',
+        obstacleAvoidanceNote: post.partnerSurvey.obstacleAvoidanceNote || '',
+        targetGuidance: post.partnerSurvey.targetGuidance || '',
+        targetGuidanceNote: post.partnerSurvey.targetGuidanceNote || '',
+        otherDogsReaction: post.partnerSurvey.otherDogsReaction || '',
+        otherDogsReactionNote: post.partnerSurvey.otherDogsReactionNote || '',
+        commandPerformance: post.partnerSurvey.commandPerformance || '',
+        commandPerformanceNote: post.partnerSurvey.commandPerformanceNote || '',
+        harnessFeeling: post.partnerSurvey.harnessFeeling || '',
+        harnessFeelingNote: post.partnerSurvey.harnessFeelingNote || '',
+        healthStatus: post.partnerSurvey.healthStatus || '',
+        healthStatusNote: post.partnerSurvey.healthStatusNote || '',
+        partnerBond: post.partnerSurvey.partnerBond || '',
+        partnerBondNote: post.partnerSurvey.partnerBondNote || '',
+        additionalComment: post.partnerSurvey.additionalComment || '',
+      });
+    }
+
     setIsWriting(true);
     setViewingPost(null);
   };
@@ -373,6 +460,39 @@ export const DiaryPage = () => {
     setDt2Records([{ time: '', place: '', success: '', accident: '', notes: '' }]);
     setOutings([{ place: '', duration: '', notes: '' }]);
     setAdditionalNotes('');
+
+    // 파트너 설문 초기화
+    setPartnerSurvey({
+      dtPattern: '',
+      dtPatternNote: '',
+      dtWalking: '',
+      dtWalkingNote: '',
+      externalStimulus: '',
+      externalStimulusNote: '',
+      droppedFood: '',
+      droppedFoodNote: '',
+      aloneState: '',
+      aloneStateNote: '',
+      visitorResponse: '',
+      visitorResponseNote: '',
+      walkingFocus: '',
+      walkingFocusNote: '',
+      obstacleAvoidance: '',
+      obstacleAvoidanceNote: '',
+      targetGuidance: '',
+      targetGuidanceNote: '',
+      otherDogsReaction: '',
+      otherDogsReactionNote: '',
+      commandPerformance: '',
+      commandPerformanceNote: '',
+      harnessFeeling: '',
+      harnessFeelingNote: '',
+      healthStatus: '',
+      healthStatusNote: '',
+      partnerBond: '',
+      partnerBondNote: '',
+      additionalComment: '',
+    });
   };
 
   const formatDate = (dateString: string) => {
@@ -670,6 +790,49 @@ export const DiaryPage = () => {
                   <h3 className="text-lg font-bold text-gray-800 mb-3">그 밖에 오늘 하고 싶은 말</h3>
                   <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
                     {viewingPost.additionalNotes}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : viewingPost.partnerSurvey ? (
+            /* 파트너 설문 상세보기 */
+            <div className="space-y-6">
+              {[
+                { key: 'dtPattern', noteKey: 'dtPatternNote', label: '1. 전반적인 DT 패턴' },
+                { key: 'dtWalking', noteKey: 'dtWalkingNote', label: '2. 보행 중 DT 패턴' },
+                { key: 'externalStimulus', noteKey: 'externalStimulusNote', label: '3. 외부 자극 반응' },
+                { key: 'droppedFood', noteKey: 'droppedFoodNote', label: '4. 떨어진 음식 반응' },
+                { key: 'aloneState', noteKey: 'aloneStateNote', label: '5. 혼자 있을 때 상태' },
+                { key: 'visitorResponse', noteKey: 'visitorResponseNote', label: '6. 방문자 대응 태도' },
+                { key: 'walkingFocus', noteKey: 'walkingFocusNote', label: '7. 보행 중 집중력' },
+                { key: 'obstacleAvoidance', noteKey: 'obstacleAvoidanceNote', label: '8. 장애물 회피 능력' },
+                { key: 'targetGuidance', noteKey: 'targetGuidanceNote', label: '9. 목표 지점 안내 능력' },
+                { key: 'otherDogsReaction', noteKey: 'otherDogsReactionNote', label: '10. 다른 동물과의 만남 반응' },
+                { key: 'commandPerformance', noteKey: 'commandPerformanceNote', label: '11. 일상 명령 수행' },
+                { key: 'harnessFeeling', noteKey: 'harnessFeelingNote', label: '12. 하네스 안내 느낌' },
+                { key: 'healthStatus', noteKey: 'healthStatusNote', label: '13. 건강 상태' },
+                { key: 'partnerBond', noteKey: 'partnerBondNote', label: '14. 파트너와의 유대감' },
+              ].map(({ key, noteKey, label }) => {
+                const value = viewingPost.partnerSurvey?.[key as keyof typeof viewingPost.partnerSurvey];
+                const note = viewingPost.partnerSurvey?.[noteKey as keyof typeof viewingPost.partnerSurvey];
+                if (!value) return null;
+                return (
+                  <div key={key} className="border-b pb-4">
+                    <h3 className="font-semibold text-gray-800 mb-2">{label}</h3>
+                    <p className="text-gray-700 bg-gray-50 px-4 py-2 rounded-lg">{value}</p>
+                    {note && (
+                      <p className="text-sm text-gray-600 mt-2 pl-4 border-l-2 border-blue-300">
+                        {note}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+              {viewingPost.partnerSurvey.additionalComment && (
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">추가 의견</h3>
+                  <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+                    {viewingPost.partnerSurvey.additionalComment}
                   </p>
                 </div>
               )}
@@ -1197,6 +1360,201 @@ export const DiaryPage = () => {
       );
     }
 
+    // 파트너(안내견) 전용 설문 폼
+    if (user?.role === 'partner') {
+      const surveyQuestions = [
+        {
+          key: 'dtPattern',
+          question: '1. 전반적인 DT 패턴은 어떻습니까?',
+          options: ['규칙적이다', '때때로 불규칙하다', '전반적으로 불안정하다'],
+        },
+        {
+          key: 'dtWalking',
+          question: '2. 보행 중 DT 패턴은 어떻습니까?',
+          options: ['실수 없다', '때때로 실수를 한다', '전반적으로 실수가 잦다'],
+        },
+        {
+          key: 'externalStimulus',
+          question: '3. 보행 중 외부 자극(소음·사람·동물)에 대한 반응은 어떻습니까?',
+          options: ['대부분 안정적이다', '특정 자극에 과민한 편이다', '자주 과민하다'],
+        },
+        {
+          key: 'droppedFood',
+          question: '4. 떨어진 음식에 어느 정도 반응합니까?',
+          options: ['거의 없다', '가끔 있다', '자주 있다'],
+        },
+        {
+          key: 'aloneState',
+          question: '5. 혼자 있을 때의 상태는 어떻습니까?',
+          options: ['안정적이다', '가끔 불안해한다', '자주 불안하거나 짖는다'],
+        },
+        {
+          key: 'visitorResponse',
+          question: '6. 방문자 대응 태도는 어떻습니까?',
+          options: ['안정적이다', '가끔 흥분하거나 경계한다', '자주 통제가 어렵다'],
+        },
+        {
+          key: 'walkingFocus',
+          question: '7. 보행 중 집중력은 어떻습니까?',
+          options: ['안정적이다', '가끔 산만하다', '자주 집중이 깨진다'],
+        },
+        {
+          key: 'obstacleAvoidance',
+          question: '8. 보행 중 장애물 회피 능력은 어떻습니까?',
+          options: ['안정적이다', '가끔 부딪친다', '자주 부딪친다'],
+        },
+        {
+          key: 'targetGuidance',
+          question: '9. 목표 지점 안내 능력은 어떻습니까?',
+          options: ['안정적이다', '가끔 실수가 있다', '자주 정확하지 않다'],
+        },
+        {
+          key: 'otherDogsReaction',
+          question: '10. 동료 안내견 또는 다른 반려동물과의 만남에서 반응은 어떻습니까?',
+          options: ['안정적이다', '가끔 흥분하거나 과민하다', '자주 통제가 어렵다'],
+        },
+        {
+          key: 'commandPerformance',
+          question: '11. 일상 명령(앉아·기다려·이리 와 등) 수행은 어떻습니까?',
+          options: ['일관되고 정확하다', '가끔 느리거나 불안정하다', '전반적으로 미흡하다'],
+        },
+        {
+          key: 'harnessFeeling',
+          question: '12. 하네스 잡았을 때의 안내(느낌)은 어떻습니까?',
+          options: ['안정적이다', '가끔 과하게 당긴다', '가끔 지나치게 느슨하다', '일관성이 없다'],
+        },
+        {
+          key: 'healthStatus',
+          question: '13. 최근 한 달간 건강 상태 전반은 어떻습니까?',
+          options: ['특이 상황 없이 양호하다', '가벼운 증상이 있었다', '병원 진료가 필요해 보인다'],
+        },
+        {
+          key: 'partnerBond',
+          question: '14. 파트너와의 유대감·보행 관계는 어떻습니까?',
+          options: ['안정적이다', '약간의 거리감이나 갈등이 있다', '전반적으로 개선이 필요하다'],
+        },
+      ];
+
+      return (
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              {editingPost ? '설문 수정' : '안내견 생활 설문'}
+            </h2>
+
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* 날짜 선택 */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  날짜
+                </label>
+                <input
+                  type="date"
+                  value={diaryDate}
+                  onChange={(e) => setDiaryDate(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  required
+                />
+              </div>
+
+              {/* 설문 질문들 */}
+              {surveyQuestions.map((q, index) => {
+                const noteKey = `${q.key}Note` as keyof typeof partnerSurvey;
+                return (
+                  <div key={q.key} className="border-t pt-6">
+                    <h3 className="text-base font-semibold text-gray-800 mb-4">
+                      {q.question}
+                    </h3>
+                    <div className="space-y-2">
+                      {q.options.map((option) => (
+                        <label
+                          key={option}
+                          className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
+                            partnerSurvey[q.key as keyof typeof partnerSurvey] === option
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name={q.key}
+                            value={option}
+                            checked={partnerSurvey[q.key as keyof typeof partnerSurvey] === option}
+                            onChange={(e) =>
+                              setPartnerSurvey({
+                                ...partnerSurvey,
+                                [q.key]: e.target.value,
+                              })
+                            }
+                            className="w-5 h-5 text-blue-600 focus:ring-blue-500"
+                          />
+                          <span className="ml-3 text-gray-700">{option}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <div className="mt-3">
+                      <label htmlFor={`note-${index}`} className="block text-sm text-gray-600 mb-1">
+                        추가 의견 (선택)
+                      </label>
+                      <input
+                        type="text"
+                        id={`note-${index}`}
+                        value={partnerSurvey[noteKey] || ''}
+                        onChange={(e) =>
+                          setPartnerSurvey({
+                            ...partnerSurvey,
+                            [noteKey]: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm"
+                        placeholder="이 항목에 대한 추가 의견이 있으면 입력하세요"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* 추가 의견 */}
+              <div className="border-t pt-6">
+                <h3 className="text-base font-semibold text-gray-800 mb-4" id="additional-comment-label">
+                  추가로 전달하고 싶은 내용이 있으시면 작성해주세요.
+                </h3>
+                <textarea
+                  value={partnerSurvey.additionalComment}
+                  onChange={(e) =>
+                    setPartnerSurvey({
+                      ...partnerSurvey,
+                      additionalComment: e.target.value,
+                    })
+                  }
+                  rows={5}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                  placeholder="자유롭게 작성하세요"
+                  aria-labelledby="additional-comment-label"
+                />
+              </div>
+
+              <div className="flex space-x-4">
+                <button
+                  type="submit"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                >
+                  {editingPost ? '수정 완료' : '제출'}
+                </button>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                >
+                  취소
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
     // 일반 사용자 폼
     return (
       <div className="max-w-4xl mx-auto">
@@ -1206,6 +1564,23 @@ export const DiaryPage = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label
+                htmlFor="diaryDateGeneral"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                날짜
+              </label>
+              <input
+                type="date"
+                id="diaryDateGeneral"
+                value={diaryDate}
+                onChange={(e) => setDiaryDate(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                required
+              />
+            </div>
+
             <div>
               <label
                 htmlFor="title"
