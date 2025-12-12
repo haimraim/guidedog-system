@@ -19,6 +19,7 @@ import { TermsOfServicePage } from './TermsOfServicePage';
 import { UserManagementPage } from './UserManagementPage';
 import { MessageSendPage } from './MessageSendPage';
 import { NoticeBoardPage } from './NoticeBoardPage';
+import { PushNotificationButton } from './PushNotificationButton';
 import { getCombinedData, calculateAgeWithMonths } from '../utils/storage';
 import type { CombinedData } from '../types/types';
 
@@ -161,12 +162,15 @@ export const MainLayout = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 outline-none"
-            >
-              로그아웃
-            </button>
+            <div className="flex items-center space-x-3">
+              <PushNotificationButton />
+              <button
+                onClick={handleLogout}
+                className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 outline-none"
+              >
+                로그아웃
+              </button>
+            </div>
           </div>
         </div>
       </header>
