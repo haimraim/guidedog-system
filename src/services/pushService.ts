@@ -7,8 +7,7 @@ import { doc, setDoc, deleteDoc, collection, getDocs, query, where } from 'fireb
 import { db, initMessaging, getToken, onMessage } from '../lib/firebase';
 
 // VAPID 키 (Firebase Console > 프로젝트 설정 > 클라우드 메시징에서 발급)
-// TODO: Firebase Console에서 VAPID 키를 발급받아 입력하세요
-const VAPID_KEY = '';
+const VAPID_KEY = 'BAjkdfIr-hzRO7PhP6igsle4f3Jmbejuwdqv2at5ET6sXbgEwjPkXYDo6aTbxvyGzpSm3Vm_r3iPCD5dR4J4eRI';
 
 export interface PushSubscription {
   id: string; // 사용자 ID
