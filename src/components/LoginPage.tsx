@@ -6,11 +6,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
-interface LoginPageProps {
-  onShowRegister?: () => void;
-}
-
-export const LoginPage = ({ onShowRegister }: LoginPageProps) => {
+export const LoginPage = () => {
   const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -45,8 +41,7 @@ export const LoginPage = ({ onShowRegister }: LoginPageProps) => {
       {/* 헤더 */}
       <header className="bg-blue-600 text-white py-8 shadow-lg">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-2">안내견 관리 시스템</h1>
-          <p className="text-blue-100 text-lg">Guide Dog Management System</p>
+          <img src="/logo.svg" alt="GIMS Logo" className="w-32 h-32 mx-auto mb-4" />
         </div>
       </header>
 
@@ -132,21 +127,6 @@ export const LoginPage = ({ onShowRegister }: LoginPageProps) => {
               </button>
             </form>
 
-            {/* 회원가입 링크 */}
-            {onShowRegister && (
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600">
-                  계정이 없으신가요?{' '}
-                  <button
-                    type="button"
-                    onClick={onShowRegister}
-                    className="text-blue-600 hover:text-blue-700 font-semibold focus:outline-none focus:underline"
-                  >
-                    회원가입
-                  </button>
-                </p>
-              </div>
-            )}
           </div>
 
           {/* 안내견학교 정보 */}

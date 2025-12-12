@@ -12,6 +12,225 @@ import {
   deleteMonthlyReport,
 } from '../utils/firestoreLectures';
 
+// 선택지 매핑 객체
+const ANSWER_MAPPINGS: Record<string, Record<string, string>> = {
+  // 집에서의 품행
+  q1: {
+    '1': '① 편안하게 있는다',
+    '2': '② 낑낑거리다 곧 편안해 진다.',
+    '3': '③ 짖다가 곧 편안히 있는다.',
+    '4': '④ 무언가를 씹는다.',
+    '5': '⑤ 자리를 잡지 못하고 지속적으로 불안해 한다.'
+  },
+  q2: {
+    '1': '① 음식이 바닥에 떨어져도 먹지 않을 정도로 관심이 없다.',
+    '2': '② 식탁 주변에서 음식이 떨어지기를 기다리거나 쳐다본다.',
+    '3': '③ 식탁에서 먹을 때는 관심 없으나 좌식 테이블에서 먹을 때는 관심보임.',
+    '4': '④ 침을 흘리며 먹고 싶어한다.',
+    '5': '⑤ 기회가 있으면 훔쳐 먹기도 한다.'
+  },
+  q3: {
+    '1': '① 크레이트 문 닫은 상태',
+    '2': '② 팬스',
+    '3': '③ 풀어 둔다'
+  },
+  q4: {
+    '1': '① 짖음 있음',
+    '2': '② 낑낑 거림',
+    '3': '③ 이불이나 크레이트, 다른 물건 등을 뜯는다.',
+    '4': '④ 편안하게 쉼'
+  },
+  q6: {
+    '1': '① 흥분하며 점프 한다.',
+    '2': '② 흥분해서 짖는다.',
+    '3': '③ 흥분하고 좋아하나 점프는 하지 않는다.',
+    '4': '④ 옷이나 손 등에 입질을 한다.',
+    '5': '⑤ 소변을 지린다.',
+    '6': '⑥ 별로 관심 없다',
+    '7': '⑦ 별로 좋아하지 않는다. (크레이트로 들어감, 털을 세우며 경계, 으르렁)'
+  },
+  q7: {
+    '1': '① 흥분하며 점프 한다.',
+    '2': '② 흥분해서 짖는다.',
+    '3': '③ 흥분하고 좋아하나 점프는 하지 않는다.',
+    '4': '④ 옷이나 손 등에 입질을 한다.',
+    '5': '⑤ 소변을 지린다.',
+    '6': '⑥ 별로 관심 없다',
+    '7': '⑦ 별로 좋아하지 않는다.'
+  },
+  q8: {
+    '1': '① 있다.',
+    '2': '② 없다.'
+  },
+  q9: {
+    '1': '① 있다.',
+    '2': '② 없다.'
+  },
+  q10: {
+    '1': '① 바로 순응한다.',
+    '2': '② 말대꾸 하듯이 짖는다 (1회 이상)',
+    '3': '③ 꿍얼거린다',
+    '4': '④ 이를 보이며 공격적인 반응을 보인 적이 있다.',
+    '5': '⑤ 배를 보이고 누워 버린다.',
+    '6': '⑥ 갑자기 흥분하며 꼬리를 숨긴 채로 날뛴다.(비방향성 돌진행동)'
+  },
+  q11: {
+    '1': '① 5초 안에 순순히 놓는다.',
+    '2': '② 몇 번 다시 뺏으려고 시도한다.',
+    '3': '③ 장난치듯 으르렁 소리를 낸다.',
+    '4': '④ 공격적인 으르렁 소리를 낸다.',
+    '5': '⑤ 물고 도망가 구석으로 숨는다.'
+  },
+  q12_option: {
+    '1': '① 한번 명령어에 바로 실시한다.',
+    '2': '② 명령어를 아직 잘 모르는것 같다.',
+    '3': '③ \'기다려\' 할 수 있는 시간',
+    '4': '④ \'기다려\' 할 수 있는 수준'
+  },
+  q13: {
+    '1': '① 바로 편안하게 눕고 잠을 잘 때도 있다.',
+    '2': '② 누워는 있으나 몸이 경직된 채로 긴장한다.',
+    '3': '③ 발버둥 치며 일어나려고 한다.',
+    '4': '④ 입질을 하며 일어나려고 한다.',
+    '5': '⑤ 잘 누워 있다가 무언가 하려고 하면(귀청소 or 발톱손질) 빠져나가려 한다.'
+  },
+  q14: {
+    '1': '① 이 닦는 것을 좋아하며 편안히 있는다.',
+    '2': '② 이 닦는 것을 좋아하지만 칫솔을 씹는다.',
+    '3': '③ 칫솔을 가까이하면 고개를 돌린다.',
+    '4': '④ 이 닦는 것을 싫어해서 도망 다닌다.',
+    '5': '⑤ 이를 닦으려고 하면 털을 세우고 공격적인 반응을 보인다.'
+  },
+  q15: {
+    '1': '① 그루밍 하는 것을 좋아하며 편안히 잘 있는다.',
+    '2': '② 그루밍 하는 것을 좋아하지만 가만히 있지 못하고 자꾸 움직인다.',
+    '3': '③ 고무빗을 가지고 놀려고 한다.',
+    '4': '④ 반대로 자세를 바꾸는 것에 대해 거부감을 보인다.',
+    '5': '⑤ 그루밍 하는 것을 싫어해서 불러도 잘 오지 않고 도망 다닌다.',
+    '6': '⑥ 그루밍 하는 것을 싫어해서 빗질 도중에 이를 드러내며 입질을 한다.'
+  },
+  q17: {
+    '1': '① 편안하게 잘 받아들인다.',
+    '2': '② 귀세정제를 가져오면 거부감을 보인다.'
+  },
+  q18: {
+    '1': '① 가만히 앉아서 잘 기다린다.',
+    '2': '② 가만 앉아는 있으나 입질을 하려고 한다.',
+    '3': '③ 닦기 싫어서 도망가거나 숨어 버린다.',
+    '4': '④ 으르렁 거리며 이를 드러낸다.'
+  },
+  q19: {
+    '1': '① 있다.',
+    '2': '② 없다.'
+  },
+  q20: {
+    '1': '① 아이들이 신나서 뛰어 놀면 같이 흥분하며 뛰려고 한다.',
+    '2': '② 아이들이 신나서 뛰어 놀면 관심은 보이나 얌전히 있는다.',
+    '3': '③ 아이들에게 크게 관심 없다.',
+    '4': '④ 아이들이 가까이 와서 만지는 것을 별로 좋아하지 않는다.',
+    '5': '⑤ 아이들이 가까이 오면 피하며 구석으로 숨으려고 한다.'
+  },
+
+  // DT 품행 기록
+  dt_signal: {
+    '1': '① 안 걸으려고 멈춰 선다.',
+    '2': '② 길 가 쪽으로 냄새를 맡으며 사람을 끌고 간다.',
+    '3': '③ 걸음이 느려진다.',
+    '4': '④ 걸어가면서 자연스럽게 해 버린다.',
+    '기타': '기타'
+  },
+
+  // 보행 훈련
+  walk_q1: {
+    '1': '① 2시간 이상',
+    '2': '② 1시간 이상',
+    '3': '③ 30분 이상',
+    '4': '④ 안 하는 날도 있다.'
+  },
+  walk_q3: {
+    '1': '① 코트와 견줄을 착용할 때까지 가만히 앉아서 잘 기다린다.',
+    '2': '② 흥분하고 점프하여 얌전히 입히기 힘들다.',
+    '3': '③ 코트/견줄 착용에는 거부감이 있으나 나가서는 잘 걷는다.',
+    '4': '④ 코트/견줄 착용에 거부감이 있고 나가서도 좋아하지 않는다.',
+    '기타': '기타'
+  },
+  walk_q4: {
+    '1': '① 매번 사용',
+    '2': '② 가끔 사용',
+    '3': '③ 사용하지 않는다.'
+  },
+  walk_q5: {
+    '1': '① 보행도중 지속적으로 사용한다.',
+    '2': '② 특별한 경우에만 사용한다. (에스컬레이터, 견유혹 컨트롤 등)',
+    '3': '③ 사용하지 않는다.'
+  },
+  walk_q6: {
+    '1': '① 나보다 앞서 걷지만 줄은 느슨하게 나와 보조를 맞추려고 노력한다.',
+    '2': '② 나를 고려하지 않고 줄이 팽팽할 정도로 앞으로 당긴다.',
+    '3': '③ 내 옆에 바로 붙어 보행한다.',
+    '4': '④ 뒤쪽으로 자꾸 쳐진다.',
+    '5': '⑤ 속도가 일정하지 않다.',
+    '기타': '기타'
+  },
+  walk_q7: {
+    '1': '① 이따금 나를 살피며 똑바로 잘 걷는다.',
+    '2': '② 나에게 너무 집중해서 몸이 사선으로 치우친다.',
+    '3': '③ 나에게 전혀 관심이 없고 계속 주변을 두리번 거린다.',
+    '4': '④ 나에게 전혀 관심이 없고 계속 냄새만 맡으려고 한다.',
+    '5': '⑤ 땅에 떨어져있는 것을 계속 주워먹으려고 한다.',
+    '6': '⑥ 보행도중 앉거나 서서 안가려고 버틴다.',
+    '기타': '기타'
+  },
+
+  // 사회화 훈련
+  social_q2: {
+    '1': '① 1회 미만',
+    '2': '② 2~3 회',
+    '3': '③ 4~5 회',
+    '4': '④ 6회 이상'
+  },
+  social_q3: {
+    '1': '① 평소와 크게 다르지 않다.',
+    '2': '② 평소보다 많이 흥분하며 지나가는 사람들에게 관심을 많이 보인다.',
+    '3': '③ 여유없이 서두르며 직진한다.',
+    '4': '④ 평소보다 유난히 행동이 줄어들어 보인다.',
+    '5': '⑤ 벽으로 붙어서 걸으려고 한다.',
+    '6': '⑥ DT1 실수가 잦다.',
+    '기타': '기타'
+  },
+  social_q4: {
+    '1': '① 특별히 문제 없이 보조를 맞춰 잘 다닌다.',
+    '2': '② 항상 너무 서두른다.',
+    '3': '③ 거의 끝에 가서는 서둘러 걷는다.',
+    '4': '④ 사람 뒤쪽에서 걸으려고 한다.',
+    '기타': '기타'
+  },
+  social_q5: {
+    '1': '① 편안하게 잘 탄다.',
+    '2': '② (상행선/하행선)을 두려워 한다.',
+    '3': '③ 안정적으로 타나 내릴 때는 서두른다.',
+    '4': '④ 잘 타지만, 타 있는 동안 움직인다.',
+    '5': '⑤ 안타려고 버틴다.',
+    '기타': '기타'
+  },
+  social_q6: {
+    '1': '① 편안하게 잘 타고 내리고, 운행중에도 편안하게 쉰다.',
+    '2': '② 편안하게 잘 타고 내리지만, 운행중에는 쉬지 못하고 자꾸 일어난다.',
+    '3': '③ 운행중에는 편안하게 잘 있지만, 타고 내릴때 주저하거나 도와줘야 한다.',
+    '4': '④ 타고 내릴때 주저하거나 도와줘야 하고, 운행중에도 편안하게 쉬지 못한다.',
+    '5': '⑤ 시트 위로 올라가려고 한다.',
+    '기타': '기타'
+  },
+  social_q7: {
+    '1': '① 편안하게 잘 탄다.',
+    '2': '② (탈 때/내릴 때) 두려워 한다.',
+    '3': '③ 타는 건 문제 없으나 버스가 흔들리면 불안해 한다. (낑낑, 자꾸 일어남, 혀쩝쩝 등)',
+    '4': '④ 문이 열릴때마다 움직인다.',
+    '5': '⑤ 무서워서 안타려고 한다.',
+    '기타': '기타'
+  }
+};
+
 export const MonthlyReportPage = () => {
   const { user } = useAuth();
 
@@ -19,11 +238,14 @@ export const MonthlyReportPage = () => {
   const [isWriting, setIsWriting] = useState(false);
   const [reports, setReports] = useState<MonthlyReport[]>([]);
   const [viewingReport, setViewingReport] = useState<MonthlyReport | null>(null);
+  const [editingReport, setEditingReport] = useState<MonthlyReport | null>(null); // 수정 중인 보고서
 
   // 관리자 전용 상태
   const [selectedReportIds, setSelectedReportIds] = useState<string[]>([]); // 비교용 다중 선택
   const [isComparing, setIsComparing] = useState(false); // 비교 모드
   const [showComparisonTable, setShowComparisonTable] = useState(false); // 비교 테이블 모달
+  const [detailViewTab, setDetailViewTab] = useState<'home' | 'dt' | 'walk' | 'social'>('home'); // 상세보기 탭
+  const [comparisonTab, setComparisonTab] = useState<'home' | 'dt' | 'walk' | 'social'>('home'); // 비교 테이블 탭
   const [filterYear, setFilterYear] = useState<string>('all');
   const [filterMonth, setFilterMonth] = useState<string>('all');
   const [filterStartDate, setFilterStartDate] = useState<string>('');
@@ -277,6 +499,18 @@ export const MonthlyReportPage = () => {
   // 사회화 질문 10
   const [social_q10, setSocial_q10] = useState(''); // 어려운 점
 
+  // 피드백 관련
+  const [feedbackText, setFeedbackText] = useState(''); // 피드백 입력 텍스트
+
+  // 답변을 사람이 읽을 수 있는 텍스트로 변환하는 helper 함수
+  const getAnswerText = (fieldName: string, value: any): string => {
+    if (!value) return '미응답';
+    if (ANSWER_MAPPINGS[fieldName] && ANSWER_MAPPINGS[fieldName][value]) {
+      return ANSWER_MAPPINGS[fieldName][value];
+    }
+    return value; // 매핑이 없으면 원래 값 반환 (텍스트 필드 등)
+  };
+
   const handleCheckboxChange = (currentArray: string[], value: string, setter: (val: string[]) => void) => {
     if (currentArray.includes(value)) {
       setter(currentArray.filter(v => v !== value));
@@ -332,13 +566,188 @@ export const MonthlyReportPage = () => {
     }
   };
 
+  // 컴포넌트 마운트 시 및 필터 변경 시 데이터 로드
+  useEffect(() => {
+    loadReports();
+  }, [user, filterYear, filterMonth, filterStartDate, filterEndDate]);
+
+  // 수정 모드: 보고서 데이터를 state에 로드
+  const loadReportForEdit = (report: MonthlyReport) => {
+    setEditingReport(report);
+    setReportDate(report.reportMonth + '-01'); // YYYY-MM-01 형식
+    setStatus(report.status || 'draft');
+
+    // 급식 및 건강 (타입 단언 사용)
+    const r = report as any;
+    if (r.foodType) setFoodType(r.foodType);
+    if (r.dailyFeedingCount) setDailyFeedingCount(r.dailyFeedingCount);
+    if (r.feedingAmountPerMeal) setFeedingAmountPerMeal(r.feedingAmountPerMeal);
+    if (r.weight) setWeight(r.weight);
+    if (r.healthNotes) setHealthNotes(r.healthNotes);
+
+    // 집에서의 품행 - 실제 필드명 사용
+    if (r.q1) setQ1(r.q1);
+    if (r.q1_time) setQ1_time(r.q1_time);
+    if (r.q1_type) setQ1_type(r.q1_type);
+    if (r.q1_other) setQ1_other(r.q1_other);
+
+    if (r.q2) setQ2(r.q2);
+    if (r.q2_food) setQ2_food(r.q2_food);
+    if (r.q2_other) setQ2_other(r.q2_other);
+
+    if (r.q3) setQ3(r.q3);
+
+    if (r.q4) setQ4(r.q4);
+    if (r.q4_bark_freq) setQ4_bark_freq(r.q4_bark_freq);
+    if (r.q4_other) setQ4_other(r.q4_other);
+
+    if (r.q5_crate_time) setQ5_crate_time(r.q5_crate_time);
+    if (r.q5_crate_state) setQ5_crate_state(r.q5_crate_state);
+    if (r.q5_fence_time) setQ5_fence_time(r.q5_fence_time);
+    if (r.q5_fence_state) setQ5_fence_state(r.q5_fence_state);
+    if (r.q5_free_time) setQ5_free_time(r.q5_free_time);
+    if (r.q5_free_state) setQ5_free_state(r.q5_free_state);
+
+    if (r.q6) setQ6(r.q6);
+    if (r.q6_other) setQ6_other(r.q6_other);
+
+    if (r.q7) setQ7(r.q7);
+    if (r.q7_dislike) setQ7_dislike(r.q7_dislike);
+    if (r.q7_other) setQ7_other(r.q7_other);
+
+    if (r.q8) setQ8(r.q8);
+    if (r.q8_situation) setQ8_situation(r.q8_situation);
+    if (r.q8_count) setQ8_count(r.q8_count);
+
+    if (r.q9) setQ9(r.q9);
+    if (r.q9_situation) setQ9_situation(r.q9_situation);
+    if (r.q9_count) setQ9_count(r.q9_count);
+
+    if (r.q10) setQ10(r.q10);
+    if (r.q10_other) setQ10_other(r.q10_other);
+
+    if (r.q11) setQ11(r.q11);
+    if (r.q11_other) setQ11_other(r.q11_other);
+
+    if (r.q12_option) setQ12_option(r.q12_option);
+    if (r.q12_commands) setQ12_commands(r.q12_commands);
+    if (r.q12_wait_state) setQ12_wait_state(r.q12_wait_state);
+    if (r.q12_wait_time) setQ12_wait_time(r.q12_wait_time);
+    if (r.q12_wait_levels) setQ12_wait_levels(r.q12_wait_levels);
+
+    if (r.q13) setQ13(r.q13);
+    if (r.q13_other) setQ13_other(r.q13_other);
+
+    if (r.q14_posture) setQ14_posture(r.q14_posture);
+    if (r.q14_frequency) setQ14_frequency(r.q14_frequency);
+    if (r.q14) setQ14(r.q14);
+    if (r.q14_other) setQ14_other(r.q14_other);
+
+    if (r.q15_posture) setQ15_posture(r.q15_posture);
+    if (r.q15_frequency) setQ15_frequency(r.q15_frequency);
+    if (r.q15) setQ15(r.q15);
+    if (r.q15_other) setQ15_other(r.q15_other);
+
+    if (r.q16_posture) setQ16_posture(r.q16_posture);
+    if (r.q16_frequency) setQ16_frequency(r.q16_frequency);
+    if (r.q16_comfortable) setQ16_comfortable(r.q16_comfortable);
+    if (r.q16_uncomfortable) setQ16_uncomfortable(r.q16_uncomfortable);
+    if (r.q16_options) setQ16_options(r.q16_options);
+    if (r.q16_bleeding) setQ16_bleeding(r.q16_bleeding);
+    if (r.q16_other) setQ16_other(r.q16_other);
+
+    if (r.q17_posture) setQ17_posture(r.q17_posture);
+    if (r.q17) setQ17(r.q17);
+    if (r.q17_reason) setQ17_reason(r.q17_reason);
+    if (r.q17_other) setQ17_other(r.q17_other);
+
+    if (r.q18) setQ18(r.q18);
+    if (r.q18_treat) setQ18_treat(r.q18_treat);
+    if (r.q18_bites) setQ18_bites(r.q18_bites);
+    if (r.q18_other) setQ18_other(r.q18_other);
+
+    if (r.q19) setQ19(r.q19);
+    if (r.q19_count) setQ19_count(r.q19_count);
+
+    if (r.q20) setQ20(r.q20);
+    if (r.q20_other) setQ20_other(r.q20_other);
+
+    if (r.q21) setQ21(r.q21);
+
+    // DT 품행 기록 - 실제 필드명 사용
+    if (r.dt1_time) setDt1_time(r.dt1_time);
+    if (r.dt2_time) setDt2_time(r.dt2_time);
+    if (r.dt_indoor_blocked) setDt_indoor_blocked(r.dt_indoor_blocked);
+    if (r.dt_indoor_type) setDt_indoor_type(r.dt_indoor_type);
+    if (r.dt_belt_type) setDt_belt_type(r.dt_belt_type);
+    if (r.dt1_location) setDt1_location(r.dt1_location);
+    if (r.dt2_location) setDt2_location(r.dt2_location);
+    if (r.dt_mistake_1_dt1 !== undefined) setDt_mistake_1_dt1(r.dt_mistake_1_dt1);
+    if (r.dt_mistake_1_dt2 !== undefined) setDt_mistake_1_dt2(r.dt_mistake_1_dt2);
+    if (r.dt_mistake_2_dt1 !== undefined) setDt_mistake_2_dt1(r.dt_mistake_2_dt1);
+    if (r.dt_mistake_2_dt2 !== undefined) setDt_mistake_2_dt2(r.dt_mistake_2_dt2);
+    if (r.dt_mistake_3_dt1 !== undefined) setDt_mistake_3_dt1(r.dt_mistake_3_dt1);
+    if (r.dt_mistake_3_dt2 !== undefined) setDt_mistake_3_dt2(r.dt_mistake_3_dt2);
+    if (r.dt_mistake_4_dt1 !== undefined) setDt_mistake_4_dt1(r.dt_mistake_4_dt1);
+    if (r.dt_mistake_4_dt2 !== undefined) setDt_mistake_4_dt2(r.dt_mistake_4_dt2);
+    if (r.dt_before_walk_dt1 !== undefined) setDt_before_walk_dt1(r.dt_before_walk_dt1);
+    if (r.dt_before_walk_dt2 !== undefined) setDt_before_walk_dt2(r.dt_before_walk_dt2);
+    if (r.dt_signal) setDt_signal(r.dt_signal);
+    if (r.dt_signal_other) setDt_signal_other(r.dt_signal_other);
+    if (r.dt_problems) setDt_problems(r.dt_problems);
+
+    // 보행 훈련 - 실제 필드명 사용
+    if (r.walk_q1) setWalk_q1(r.walk_q1);
+    if (r.walk_q2) setWalk_q2(r.walk_q2);
+    if (r.walk_q3) setWalk_q3(r.walk_q3);
+    if (r.walk_q3_other) setWalk_q3_other(r.walk_q3_other);
+    if (r.walk_q4) setWalk_q4(r.walk_q4);
+    if (r.walk_q5) setWalk_q5(r.walk_q5);
+    if (r.walk_q6) setWalk_q6(r.walk_q6);
+    if (r.walk_q6_other) setWalk_q6_other(r.walk_q6_other);
+    if (r.walk_q7) setWalk_q7(r.walk_q7);
+    if (r.walk_q7_other) setWalk_q7_other(r.walk_q7_other);
+    if (r.walk_q8) setWalk_q8(r.walk_q8);
+    if (r.walk_q8_other) setWalk_q8_other(r.walk_q8_other);
+    if (r.walk_q9) setWalk_q9(r.walk_q9);
+    if (r.walk_q9_target) setWalk_q9_target(r.walk_q9_target);
+    if (r.walk_q9_other) setWalk_q9_other(r.walk_q9_other);
+    if (r.walk_q10) setWalk_q10(r.walk_q10);
+    if (r.walk_q11) setWalk_q11(r.walk_q11);
+
+    // 사회화 훈련 - 실제 필드명 사용
+    if (r.social_q1) setSocial_q1(r.social_q1);
+    if (r.social_q2) setSocial_q2(r.social_q2);
+    if (r.social_q3) setSocial_q3(r.social_q3);
+    if (r.social_q3_other) setSocial_q3_other(r.social_q3_other);
+    if (r.social_q4) setSocial_q4(r.social_q4);
+    if (r.social_q4_other) setSocial_q4_other(r.social_q4_other);
+    if (r.social_q5) setSocial_q5(r.social_q5);
+    if (r.social_q5_direction) setSocial_q5_direction(r.social_q5_direction);
+    if (r.social_q5_other) setSocial_q5_other(r.social_q5_other);
+    if (r.social_q6) setSocial_q6(r.social_q6);
+    if (r.social_q6_other) setSocial_q6_other(r.social_q6_other);
+    if (r.social_q7) setSocial_q7(r.social_q7);
+    if (r.social_q7_when) setSocial_q7_when(r.social_q7_when);
+    if (r.social_q7_other) setSocial_q7_other(r.social_q7_other);
+    if (r.social_q8) setSocial_q8(r.social_q8);
+    if (r.social_q8_other) setSocial_q8_other(r.social_q8_other);
+    if (r.social_q9) setSocial_q9(r.social_q9);
+    if (r.social_q9_other) setSocial_q9_other(r.social_q9_other);
+    if (r.social_q10) setSocial_q10(r.social_q10);
+
+    // 작성 모드로 전환
+    setCurrentStep(1);
+    setIsWriting(true);
+  };
+
   const createReportData = (): MonthlyReport => ({
-    id: generateId(),
+    id: editingReport?.id || generateId(), // 수정 모드면 기존 ID 유지
     userId: user?.id || '',
     userName: user?.name || '',
     dogName: user?.dogName || '',
     reportMonth: reportDate.substring(0, 7), // YYYY-MM 형식으로 변환
-    createdAt: new Date().toISOString(),
+    createdAt: editingReport?.createdAt || new Date().toISOString(), // 수정 모드면 기존 작성일 유지
     // 급식
     foodType, dailyFeedingCount, feedingAmountPerMeal,
     // 건강
@@ -397,6 +806,7 @@ export const MonthlyReportPage = () => {
     social_q8, social_q8_other,
     social_q9, social_q9_other,
     social_q10,
+    status, // 상태: 'draft' 또는 'completed'
     updatedAt: new Date().toISOString(),
   });
 
@@ -410,9 +820,10 @@ export const MonthlyReportPage = () => {
       const monthlyReport = createReportData();
       await saveMonthlyReport(monthlyReport);
       await loadReports();
-      alert('임시 저장되었습니다.');
+      alert(editingReport ? '수정되었습니다.' : '임시 저장되었습니다.');
       setIsWriting(false);
       setCurrentStep(1);
+      setEditingReport(null); // 수정 모드 초기화
     } catch (error) {
       console.error('저장 실패:', error);
       alert('저장에 실패했습니다.');
@@ -425,14 +836,24 @@ export const MonthlyReportPage = () => {
       return;
     }
 
-    if (window.confirm('제출하시겠습니까?')) {
+    if (window.confirm('제출하시겠습니까? 제출 후에는 수정이 불가능합니다.')) {
       try {
-        const monthlyReport = createReportData();
+        // status를 'completed'로 변경
+        setStatus('completed');
+
+        // status가 업데이트된 후 저장하기 위해 직접 데이터 생성
+        const monthlyReport: MonthlyReport = {
+          ...createReportData(),
+          status: 'completed'
+        };
+
         await saveMonthlyReport(monthlyReport);
         await loadReports();
         alert('월간 보고서가 제출되었습니다.');
         setIsWriting(false);
         setCurrentStep(1);
+        setStatus('draft'); // 다음 작성을 위해 초기화
+        setEditingReport(null); // 수정 모드 초기화
       } catch (error) {
         console.error('제출 실패:', error);
         alert('제출에 실패했습니다.');
@@ -1348,14 +1769,15 @@ export const MonthlyReportPage = () => {
               <div className="ml-4 space-y-3">
                 <div className="flex gap-4 items-center">
                   <div>
-                    <label className="text-sm text-gray-700">자세</label>
-                    <input
-                      type="text"
-                      value={q15_posture}
-                      onChange={(e)=>setQ15_posture(e.target.value)}
-                      className="ml-2 px-3 py-1 border border-gray-300 rounded w-48"
-                      placeholder="예: 누워서, 서서 등"
-                    />
+                    <span className="text-sm text-gray-700 mr-2">자세:</span>
+                    <label className="mr-4">
+                      <input type="radio" name="q15_posture" value="누워서" checked={q15_posture==='누워서'} onChange={(e)=>setQ15_posture(e.target.value)} className="mr-1" />
+                      누워서
+                    </label>
+                    <label>
+                      <input type="radio" name="q15_posture" value="앉아서" checked={q15_posture==='앉아서'} onChange={(e)=>setQ15_posture(e.target.value)} className="mr-1" />
+                      앉아서
+                    </label>
                   </div>
                   <div>
                     <label className="text-sm text-gray-700">주별 횟수</label>
@@ -3517,9 +3939,59 @@ export const MonthlyReportPage = () => {
     );
   }
 
+  // 상세보기 모달 열기
+  const openDetailView = (report: MonthlyReport) => {
+    setViewingReport(report);
+    // 기존 피드백이 있으면 로드
+    if ((report as any).feedback) {
+      setFeedbackText((report as any).feedback);
+    } else {
+      setFeedbackText('');
+    }
+  };
+
   // 상세보기 모달 닫기
   const closeDetailView = () => {
     setViewingReport(null);
+    setFeedbackText(''); // 피드백 텍스트 초기화
+  };
+
+  // 피드백 저장
+  const saveFeedback = async (reportId: string) => {
+    if (!feedbackText.trim()) {
+      alert('피드백 내용을 입력하세요.');
+      return;
+    }
+
+    try {
+      // 기존 보고서 데이터 가져오기
+      const reportToUpdate = reports.find(r => r.id === reportId);
+      if (!reportToUpdate) {
+        alert('보고서를 찾을 수 없습니다.');
+        return;
+      }
+
+      // 피드백 정보와 함께 업데이트
+      const updatedReport: MonthlyReport = {
+        ...reportToUpdate,
+        feedback: feedbackText,
+        feedbackAuthor: user?.name || '관리자',
+        feedbackDate: new Date().toISOString(),
+      };
+
+      await saveMonthlyReport(updatedReport);
+      alert('피드백이 저장되었습니다.');
+
+      // 보고서 목록 다시 로드
+      await loadReports();
+
+      // 상세보기 업데이트
+      setViewingReport(updatedReport);
+      setFeedbackText('');
+    } catch (error) {
+      console.error('피드백 저장 실패:', error);
+      alert('피드백 저장에 실패했습니다.');
+    }
   };
 
   // 비교 모드 토글
@@ -3657,14 +4129,23 @@ export const MonthlyReportPage = () => {
                   {/* 내용 */}
                   <div className="flex-1">
                     <button
-                      onClick={() => setViewingReport(report)}
+                      onClick={() => openDetailView(report)}
                       className="text-xl font-bold text-blue-600 hover:text-blue-800 underline text-left"
+                      aria-label={`${report.reportMonth} 월간 보고서, 견명 ${report.dogName}, 퍼피티처 ${report.userName}, 상태 ${report.status === 'completed' ? '완료' : '임시저장'}`}
                     >
-                      {report.dogName}_{report.userName}
+                      {report.reportMonth} 월간 보고서
                     </button>
                     <div className="flex items-center text-sm text-gray-600 space-x-4 mt-2">
-                      <span>{report.reportMonth}</span>
+                      <span>견명: {report.dogName}</span>
+                      <span>퍼피티처: {report.userName}</span>
                       <span>작성일: {formatDate(report.createdAt)}</span>
+                      <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                        report.status === 'completed'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {report.status === 'completed' ? '완료' : '임시저장'}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -3676,20 +4157,47 @@ export const MonthlyReportPage = () => {
         {/* 비교 테이블 모달 */}
         {showComparisonTable && (() => {
           const selectedReports = reports.filter(r => selectedReportIds.includes(r.id));
-          // 모든 필드 수집
-          const allFields = new Set<string>();
-          selectedReports.forEach(report => {
-            Object.keys(report).forEach(key => {
-              if (key !== 'id' && key !== 'userId' && key !== 'createdAt' && key !== 'updatedAt') {
-                allFields.add(key);
-              }
+
+          // 필드 렌더링 헬퍼 함수
+          const renderComparisonRow = (label: string, fieldName: string) => {
+            const hasValue = selectedReports.some(report => {
+              const value = (report as any)[fieldName];
+              return value !== undefined && value !== null && value !== '';
             });
-          });
+            if (!hasValue) return null;
+
+            return (
+              <tr className="hover:bg-gray-50">
+                <td className="border border-gray-300 p-3 font-semibold bg-gray-50 sticky left-0 min-w-[200px]">
+                  {label}
+                </td>
+                {selectedReports.map(report => {
+                  const value = (report as any)[fieldName];
+                  let displayValue;
+                  if (Array.isArray(value)) {
+                    displayValue = value.join(', ');
+                  } else if (typeof value === 'boolean') {
+                    displayValue = value ? '예' : '아니오';
+                  } else if (value) {
+                    // getAnswerText를 사용하여 매핑 시도
+                    displayValue = getAnswerText(fieldName, value);
+                  } else {
+                    displayValue = '-';
+                  }
+                  return (
+                    <td key={report.id} className="border border-gray-300 p-3">
+                      {displayValue}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          };
 
           return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] overflow-auto">
-                <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
+              <div className="bg-white rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center z-10">
                   <h3 className="text-2xl font-bold text-gray-800">
                     보고서 비교 ({selectedReports.length}개)
                   </h3>
@@ -3700,12 +4208,15 @@ export const MonthlyReportPage = () => {
                     ×
                   </button>
                 </div>
-                <div className="p-6">
+
+                {/* 기본 정보 */}
+                <div className="p-6 bg-gray-50 border-b border-gray-200">
+                  <h4 className="text-lg font-bold text-gray-800 mb-4">기본 정보</h4>
                   <div className="overflow-x-auto">
                     <table className="w-full border-collapse text-sm">
                       <thead>
                         <tr className="bg-gray-100">
-                          <th className="border border-gray-300 p-3 text-left font-semibold sticky left-0 bg-gray-100">
+                          <th className="border border-gray-300 p-3 text-left font-semibold sticky left-0 bg-gray-100 min-w-[200px]">
                             항목
                           </th>
                           {selectedReports.map(report => (
@@ -3719,31 +4230,233 @@ export const MonthlyReportPage = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {Array.from(allFields).sort().map(field => {
-                          const hasValue = selectedReports.some(report => {
-                            const value = (report as any)[field];
-                            return value && value !== '';
-                          });
+                        {renderComparisonRow('사료 종류', 'foodType')}
+                        {renderComparisonRow('1일 급식 횟수', 'dailyFeedingCount')}
+                        {renderComparisonRow('1회 급식량', 'feedingAmountPerMeal')}
+                        {renderComparisonRow('체중', 'weight')}
+                        {renderComparisonRow('건강상 특이사항', 'healthNotes')}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
 
-                          if (!hasValue) return null;
+                {/* 탭 버튼 */}
+                <div className="border-b border-gray-200 sticky top-[88px] bg-white z-10">
+                  <div className="flex space-x-1 p-2" role="tablist">
+                    <button
+                      role="tab"
+                      aria-selected={comparisonTab === 'home'}
+                      onClick={() => setComparisonTab('home')}
+                      className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                        comparisonTab === 'home'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      집에서의 품행
+                    </button>
+                    <button
+                      role="tab"
+                      aria-selected={comparisonTab === 'dt'}
+                      onClick={() => setComparisonTab('dt')}
+                      className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                        comparisonTab === 'dt'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      DT 품행 기록
+                    </button>
+                    <button
+                      role="tab"
+                      aria-selected={comparisonTab === 'walk'}
+                      onClick={() => setComparisonTab('walk')}
+                      className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                        comparisonTab === 'walk'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      보행 훈련
+                    </button>
+                    <button
+                      role="tab"
+                      aria-selected={comparisonTab === 'social'}
+                      onClick={() => setComparisonTab('social')}
+                      className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                        comparisonTab === 'social'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      사회화 훈련
+                    </button>
+                  </div>
+                </div>
 
-                          return (
-                            <tr key={field} className="hover:bg-gray-50">
-                              <td className="border border-gray-300 p-3 font-semibold bg-gray-50 sticky left-0">
-                                {field}
-                              </td>
-                              {selectedReports.map(report => {
-                                const value = (report as any)[field];
-                                const displayValue = Array.isArray(value) ? value.join(', ') : value || '-';
-                                return (
-                                  <td key={report.id} className="border border-gray-300 p-3">
-                                    {displayValue}
-                                  </td>
-                                );
-                              })}
-                            </tr>
-                          );
-                        })}
+                {/* 탭 컨텐츠 */}
+                <div className="p-6" role="tabpanel">
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse text-sm">
+                      <thead>
+                        <tr className="bg-gray-100">
+                          <th className="border border-gray-300 p-3 text-left font-semibold sticky left-0 bg-gray-100 min-w-[250px]">
+                            질문
+                          </th>
+                          {selectedReports.map(report => (
+                            <th key={report.id} className="border border-gray-300 p-3 text-left font-semibold min-w-[200px]">
+                              {report.dogName}_{report.userName}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* 집에서의 품행 탭 */}
+                        {comparisonTab === 'home' && (
+                          <>
+                            {renderComparisonRow('Q1. 크레이트 안에서의 행동', 'q1')}
+                            {renderComparisonRow('Q1-1. 편안해질 때까지 시간', 'q1_time')}
+                            {renderComparisonRow('Q1-2. 씹는 종류', 'q1_type')}
+                            {renderComparisonRow('Q1-3. 기타', 'q1_other')}
+                            {renderComparisonRow('Q2. 사람 음식 반응', 'q2')}
+                            {renderComparisonRow('Q2-1. 먹은 음식', 'q2_food')}
+                            {renderComparisonRow('Q2-2. 기타', 'q2_other')}
+                            {renderComparisonRow('Q3. 혼자 있을 때 상태', 'q3')}
+                            {renderComparisonRow('Q4. 혼자 있을 때 반응', 'q4')}
+                            {renderComparisonRow('Q4-1. 짖음 빈도', 'q4_bark_freq')}
+                            {renderComparisonRow('Q4-2. 기타', 'q4_other')}
+                            {renderComparisonRow('Q5. 크레이트 최장시간', 'q5_crate_time')}
+                            {renderComparisonRow('Q5. 크레이트 상태', 'q5_crate_state')}
+                            {renderComparisonRow('Q5. 팬스 최장시간', 'q5_fence_time')}
+                            {renderComparisonRow('Q5. 팬스 상태', 'q5_fence_state')}
+                            {renderComparisonRow('Q5. 풀린상태 최장시간', 'q5_free_time')}
+                            {renderComparisonRow('Q5. 풀린상태', 'q5_free_state')}
+                            {renderComparisonRow('Q6. 손님 반응', 'q6')}
+                            {renderComparisonRow('Q6-1. 기타', 'q6_other')}
+                            {renderComparisonRow('Q7. 가족 귀가 반응', 'q7')}
+                            {renderComparisonRow('Q7-1. 좋아하지 않는 행동', 'q7_dislike')}
+                            {renderComparisonRow('Q7-2. 기타', 'q7_other')}
+                            {renderComparisonRow('Q8. 집에서 짖음', 'q8')}
+                            {renderComparisonRow('Q8-1. 상황', 'q8_situation')}
+                            {renderComparisonRow('Q8-2. 횟수', 'q8_count')}
+                            {renderComparisonRow('Q9. 으르렁', 'q9')}
+                            {renderComparisonRow('Q9-1. 상황', 'q9_situation')}
+                            {renderComparisonRow('Q9-2. 횟수', 'q9_count')}
+                            {renderComparisonRow('Q10. 컨트롤 반응', 'q10')}
+                            {renderComparisonRow('Q10-1. 기타', 'q10_other')}
+                            {renderComparisonRow('Q11. 장난감 반응', 'q11')}
+                            {renderComparisonRow('Q11-1. 기타', 'q11_other')}
+                            {renderComparisonRow('Q12. 기본훈련 옵션', 'q12_option')}
+                            {renderComparisonRow('Q12-1. 명령어', 'q12_commands')}
+                            {renderComparisonRow('Q12-2. 기다려 상태', 'q12_wait_state')}
+                            {renderComparisonRow('Q12-3. 기다려 시간', 'q12_wait_time')}
+                            {renderComparisonRow('Q12-4. 기다려 수준', 'q12_wait_levels')}
+                            {renderComparisonRow('Q13. 바디핸들링', 'q13')}
+                            {renderComparisonRow('Q13-1. 기타', 'q13_other')}
+                            {renderComparisonRow('Q14. 이닦기 자세', 'q14_posture')}
+                            {renderComparisonRow('Q14-1. 주별 횟수', 'q14_frequency')}
+                            {renderComparisonRow('Q14-2. 반응', 'q14')}
+                            {renderComparisonRow('Q14-3. 기타', 'q14_other')}
+                            {renderComparisonRow('Q15. 그루밍 자세', 'q15_posture')}
+                            {renderComparisonRow('Q15-1. 주별 횟수', 'q15_frequency')}
+                            {renderComparisonRow('Q15-2. 반응', 'q15')}
+                            {renderComparisonRow('Q15-3. 기타', 'q15_other')}
+                            {renderComparisonRow('Q16. 발톱손질 자세', 'q16_posture')}
+                            {renderComparisonRow('Q16-1. 주별 횟수', 'q16_frequency')}
+                            {renderComparisonRow('Q16-2. 편안한 것', 'q16_comfortable')}
+                            {renderComparisonRow('Q16-3. 불편한 부위', 'q16_uncomfortable')}
+                            {renderComparisonRow('Q16-4. 기타 반응', 'q16_options')}
+                            {renderComparisonRow('Q16-5. 과거 피', 'q16_bleeding')}
+                            {renderComparisonRow('Q16-6. 기타', 'q16_other')}
+                            {renderComparisonRow('Q17. 귀청소 자세', 'q17_posture')}
+                            {renderComparisonRow('Q17-1. 반응', 'q17')}
+                            {renderComparisonRow('Q17-2. 계기', 'q17_reason')}
+                            {renderComparisonRow('Q17-3. 기타', 'q17_other')}
+                            {renderComparisonRow('Q18. 발닦기', 'q18')}
+                            {renderComparisonRow('Q18-1. 트릿 사용', 'q18_treat')}
+                            {renderComparisonRow('Q18-2. 입질 대상', 'q18_bites')}
+                            {renderComparisonRow('Q18-3. 기타', 'q18_other')}
+                            {renderComparisonRow('Q19. 물건 망가뜨림', 'q19')}
+                            {renderComparisonRow('Q19-1. 횟수', 'q19_count')}
+                            {renderComparisonRow('Q20. 자녀 반응', 'q20')}
+                            {renderComparisonRow('Q20-1. 기타', 'q20_other')}
+                            {renderComparisonRow('Q21. 가장 큰 문제', 'q21')}
+                          </>
+                        )}
+
+                        {/* DT 품행 기록 탭 */}
+                        {comparisonTab === 'dt' && (
+                          <>
+                            {renderComparisonRow('DT1 시간', 'dt1_time')}
+                            {renderComparisonRow('DT2 시간', 'dt2_time')}
+                            {renderComparisonRow('실내 배변 차단', 'dt_indoor_blocked')}
+                            {renderComparisonRow('실내 배변 형태', 'dt_indoor_type')}
+                            {renderComparisonRow('배변벨트 사용', 'dt_belt_type')}
+                            {renderComparisonRow('DT1 장소', 'dt1_location')}
+                            {renderComparisonRow('DT2 장소', 'dt2_location')}
+                            {renderComparisonRow('실수 - 안함 DT1', 'dt_mistake_1_dt1')}
+                            {renderComparisonRow('실수 - 안함 DT2', 'dt_mistake_1_dt2')}
+                            {renderComparisonRow('실수 - 주1회 DT1', 'dt_mistake_2_dt1')}
+                            {renderComparisonRow('실수 - 주1회 DT2', 'dt_mistake_2_dt2')}
+                            {renderComparisonRow('실수 - 주2-3회 DT1', 'dt_mistake_3_dt1')}
+                            {renderComparisonRow('실수 - 주2-3회 DT2', 'dt_mistake_3_dt2')}
+                            {renderComparisonRow('실수 - 주4-5회 DT1', 'dt_mistake_4_dt1')}
+                            {renderComparisonRow('실수 - 주4-5회 DT2', 'dt_mistake_4_dt2')}
+                            {renderComparisonRow('보행전 DT - DT1', 'dt_before_walk_dt1')}
+                            {renderComparisonRow('보행전 DT - DT2', 'dt_before_walk_dt2')}
+                            {renderComparisonRow('DT 신호', 'dt_signal')}
+                            {renderComparisonRow('DT 신호 기타', 'dt_signal_other')}
+                            {renderComparisonRow('배변 문제', 'dt_problems')}
+                          </>
+                        )}
+
+                        {/* 보행 훈련 탭 */}
+                        {comparisonTab === 'walk' && (
+                          <>
+                            {renderComparisonRow('1. 평균 산책 시간', 'walk_q1')}
+                            {renderComparisonRow('2. 산책 시간대', 'walk_q2')}
+                            {renderComparisonRow('3. 코트/견줄 반응', 'walk_q3')}
+                            {renderComparisonRow('3-1. 기타', 'walk_q3_other')}
+                            {renderComparisonRow('4. 헤드칼라 사용', 'walk_q4')}
+                            {renderComparisonRow('5. 트릿 사용', 'walk_q5')}
+                            {renderComparisonRow('6. 보행 속도', 'walk_q6')}
+                            {renderComparisonRow('6-1. 기타', 'walk_q6_other')}
+                            {renderComparisonRow('7. 보행 행동', 'walk_q7')}
+                            {renderComparisonRow('7-1. 기타', 'walk_q7_other')}
+                            {renderComparisonRow('8. 동물 반응', 'walk_q8')}
+                            {renderComparisonRow('8-1. 기타', 'walk_q8_other')}
+                            {renderComparisonRow('9. 사람 반응', 'walk_q9')}
+                            {renderComparisonRow('9-1. 대상', 'walk_q9_target')}
+                            {renderComparisonRow('9-2. 기타', 'walk_q9_other')}
+                            {renderComparisonRow('10. 두려운 대상', 'walk_q10')}
+                            {renderComparisonRow('11. 관심 대상', 'walk_q11')}
+                          </>
+                        )}
+
+                        {/* 사회화 훈련 탭 */}
+                        {comparisonTab === 'social' && (
+                          <>
+                            {renderComparisonRow('1. 다녀온 장소', 'social_q1')}
+                            {renderComparisonRow('2. 훈련 빈도', 'social_q2')}
+                            {renderComparisonRow('3. 복잡한 곳 반응', 'social_q3')}
+                            {renderComparisonRow('3-1. 기타', 'social_q3_other')}
+                            {renderComparisonRow('4. 계단 이용', 'social_q4')}
+                            {renderComparisonRow('4-1. 기타', 'social_q4_other')}
+                            {renderComparisonRow('5. 에스컬레이터', 'social_q5')}
+                            {renderComparisonRow('5-1. 방향', 'social_q5_direction')}
+                            {renderComparisonRow('5-2. 기타', 'social_q5_other')}
+                            {renderComparisonRow('6. 승용차', 'social_q6')}
+                            {renderComparisonRow('6-1. 기타', 'social_q6_other')}
+                            {renderComparisonRow('7. 버스', 'social_q7')}
+                            {renderComparisonRow('7-1. 시간', 'social_q7_when')}
+                            {renderComparisonRow('7-2. 기타', 'social_q7_other')}
+                            {renderComparisonRow('8. 지하철', 'social_q8')}
+                            {renderComparisonRow('8-1. 기타', 'social_q8_other')}
+                            {renderComparisonRow('9. 기차', 'social_q9')}
+                            {renderComparisonRow('9-1. 기타', 'social_q9_other')}
+                            {renderComparisonRow('10. 가장 어려운 점', 'social_q10')}
+                          </>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -3768,103 +4481,651 @@ export const MonthlyReportPage = () => {
                   ×
                 </button>
               </div>
-              <div className="p-6 space-y-6">
-                {/* 기본 정보 */}
-                <div className="border-b pb-4">
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">기본 정보</h4>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div><span className="font-semibold">보고 월:</span> {viewingReport.reportMonth}</div>
-                    <div><span className="font-semibold">작성일:</span> {formatDate(viewingReport.createdAt)}</div>
-                    <div><span className="font-semibold">견명:</span> {viewingReport.dogName}</div>
-                    <div><span className="font-semibold">퍼피티처:</span> {viewingReport.userName}</div>
+
+              {/* 기본 정보 */}
+              <div className="p-6 bg-gray-50 border-b border-gray-200">
+                <h4 className="text-lg font-bold text-gray-800 mb-4">기본 정보</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-lg">
+                    <h5 className="text-sm font-semibold text-gray-600 mb-2">급식</h5>
+                    <div className="space-y-2 text-sm">
+                      {(viewingReport as any).foodType && (
+                        <div className="flex">
+                          <span className="font-semibold w-32">사료 종류:</span>
+                          <span>{(viewingReport as any).foodType}</span>
+                        </div>
+                      )}
+                      {(viewingReport as any).dailyFeedingCount && (
+                        <div className="flex">
+                          <span className="font-semibold w-32">1일 급식 횟수:</span>
+                          <span>{(viewingReport as any).dailyFeedingCount}</span>
+                        </div>
+                      )}
+                      {(viewingReport as any).feedingAmountPerMeal && (
+                        <div className="flex">
+                          <span className="font-semibold w-32">1회 급식량:</span>
+                          <span>{(viewingReport as any).feedingAmountPerMeal}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg">
+                    <h5 className="text-sm font-semibold text-gray-600 mb-2">건강</h5>
+                    <div className="space-y-2 text-sm">
+                      {(viewingReport as any).weight && (
+                        <div className="flex">
+                          <span className="font-semibold w-32">체중:</span>
+                          <span>{(viewingReport as any).weight}</span>
+                        </div>
+                      )}
+                      {(viewingReport as any).healthNotes && (
+                        <div>
+                          <span className="font-semibold">건강상 특이사항:</span>
+                          <p className="mt-1 text-gray-700 whitespace-pre-wrap">{(viewingReport as any).healthNotes}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                {/* 급식 및 건강 */}
-                {(viewingReport as any).foodType && (
-                  <div className="border-b pb-4">
-                    <h4 className="text-lg font-bold text-gray-800 mb-3">급식 및 건강</h4>
-                    <div className="space-y-2 text-sm">
-                      {(viewingReport as any).foodType && <div><span className="font-semibold">사료 종류:</span> {(viewingReport as any).foodType}</div>}
-                      {(viewingReport as any).dailyFeedingCount && <div><span className="font-semibold">1일 급식 횟수:</span> {(viewingReport as any).dailyFeedingCount}</div>}
-                      {(viewingReport as any).feedingAmountPerMeal && <div><span className="font-semibold">1회 급식량:</span> {(viewingReport as any).feedingAmountPerMeal}</div>}
-                      {(viewingReport as any).weight && <div><span className="font-semibold">체중:</span> {(viewingReport as any).weight}</div>}
-                      {(viewingReport as any).healthNotes && <div><span className="font-semibold">건강 특이사항:</span> {(viewingReport as any).healthNotes}</div>}
-                    </div>
+              {/* 탭 버튼 */}
+              <div className="border-b border-gray-200">
+                <div className="flex space-x-1 p-2" role="tablist">
+                  <button
+                    role="tab"
+                    aria-selected={detailViewTab === 'home'}
+                    onClick={() => setDetailViewTab('home')}
+                    className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                      detailViewTab === 'home'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    집에서의 품행
+                  </button>
+                  <button
+                    role="tab"
+                    aria-selected={detailViewTab === 'dt'}
+                    onClick={() => setDetailViewTab('dt')}
+                    className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                      detailViewTab === 'dt'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    DT 품행 기록
+                  </button>
+                  <button
+                    role="tab"
+                    aria-selected={detailViewTab === 'walk'}
+                    onClick={() => setDetailViewTab('walk')}
+                    className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                      detailViewTab === 'walk'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    보행 훈련
+                  </button>
+                  <button
+                    role="tab"
+                    aria-selected={detailViewTab === 'social'}
+                    onClick={() => setDetailViewTab('social')}
+                    className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                      detailViewTab === 'social'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    사회화 훈련
+                  </button>
+                </div>
+              </div>
+
+              {/* 탭 컨텐츠 */}
+              <div className="p-6" role="tabpanel">
+                {/* 집에서의 품행 탭 */}
+                {detailViewTab === 'home' && (
+                  <div className="space-y-4">
+                    <h4 className="text-xl font-bold text-gray-800 mb-4">집에서의 품행 (21개 질문)</h4>
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-gray-100">
+                          <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
+                          <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(viewingReport as any).q1 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q1. 크레이트(팬스)를 닫았을 때 안에서의 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q1', (viewingReport as any).q1)}</td></tr>
+                        )}
+                        {(viewingReport as any).q1_time && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">편안해질 때까지 걸리는 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_time}</td></tr>
+                        )}
+                        {(viewingReport as any).q1_type && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">씹는 종류</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_type}</td></tr>
+                        )}
+                        {(viewingReport as any).q1_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q2 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q2. 사람 음식에 대한 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q2', (viewingReport as any).q2)}</td></tr>
+                        )}
+                        {(viewingReport as any).q2_food && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">먹은 음식</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q2_food}</td></tr>
+                        )}
+                        {(viewingReport as any).q2_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q2_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q3 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q3. 혼자 있을 때 상태</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q3', (viewingReport as any).q3)}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q4 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q4. 혼자 있을 때 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q4', (viewingReport as any).q4)}</td></tr>
+                        )}
+                        {(viewingReport as any).q4_bark_freq && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">짖음 빈도</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q4_bark_freq}</td></tr>
+                        )}
+                        {(viewingReport as any).q4_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q4_other}</td></tr>
+                        )}
+
+                        {((viewingReport as any).q5_crate_time || (viewingReport as any).q5_fence_time || (viewingReport as any).q5_free_time) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q5. 혼자 있어 본 최장시간과 상태</td></tr>
+                        )}
+                        {(viewingReport as any).q5_crate_time && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">크레이트 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_crate_time}</td></tr>
+                        )}
+                        {(viewingReport as any).q5_crate_state && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">크레이트 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_crate_state}</td></tr>
+                        )}
+                        {(viewingReport as any).q5_fence_time && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">팬스 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_fence_time}</td></tr>
+                        )}
+                        {(viewingReport as any).q5_fence_state && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">팬스 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_fence_state}</td></tr>
+                        )}
+                        {(viewingReport as any).q5_free_time && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_free_time}</td></tr>
+                        )}
+                        {(viewingReport as any).q5_free_state && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_free_state}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q6 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q6. 손님이 왔을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q6', (viewingReport as any).q6)}</td></tr>
+                        )}
+                        {(viewingReport as any).q6_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q6_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q7 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q7. 가족이 귀가했을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q7', (viewingReport as any).q7)}</td></tr>
+                        )}
+                        {(viewingReport as any).q7_dislike && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">별로 좋아하지 않는 행동</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q7_dislike}</td></tr>
+                        )}
+                        {(viewingReport as any).q7_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q7_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q8 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q8. 집에 있는 상황에서 짖은 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q8', (viewingReport as any).q8)}</td></tr>
+                        )}
+                        {(viewingReport as any).q8_situation && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q8_situation}</td></tr>
+                        )}
+                        {(viewingReport as any).q8_count && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q8_count}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q9 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q9. 으르렁 거린 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q9', (viewingReport as any).q9)}</td></tr>
+                        )}
+                        {(viewingReport as any).q9_situation && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q9_situation}</td></tr>
+                        )}
+                        {(viewingReport as any).q9_count && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q9_count}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q10 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q10. 개의 잘못된 행동을 사람이 컨트롤 했을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q10', (viewingReport as any).q10)}</td></tr>
+                        )}
+                        {(viewingReport as any).q10_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q10_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q11 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q11. 장난감이나 콩, 껌을 물고 있는 강아지에게 "놔 or 그만"을 했을 때 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q11', (viewingReport as any).q11)}</td></tr>
+                        )}
+                        {(viewingReport as any).q11_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q11_other}</td></tr>
+                        )}
+
+                        {((viewingReport as any).q12_option || (viewingReport as any).q12_commands || (viewingReport as any).q12_wait_state) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q12. 집안에서 기본훈련(앉아/엎드려/서)에 대한 강아지의 수준</td></tr>
+                        )}
+                        {(viewingReport as any).q12_option && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">선택</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q12_option', (viewingReport as any).q12_option)}</td></tr>
+                        )}
+                        {(viewingReport as any).q12_commands && Array.isArray((viewingReport as any).q12_commands) && (viewingReport as any).q12_commands.length > 0 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">명령어</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_commands.join(', ')}</td></tr>
+                        )}
+                        {(viewingReport as any).q12_wait_state && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_state}</td></tr>
+                        )}
+                        {(viewingReport as any).q12_wait_time && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_time}</td></tr>
+                        )}
+                        {(viewingReport as any).q12_wait_levels && Array.isArray((viewingReport as any).q12_wait_levels) && (viewingReport as any).q12_wait_levels.length > 0 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 수준</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_levels.join(', ')}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q13 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q13. 바디핸들링이나 배를 보이며 눕히기를 했을때 강아지의 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q13', (viewingReport as any).q13)}</td></tr>
+                        )}
+                        {(viewingReport as any).q13_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q13_other}</td></tr>
+                        )}
+
+                        {((viewingReport as any).q14_posture || (viewingReport as any).q14_frequency || (viewingReport as any).q14) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q14. 이를 닦을 때 품행</td></tr>
+                        )}
+                        {(viewingReport as any).q14_posture && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_posture}</td></tr>
+                        )}
+                        {(viewingReport as any).q14_frequency && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_frequency}</td></tr>
+                        )}
+                        {(viewingReport as any).q14 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q14', (viewingReport as any).q14)}</td></tr>
+                        )}
+                        {(viewingReport as any).q14_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_other}</td></tr>
+                        )}
+
+                        {((viewingReport as any).q15_posture || (viewingReport as any).q15_frequency || (viewingReport as any).q15) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q15. 그루밍(빗질) 할 때의 품행</td></tr>
+                        )}
+                        {(viewingReport as any).q15_posture && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_posture}</td></tr>
+                        )}
+                        {(viewingReport as any).q15_frequency && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_frequency}</td></tr>
+                        )}
+                        {(viewingReport as any).q15 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q15', (viewingReport as any).q15)}</td></tr>
+                        )}
+                        {(viewingReport as any).q15_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_other}</td></tr>
+                        )}
+
+                        {((viewingReport as any).q16_posture || (viewingReport as any).q16_frequency || (viewingReport as any).q16_comfortable || (viewingReport as any).q16_uncomfortable) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q16. 발톱/발털손질 할 때의 품행</td></tr>
+                        )}
+                        {(viewingReport as any).q16_posture && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_posture}</td></tr>
+                        )}
+                        {(viewingReport as any).q16_frequency && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_frequency}</td></tr>
+                        )}
+                        {(viewingReport as any).q16_comfortable && Array.isArray((viewingReport as any).q16_comfortable) && (viewingReport as any).q16_comfortable.length > 0 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">편안하게 잘 하는 것</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_comfortable.join(', ')}</td></tr>
+                        )}
+                        {(viewingReport as any).q16_uncomfortable && Array.isArray((viewingReport as any).q16_uncomfortable) && (viewingReport as any).q16_uncomfortable.length > 0 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">불편해하는 부위</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_uncomfortable.join(', ')}</td></tr>
+                        )}
+                        {(viewingReport as any).q16_options && Array.isArray((viewingReport as any).q16_options) && (viewingReport as any).q16_options.length > 0 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_options.join(', ')}</td></tr>
+                        )}
+                        {(viewingReport as any).q16_bleeding && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">과거 피가 난 적</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_bleeding === 'Y' ? '예' : '아니오'}</td></tr>
+                        )}
+                        {(viewingReport as any).q16_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_other}</td></tr>
+                        )}
+
+                        {((viewingReport as any).q17_posture || (viewingReport as any).q17) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q17. 귀청소 할 때의 품행</td></tr>
+                        )}
+                        {(viewingReport as any).q17_posture && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_posture}</td></tr>
+                        )}
+                        {(viewingReport as any).q17 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q17', (viewingReport as any).q17)}</td></tr>
+                        )}
+                        {(viewingReport as any).q17_reason && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">계기</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_reason}</td></tr>
+                        )}
+                        {(viewingReport as any).q17_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q18 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q18. 외출 후 발을 닦을 때의 품행</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q18', (viewingReport as any).q18)}</td></tr>
+                        )}
+                        {(viewingReport as any).q18_treat && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">트릿 사용 여부</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_treat}</td></tr>
+                        )}
+                        {(viewingReport as any).q18_bites && Array.isArray((viewingReport as any).q18_bites) && (viewingReport as any).q18_bites.length > 0 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">입질 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_bites.join(', ')}</td></tr>
+                        )}
+                        {(viewingReport as any).q18_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q19 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q19. 집안의 물건을 망가뜨린 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q19', (viewingReport as any).q19)}</td></tr>
+                        )}
+                        {(viewingReport as any).q19_count && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">지난 한달간 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q19_count}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q20 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q20. 집에서 자녀들과 있을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q20', (viewingReport as any).q20)}</td></tr>
+                        )}
+                        {(viewingReport as any).q20_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q20_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).q21 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q21. 현재 품행에 있어 가장 큰 문제는?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q21}</td></tr>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 )}
 
-                {/* 집에서의 품행 */}
-                <div className="border-b pb-4">
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">집에서의 품행</h4>
-                  <div className="space-y-3 text-sm">
-                    {Object.entries(viewingReport as any).filter(([key]) => key.startsWith('q') && key.match(/^q\d+/)).map(([key, value]) => {
-                      if (value && typeof value === 'string' && value.trim()) {
-                        const questionNum = key.match(/^q(\d+)/)?.[1];
-                        return (
-                          <div key={key} className="bg-gray-50 p-3 rounded">
-                            <span className="font-semibold">{key}:</span> {value}
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
-                  </div>
-                </div>
+                {/* DT 품행 기록 탭 */}
+                {detailViewTab === 'dt' && (
+                  <div className="space-y-4">
+                    <h4 className="text-xl font-bold text-gray-800 mb-4">DT 품행 기록</h4>
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-gray-100">
+                          <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
+                          <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {((viewingReport as any).dt1_time || (viewingReport as any).dt2_time) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>1. '하나둘,하나둘' 명령어에 몇분안에 반응하나요?</td></tr>
+                        )}
+                        {(viewingReport as any).dt1_time && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT1(소변)</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt1_time}분</td></tr>
+                        )}
+                        {(viewingReport as any).dt2_time && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT2(대변)</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt2_time}분</td></tr>
+                        )}
 
-                {/* DT 품행 기록 */}
-                <div className="border-b pb-4">
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">DT 품행 기록</h4>
-                  <div className="space-y-3 text-sm">
-                    {Object.entries(viewingReport as any).filter(([key]) => key.startsWith('dt')).map(([key, value]) => {
-                      if (value && typeof value === 'string' && value.trim()) {
-                        return (
-                          <div key={key} className="bg-gray-50 p-3 rounded">
-                            <span className="font-semibold">{key}:</span> {value}
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
-                  </div>
-                </div>
+                        {(viewingReport as any).dt_indoor_blocked && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 실내 배변 장소는 차단해 두었나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_indoor_blocked}</td></tr>
+                        )}
 
-                {/* 보행 훈련 */}
-                <div className="border-b pb-4">
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">보행 훈련</h4>
-                  <div className="space-y-3 text-sm">
-                    {Object.entries(viewingReport as any).filter(([key]) => key.startsWith('walk_')).map(([key, value]) => {
-                      if (value && typeof value === 'string' && value.trim()) {
-                        return (
-                          <div key={key} className="bg-gray-50 p-3 rounded">
-                            <span className="font-semibold">{key}:</span> {value}
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
-                  </div>
-                </div>
+                        {(viewingReport as any).dt_indoor_type && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 실내배변은 어떤 형태로 하고 있나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_indoor_type}</td></tr>
+                        )}
 
-                {/* 사회화 훈련 */}
-                <div className="pb-4">
-                  <h4 className="text-lg font-bold text-gray-800 mb-3">사회화 훈련</h4>
-                  <div className="space-y-3 text-sm">
-                    {Object.entries(viewingReport as any).filter(([key]) => key.startsWith('social_')).map(([key, value]) => {
-                      if (value) {
-                        const displayValue = Array.isArray(value) ? value.join(', ') : value;
-                        if (typeof displayValue === 'string' && displayValue.trim()) {
-                          return (
-                            <div key={key} className="bg-gray-50 p-3 rounded">
-                              <span className="font-semibold">{key}:</span> {displayValue}
-                            </div>
-                          );
-                        }
-                      }
-                      return null;
-                    })}
+                        {(viewingReport as any).dt_belt_type && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 배변벨트 사용 여부</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_belt_type}</td></tr>
+                        )}
+
+                        {((viewingReport as any).dt1_location || (viewingReport as any).dt2_location) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>5. 배변 장소</td></tr>
+                        )}
+                        {(viewingReport as any).dt1_location && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT1</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt1_location}</td></tr>
+                        )}
+                        {(viewingReport as any).dt2_location && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT2</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt2_location}</td></tr>
+                        )}
+
+                        {((viewingReport as any).dt_mistake_1_dt1 || (viewingReport as any).dt_mistake_1_dt2 || (viewingReport as any).dt_mistake_2_dt1 || (viewingReport as any).dt_mistake_2_dt2 || (viewingReport as any).dt_mistake_3_dt1 || (viewingReport as any).dt_mistake_3_dt2 || (viewingReport as any).dt_mistake_4_dt1 || (viewingReport as any).dt_mistake_4_dt2) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>6. 보행 도중에 DT 실수를 할 때가 있나요?</td></tr>
+                        )}
+                        {((viewingReport as any).dt_mistake_1_dt1 || (viewingReport as any).dt_mistake_1_dt2) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">① 안 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_1_dt1 && 'DT1', (viewingReport as any).dt_mistake_1_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        )}
+                        {((viewingReport as any).dt_mistake_2_dt1 || (viewingReport as any).dt_mistake_2_dt2) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">② 주 1회 정도 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_2_dt1 && 'DT1', (viewingReport as any).dt_mistake_2_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        )}
+                        {((viewingReport as any).dt_mistake_3_dt1 || (viewingReport as any).dt_mistake_3_dt2) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">③ 주 2~3회 정도 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_3_dt1 && 'DT1', (viewingReport as any).dt_mistake_3_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        )}
+                        {((viewingReport as any).dt_mistake_4_dt1 || (viewingReport as any).dt_mistake_4_dt2) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">④ 주 4~5회 이상 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_4_dt1 && 'DT1', (viewingReport as any).dt_mistake_4_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        )}
+
+                        {((viewingReport as any).dt_before_walk_dt1 || (viewingReport as any).dt_before_walk_dt2) && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 보행 전에 반드시 DT를 하고 걷나요?</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_before_walk_dt1 && 'DT1', (viewingReport as any).dt_before_walk_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        )}
+
+                        {(viewingReport as any).dt_signal && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 보행 도중 DT를 하고 싶어할 때 특별히 보내는 신호가 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('dt_signal', (viewingReport as any).dt_signal)}</td></tr>
+                        )}
+                        {(viewingReport as any).dt_signal_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_signal_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).dt_problems && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 현재 배변문제가 있다면 어떤 것이 있나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_problems}</td></tr>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
-                </div>
+                )}
+
+                {/* 보행 훈련 탭 */}
+                {detailViewTab === 'walk' && (
+                  <div className="space-y-4">
+                    <h4 className="text-xl font-bold text-gray-800 mb-4">보행 훈련</h4>
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-gray-100">
+                          <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
+                          <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(viewingReport as any).walk_q1 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">1. 하루 평균 산책 시간은?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q1', (viewingReport as any).walk_q1)}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q2 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 산책 나가는 시간대</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q2}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q3 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 코트와 견줄 착용에 대한 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q3', (viewingReport as any).walk_q3)}</td></tr>
+                        )}
+                        {(viewingReport as any).walk_q3_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q3_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q4 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 헤드칼라 사용 여부</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q4', (viewingReport as any).walk_q4)}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q5 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">5. 산책 중 트릿 사용 여부</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q5', (viewingReport as any).walk_q5)}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q6 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">6. 보행 속도</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q6', (viewingReport as any).walk_q6)}</td></tr>
+                        )}
+                        {(viewingReport as any).walk_q6_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q6_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q7 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 보행중 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q7', (viewingReport as any).walk_q7)}</td></tr>
+                        )}
+                        {(viewingReport as any).walk_q7_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q7_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q8 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 보행중 다른 동물을 만났을 때 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q8}</td></tr>
+                        )}
+                        {(viewingReport as any).walk_q8_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q8_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q9 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 보행중 사람을 만났을 때 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9}</td></tr>
+                        )}
+                        {(viewingReport as any).walk_q9_target && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9_target}</td></tr>
+                        )}
+                        {(viewingReport as any).walk_q9_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q10 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">10. 두려워하는 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q10}</td></tr>
+                        )}
+
+                        {(viewingReport as any).walk_q11 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">11. 관심을 보이는 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q11}</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {/* 사회화 훈련 탭 */}
+                {detailViewTab === 'social' && (
+                  <div className="space-y-4">
+                    <h4 className="text-xl font-bold text-gray-800 mb-4">사회화 훈련</h4>
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-gray-100">
+                          <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
+                          <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(viewingReport as any).social_q1 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">1. 지난 한달간 다녀온 장소</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q1}</td></tr>
+                        )}
+
+                        {(viewingReport as any).social_q2 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 사회화 훈련 빈도</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q2', (viewingReport as any).social_q2)}</td></tr>
+                        )}
+
+                        {(viewingReport as any).social_q3 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 복잡하고 사람이 많은 곳에서의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q3', (viewingReport as any).social_q3)}</td></tr>
+                        )}
+                        {(viewingReport as any).social_q3_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q3_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).social_q4 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 계단 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q4', (viewingReport as any).social_q4)}</td></tr>
+                        )}
+                        {(viewingReport as any).social_q4_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q4_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).social_q5 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">5. 에스컬레이터 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q5', (viewingReport as any).social_q5)}</td></tr>
+                        )}
+                        {(viewingReport as any).social_q5_direction && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">방향</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q5_direction}</td></tr>
+                        )}
+                        {(viewingReport as any).social_q5_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q5_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).social_q6 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">6. 승용차 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q6', (viewingReport as any).social_q6)}</td></tr>
+                        )}
+                        {(viewingReport as any).social_q6_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q6_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).social_q7 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 버스 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q7', (viewingReport as any).social_q7)}</td></tr>
+                        )}
+                        {(viewingReport as any).social_q7_when && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q7_when}</td></tr>
+                        )}
+                        {(viewingReport as any).social_q7_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q7_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).social_q8 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 지하철 이용</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q8}</td></tr>
+                        )}
+                        {(viewingReport as any).social_q8_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q8_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).social_q9 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 기차 이용</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q9}</td></tr>
+                        )}
+                        {(viewingReport as any).social_q9_other && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q9_other}</td></tr>
+                        )}
+
+                        {(viewingReport as any).social_q10 && (
+                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">10. 사회화 훈련 중 가장 어려운 점</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q10}</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* 피드백 섹션 */}
+              <div className="p-6 bg-gray-50 border-t border-gray-200">
+                <h4 className="text-lg font-bold text-gray-800 mb-4">관리자 피드백</h4>
+
+                {/* 기존 피드백 표시 */}
+                {(viewingReport as any).feedback && (
+                  <div className="mb-4 bg-white p-4 rounded-lg border border-gray-300">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-sm text-gray-600">
+                        작성자: {(viewingReport as any).feedbackAuthor || '관리자'}
+                      </span>
+                      {(viewingReport as any).feedbackDate && (
+                        <span className="text-sm text-gray-500">
+                          {new Date((viewingReport as any).feedbackDate).toLocaleString('ko-KR')}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-gray-800 whitespace-pre-wrap">{(viewingReport as any).feedback}</p>
+                  </div>
+                )}
+
+                {/* 관리자만 피드백 작성/수정 가능 */}
+                {user?.role === 'admin' && (
+                  <div>
+                    <textarea
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                      placeholder="피드백을 작성하세요..."
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
+                      rows={4}
+                    />
+                    <button
+                      onClick={() => saveFeedback(viewingReport.id)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                    >
+                      피드백 저장
+                    </button>
+                  </div>
+                )}
+
+                {/* 작성자는 피드백을 읽기만 가능 */}
+                {user?.role !== 'admin' && !(viewingReport as any).feedback && (
+                  <p className="text-gray-500 text-center py-4">아직 피드백이 없습니다.</p>
+                )}
               </div>
             </div>
           </div>
@@ -3905,35 +5166,724 @@ export const MonthlyReportPage = () => {
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  <button
+                    onClick={() => openDetailView(report)}
+                    className="text-xl font-bold text-blue-600 hover:text-blue-800 underline text-left"
+                    aria-label={`${report.reportMonth} 월간 보고서, 견명 ${report.dogName}, 퍼피티처 ${report.userName}, 상태 ${report.status === 'completed' ? '완료' : '임시저장'}`}
+                  >
                     {report.reportMonth} 월간 보고서
-                  </h3>
-                  <div className="flex items-center text-sm text-gray-600 space-x-4">
-                    <span>{report.userName}</span>
-                    <span>{report.dogName}</span>
-                    <span>{formatDate(report.createdAt)}</span>
+                  </button>
+                  <div className="flex items-center text-sm text-gray-600 space-x-4 mt-2">
+                    <span>견명: {report.dogName}</span>
+                    <span>퍼피티처: {report.userName}</span>
+                    <span>작성일: {formatDate(report.createdAt)}</span>
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                      report.status === 'completed'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {report.status === 'completed' ? '완료' : '임시저장'}
+                    </span>
                   </div>
                 </div>
-                <button
-                  onClick={async () => {
-                    if (window.confirm('이 보고서를 삭제하시겠습니까?')) {
-                      try {
-                        await deleteMonthlyReport(report.id);
-                        await loadReports();
-                        alert('삭제되었습니다.');
-                      } catch (error) {
-                        console.error('삭제 실패:', error);
-                        alert('삭제에 실패했습니다.');
-                      }
-                    }
-                  }}
-                  className="text-red-600 hover:text-red-800 ml-4"
-                >
-                  삭제
-                </button>
+                <div className="flex space-x-2">
+                  {/* 완료된 보고서는 수정/삭제 불가 */}
+                  {report.status !== 'completed' && (
+                    <>
+                      <button
+                        onClick={() => loadReportForEdit(report)}
+                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={async () => {
+                          if (window.confirm('이 보고서를 삭제하시겠습니까?')) {
+                            try {
+                              await deleteMonthlyReport(report.id);
+                              await loadReports();
+                              alert('삭제되었습니다.');
+                            } catch (error) {
+                              console.error('삭제 실패:', error);
+                              alert('삭제에 실패했습니다.');
+                            }
+                          }
+                        }}
+                        className="text-red-600 hover:text-red-800 px-4 py-2"
+                      >
+                        삭제
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* 상세보기 모달 */}
+      {viewingReport && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
+              <h3 className="text-2xl font-bold text-gray-800">
+                {viewingReport.dogName}_{viewingReport.userName} - {viewingReport.reportMonth}
+              </h3>
+              <button
+                onClick={closeDetailView}
+                className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* 기본 정보 */}
+            <div className="p-6 bg-gray-50 border-b border-gray-200">
+              <h4 className="text-lg font-bold text-gray-800 mb-4">기본 정보</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white p-4 rounded-lg">
+                  <h5 className="text-sm font-semibold text-gray-600 mb-2">급식</h5>
+                  <div className="space-y-2 text-sm">
+                    {(viewingReport as any).foodType && (
+                      <div className="flex">
+                        <span className="font-semibold w-32">사료 종류:</span>
+                        <span>{(viewingReport as any).foodType}</span>
+                      </div>
+                    )}
+                    {(viewingReport as any).dailyFeedingCount && (
+                      <div className="flex">
+                        <span className="font-semibold w-32">1일 급식 횟수:</span>
+                        <span>{(viewingReport as any).dailyFeedingCount}</span>
+                      </div>
+                    )}
+                    {(viewingReport as any).feedingAmountPerMeal && (
+                      <div className="flex">
+                        <span className="font-semibold w-32">1회 급식량:</span>
+                        <span>{(viewingReport as any).feedingAmountPerMeal}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="bg-white p-4 rounded-lg">
+                  <h5 className="text-sm font-semibold text-gray-600 mb-2">건강</h5>
+                  <div className="space-y-2 text-sm">
+                    {(viewingReport as any).weight && (
+                      <div className="flex">
+                        <span className="font-semibold w-32">체중:</span>
+                        <span>{(viewingReport as any).weight}</span>
+                      </div>
+                    )}
+                    {(viewingReport as any).healthNotes && (
+                      <div>
+                        <span className="font-semibold">건강상 특이사항:</span>
+                        <p className="mt-1 text-gray-700 whitespace-pre-wrap">{(viewingReport as any).healthNotes}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 탭 버튼 */}
+            <div className="border-b border-gray-200">
+              <div className="flex space-x-1 p-2" role="tablist">
+                <button
+                  role="tab"
+                  aria-selected={detailViewTab === 'home'}
+                  onClick={() => setDetailViewTab('home')}
+                  className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                    detailViewTab === 'home'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  집에서의 품행
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={detailViewTab === 'dt'}
+                  onClick={() => setDetailViewTab('dt')}
+                  className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                    detailViewTab === 'dt'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  DT 품행 기록
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={detailViewTab === 'walk'}
+                  onClick={() => setDetailViewTab('walk')}
+                  className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                    detailViewTab === 'walk'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  보행 훈련
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={detailViewTab === 'social'}
+                  onClick={() => setDetailViewTab('social')}
+                  className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
+                    detailViewTab === 'social'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  사회화 훈련
+                </button>
+              </div>
+            </div>
+
+            {/* 탭 컨텐츠 */}
+            <div className="p-6" role="tabpanel">
+              {/* 집에서의 품행 탭 */}
+              {detailViewTab === 'home' && (
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-gray-800 mb-4">집에서의 품행 (21개 질문)</h4>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(viewingReport as any).q1 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q1. 크레이트(팬스)를 닫았을 때 안에서의 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q1', (viewingReport as any).q1)}</td></tr>
+                      )}
+                      {(viewingReport as any).q1_time && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">편안해질 때까지 걸리는 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_time}</td></tr>
+                      )}
+                      {(viewingReport as any).q1_type && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">씹는 종류</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_type}</td></tr>
+                      )}
+                      {(viewingReport as any).q1_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q2 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q2. 사람 음식에 대한 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q2', (viewingReport as any).q2)}</td></tr>
+                      )}
+                      {(viewingReport as any).q2_food && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">먹은 음식</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q2_food}</td></tr>
+                      )}
+                      {(viewingReport as any).q2_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q2_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q3 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q3. 혼자 있을 때 상태</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q3', (viewingReport as any).q3)}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q4 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q4. 혼자 있을 때 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q4', (viewingReport as any).q4)}</td></tr>
+                      )}
+                      {(viewingReport as any).q4_bark_freq && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">짖음 빈도</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q4_bark_freq}</td></tr>
+                      )}
+                      {(viewingReport as any).q4_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q4_other}</td></tr>
+                      )}
+
+                      {((viewingReport as any).q5_crate_time || (viewingReport as any).q5_fence_time || (viewingReport as any).q5_free_time) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q5. 혼자 있어 본 최장시간과 상태</td></tr>
+                      )}
+                      {(viewingReport as any).q5_crate_time && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">크레이트 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_crate_time}</td></tr>
+                      )}
+                      {(viewingReport as any).q5_crate_state && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">크레이트 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_crate_state}</td></tr>
+                      )}
+                      {(viewingReport as any).q5_fence_time && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">팬스 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_fence_time}</td></tr>
+                      )}
+                      {(viewingReport as any).q5_fence_state && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">팬스 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_fence_state}</td></tr>
+                      )}
+                      {(viewingReport as any).q5_free_time && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_free_time}</td></tr>
+                      )}
+                      {(viewingReport as any).q5_free_state && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_free_state}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q6 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q6. 손님이 왔을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q6', (viewingReport as any).q6)}</td></tr>
+                      )}
+                      {(viewingReport as any).q6_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q6_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q7 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q7. 가족이 귀가했을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q7', (viewingReport as any).q7)}</td></tr>
+                      )}
+                      {(viewingReport as any).q7_dislike && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">별로 좋아하지 않는 행동</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q7_dislike}</td></tr>
+                      )}
+                      {(viewingReport as any).q7_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q7_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q8 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q8. 집에 있는 상황에서 짖은 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q8', (viewingReport as any).q8)}</td></tr>
+                      )}
+                      {(viewingReport as any).q8_situation && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q8_situation}</td></tr>
+                      )}
+                      {(viewingReport as any).q8_count && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q8_count}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q9 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q9. 으르렁 거린 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q9', (viewingReport as any).q9)}</td></tr>
+                      )}
+                      {(viewingReport as any).q9_situation && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q9_situation}</td></tr>
+                      )}
+                      {(viewingReport as any).q9_count && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q9_count}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q10 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q10. 개의 잘못된 행동을 사람이 컨트롤 했을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q10', (viewingReport as any).q10)}</td></tr>
+                      )}
+                      {(viewingReport as any).q10_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q10_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q11 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q11. 장난감이나 콩, 껌을 물고 있는 강아지에게 "놔 or 그만"을 했을 때 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q11', (viewingReport as any).q11)}</td></tr>
+                      )}
+                      {(viewingReport as any).q11_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q11_other}</td></tr>
+                      )}
+
+                      {((viewingReport as any).q12_option || (viewingReport as any).q12_commands || (viewingReport as any).q12_wait_state) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q12. 집안에서 기본훈련(앉아/엎드려/서)에 대한 강아지의 수준</td></tr>
+                      )}
+                      {(viewingReport as any).q12_option && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">선택</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q12_option', (viewingReport as any).q12_option)}</td></tr>
+                      )}
+                      {(viewingReport as any).q12_commands && Array.isArray((viewingReport as any).q12_commands) && (viewingReport as any).q12_commands.length > 0 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">명령어</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_commands.join(', ')}</td></tr>
+                      )}
+                      {(viewingReport as any).q12_wait_state && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_state}</td></tr>
+                      )}
+                      {(viewingReport as any).q12_wait_time && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_time}</td></tr>
+                      )}
+                      {(viewingReport as any).q12_wait_levels && Array.isArray((viewingReport as any).q12_wait_levels) && (viewingReport as any).q12_wait_levels.length > 0 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 수준</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_levels.join(', ')}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q13 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q13. 바디핸들링이나 배를 보이며 눕히기를 했을때 강아지의 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q13', (viewingReport as any).q13)}</td></tr>
+                      )}
+                      {(viewingReport as any).q13_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q13_other}</td></tr>
+                      )}
+
+                      {((viewingReport as any).q14_posture || (viewingReport as any).q14_frequency || (viewingReport as any).q14) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q14. 이를 닦을 때 품행</td></tr>
+                      )}
+                      {(viewingReport as any).q14_posture && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_posture}</td></tr>
+                      )}
+                      {(viewingReport as any).q14_frequency && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_frequency}</td></tr>
+                      )}
+                      {(viewingReport as any).q14 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q14', (viewingReport as any).q14)}</td></tr>
+                      )}
+                      {(viewingReport as any).q14_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_other}</td></tr>
+                      )}
+
+                      {((viewingReport as any).q15_posture || (viewingReport as any).q15_frequency || (viewingReport as any).q15) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q15. 그루밍(빗질) 할 때의 품행</td></tr>
+                      )}
+                      {(viewingReport as any).q15_posture && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_posture}</td></tr>
+                      )}
+                      {(viewingReport as any).q15_frequency && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_frequency}</td></tr>
+                      )}
+                      {(viewingReport as any).q15 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q15', (viewingReport as any).q15)}</td></tr>
+                      )}
+                      {(viewingReport as any).q15_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_other}</td></tr>
+                      )}
+
+                      {((viewingReport as any).q16_posture || (viewingReport as any).q16_frequency || (viewingReport as any).q16_comfortable || (viewingReport as any).q16_uncomfortable) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q16. 발톱/발털손질 할 때의 품행</td></tr>
+                      )}
+                      {(viewingReport as any).q16_posture && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_posture}</td></tr>
+                      )}
+                      {(viewingReport as any).q16_frequency && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_frequency}</td></tr>
+                      )}
+                      {(viewingReport as any).q16_comfortable && Array.isArray((viewingReport as any).q16_comfortable) && (viewingReport as any).q16_comfortable.length > 0 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">편안하게 잘 하는 것</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_comfortable.join(', ')}</td></tr>
+                      )}
+                      {(viewingReport as any).q16_uncomfortable && Array.isArray((viewingReport as any).q16_uncomfortable) && (viewingReport as any).q16_uncomfortable.length > 0 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">불편해하는 부위</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_uncomfortable.join(', ')}</td></tr>
+                      )}
+                      {(viewingReport as any).q16_options && Array.isArray((viewingReport as any).q16_options) && (viewingReport as any).q16_options.length > 0 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_options.join(', ')}</td></tr>
+                      )}
+                      {(viewingReport as any).q16_bleeding && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">과거 피가 난 적</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_bleeding === 'Y' ? '예' : '아니오'}</td></tr>
+                      )}
+                      {(viewingReport as any).q16_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_other}</td></tr>
+                      )}
+
+                      {((viewingReport as any).q17_posture || (viewingReport as any).q17) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q17. 귀청소 할 때의 품행</td></tr>
+                      )}
+                      {(viewingReport as any).q17_posture && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_posture}</td></tr>
+                      )}
+                      {(viewingReport as any).q17 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q17', (viewingReport as any).q17)}</td></tr>
+                      )}
+                      {(viewingReport as any).q17_reason && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">계기</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_reason}</td></tr>
+                      )}
+                      {(viewingReport as any).q17_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q18 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q18. 외출 후 발을 닦을 때의 품행</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q18', (viewingReport as any).q18)}</td></tr>
+                      )}
+                      {(viewingReport as any).q18_treat && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">트릿 사용 여부</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_treat}</td></tr>
+                      )}
+                      {(viewingReport as any).q18_bites && Array.isArray((viewingReport as any).q18_bites) && (viewingReport as any).q18_bites.length > 0 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">입질 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_bites.join(', ')}</td></tr>
+                      )}
+                      {(viewingReport as any).q18_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q19 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q19. 집안의 물건을 망가뜨린 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q19', (viewingReport as any).q19)}</td></tr>
+                      )}
+                      {(viewingReport as any).q19_count && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">지난 한달간 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q19_count}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q20 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q20. 집에서 자녀들과 있을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q20', (viewingReport as any).q20)}</td></tr>
+                      )}
+                      {(viewingReport as any).q20_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q20_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).q21 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q21. 현재 품행에 있어 가장 큰 문제는?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q21}</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* DT 품행 기록 탭 */}
+              {detailViewTab === 'dt' && (
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-gray-800 mb-4">DT 품행 기록</h4>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {((viewingReport as any).dt1_time || (viewingReport as any).dt2_time) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>1. '하나둘,하나둘' 명령어에 몇분안에 반응하나요?</td></tr>
+                      )}
+                      {(viewingReport as any).dt1_time && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT1(소변)</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt1_time}분</td></tr>
+                      )}
+                      {(viewingReport as any).dt2_time && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT2(대변)</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt2_time}분</td></tr>
+                      )}
+
+                      {(viewingReport as any).dt_indoor_blocked && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 실내 배변 장소는 차단해 두었나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_indoor_blocked}</td></tr>
+                      )}
+
+                      {(viewingReport as any).dt_indoor_type && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 실내배변은 어떤 형태로 하고 있나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_indoor_type}</td></tr>
+                      )}
+
+                      {(viewingReport as any).dt_belt_type && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 배변벨트 사용 여부</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_belt_type}</td></tr>
+                      )}
+
+                      {((viewingReport as any).dt1_location || (viewingReport as any).dt2_location) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>5. 배변 장소</td></tr>
+                      )}
+                      {(viewingReport as any).dt1_location && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT1</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt1_location}</td></tr>
+                      )}
+                      {(viewingReport as any).dt2_location && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT2</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt2_location}</td></tr>
+                      )}
+
+                      {((viewingReport as any).dt_mistake_1_dt1 || (viewingReport as any).dt_mistake_1_dt2 || (viewingReport as any).dt_mistake_2_dt1 || (viewingReport as any).dt_mistake_2_dt2 || (viewingReport as any).dt_mistake_3_dt1 || (viewingReport as any).dt_mistake_3_dt2 || (viewingReport as any).dt_mistake_4_dt1 || (viewingReport as any).dt_mistake_4_dt2) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>6. 보행 도중에 DT 실수를 할 때가 있나요?</td></tr>
+                      )}
+                      {((viewingReport as any).dt_mistake_1_dt1 || (viewingReport as any).dt_mistake_1_dt2) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">① 안 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_1_dt1 && 'DT1', (viewingReport as any).dt_mistake_1_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                      )}
+                      {((viewingReport as any).dt_mistake_2_dt1 || (viewingReport as any).dt_mistake_2_dt2) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">② 주 1회 정도 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_2_dt1 && 'DT1', (viewingReport as any).dt_mistake_2_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                      )}
+                      {((viewingReport as any).dt_mistake_3_dt1 || (viewingReport as any).dt_mistake_3_dt2) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">③ 주 2~3회 정도 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_3_dt1 && 'DT1', (viewingReport as any).dt_mistake_3_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                      )}
+                      {((viewingReport as any).dt_mistake_4_dt1 || (viewingReport as any).dt_mistake_4_dt2) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">④ 주 4~5회 이상 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_4_dt1 && 'DT1', (viewingReport as any).dt_mistake_4_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                      )}
+
+                      {((viewingReport as any).dt_before_walk_dt1 || (viewingReport as any).dt_before_walk_dt2) && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 보행 전에 반드시 DT를 하고 걷나요?</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_before_walk_dt1 && 'DT1', (viewingReport as any).dt_before_walk_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                      )}
+
+                      {(viewingReport as any).dt_signal && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 보행 도중 DT를 하고 싶어할 때 특별히 보내는 신호가 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('dt_signal', (viewingReport as any).dt_signal)}</td></tr>
+                      )}
+                      {(viewingReport as any).dt_signal_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_signal_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).dt_problems && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 현재 배변문제가 있다면 어떤 것이 있나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_problems}</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* 보행 훈련 탭 */}
+              {detailViewTab === 'walk' && (
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-gray-800 mb-4">보행 훈련</h4>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(viewingReport as any).walk_q1 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">1. 하루 평균 산책 시간은?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q1', (viewingReport as any).walk_q1)}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q2 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 산책 나가는 시간대</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q2}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q3 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 코트와 견줄 착용에 대한 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q3', (viewingReport as any).walk_q3)}</td></tr>
+                      )}
+                      {(viewingReport as any).walk_q3_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q3_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q4 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 헤드칼라 사용 여부</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q4', (viewingReport as any).walk_q4)}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q5 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">5. 산책 중 트릿 사용 여부</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q5', (viewingReport as any).walk_q5)}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q6 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">6. 보행 속도</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q6', (viewingReport as any).walk_q6)}</td></tr>
+                      )}
+                      {(viewingReport as any).walk_q6_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q6_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q7 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 보행중 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q7', (viewingReport as any).walk_q7)}</td></tr>
+                      )}
+                      {(viewingReport as any).walk_q7_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q7_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q8 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 보행중 다른 동물을 만났을 때 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q8}</td></tr>
+                      )}
+                      {(viewingReport as any).walk_q8_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q8_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q9 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 보행중 사람을 만났을 때 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9}</td></tr>
+                      )}
+                      {(viewingReport as any).walk_q9_target && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9_target}</td></tr>
+                      )}
+                      {(viewingReport as any).walk_q9_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q10 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">10. 두려워하는 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q10}</td></tr>
+                      )}
+
+                      {(viewingReport as any).walk_q11 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">11. 관심을 보이는 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q11}</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* 사회화 훈련 탭 */}
+              {detailViewTab === 'social' && (
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-gray-800 mb-4">사회화 훈련</h4>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(viewingReport as any).social_q1 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">1. 지난 한달간 다녀온 장소</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q1}</td></tr>
+                      )}
+
+                      {(viewingReport as any).social_q2 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 사회화 훈련 빈도</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q2', (viewingReport as any).social_q2)}</td></tr>
+                      )}
+
+                      {(viewingReport as any).social_q3 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 복잡하고 사람이 많은 곳에서의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q3', (viewingReport as any).social_q3)}</td></tr>
+                      )}
+                      {(viewingReport as any).social_q3_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q3_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).social_q4 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 계단 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q4', (viewingReport as any).social_q4)}</td></tr>
+                      )}
+                      {(viewingReport as any).social_q4_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q4_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).social_q5 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">5. 에스컬레이터 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q5', (viewingReport as any).social_q5)}</td></tr>
+                      )}
+                      {(viewingReport as any).social_q5_direction && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">방향</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q5_direction}</td></tr>
+                      )}
+                      {(viewingReport as any).social_q5_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q5_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).social_q6 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">6. 승용차 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q6', (viewingReport as any).social_q6)}</td></tr>
+                      )}
+                      {(viewingReport as any).social_q6_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q6_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).social_q7 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 버스 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q7', (viewingReport as any).social_q7)}</td></tr>
+                      )}
+                      {(viewingReport as any).social_q7_when && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q7_when}</td></tr>
+                      )}
+                      {(viewingReport as any).social_q7_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q7_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).social_q8 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 지하철 이용</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q8}</td></tr>
+                      )}
+                      {(viewingReport as any).social_q8_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q8_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).social_q9 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 기차 이용</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q9}</td></tr>
+                      )}
+                      {(viewingReport as any).social_q9_other && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q9_other}</td></tr>
+                      )}
+
+                      {(viewingReport as any).social_q10 && (
+                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">10. 사회화 훈련 중 가장 어려운 점</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q10}</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* 피드백 섹션 */}
+            <div className="p-6 bg-gray-50 border-t border-gray-200">
+              <h4 className="text-lg font-bold text-gray-800 mb-4">관리자 피드백</h4>
+
+              {/* 기존 피드백 표시 */}
+              {(viewingReport as any).feedback && (
+                <div className="mb-4 bg-white p-4 rounded-lg border border-gray-300">
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-sm text-gray-600">
+                      작성자: {(viewingReport as any).feedbackAuthor || '관리자'}
+                    </span>
+                    {(viewingReport as any).feedbackDate && (
+                      <span className="text-sm text-gray-500">
+                        {new Date((viewingReport as any).feedbackDate).toLocaleString('ko-KR')}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-800 whitespace-pre-wrap">{(viewingReport as any).feedback}</p>
+                </div>
+              )}
+
+              {/* 관리자만 피드백 작성/수정 가능 */}
+              {user?.role === 'admin' && (
+                <div>
+                  <textarea
+                    value={feedbackText}
+                    onChange={(e) => setFeedbackText(e.target.value)}
+                    placeholder="피드백을 작성하세요..."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
+                    rows={4}
+                  />
+                  <button
+                    onClick={() => saveFeedback(viewingReport.id)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                  >
+                    피드백 저장
+                  </button>
+                </div>
+              )}
+
+              {/* 작성자는 피드백을 읽기만 가능 */}
+              {user?.role !== 'admin' && !(viewingReport as any).feedback && (
+                <p className="text-gray-500 text-center py-4">아직 피드백이 없습니다.</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

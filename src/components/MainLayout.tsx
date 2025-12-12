@@ -18,10 +18,11 @@ import { PrivacyPolicyPage } from './PrivacyPolicyPage';
 import { TermsOfServicePage } from './TermsOfServicePage';
 import { UserManagementPage } from './UserManagementPage';
 import { MessageSendPage } from './MessageSendPage';
+import { NoticeBoardPage } from './NoticeBoardPage';
 import { getCombinedData, calculateAgeWithMonths } from '../utils/storage';
 import type { CombinedData } from '../types/types';
 
-type MenuItem = 'home' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'users' | 'message' | 'privacy' | 'terms';
+type MenuItem = 'home' | 'notice' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'users' | 'message' | 'privacy' | 'terms';
 
 export const MainLayout = () => {
   const { user, logout } = useAuth();
@@ -33,7 +34,7 @@ export const MainLayout = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = urlParams.get('page') as MenuItem;
 
-    if (pageParam && ['home', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'users', 'message', 'privacy', 'terms'].includes(pageParam)) {
+    if (pageParam && ['home', 'notice', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'users', 'message', 'privacy', 'terms'].includes(pageParam)) {
       setCurrentPage(pageParam);
       window.history.replaceState({ page: pageParam }, '', `?page=${pageParam}`);
     } else {
@@ -99,37 +100,20 @@ export const MainLayout = () => {
         return (
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">환영합니다!</h2>
-              <div className="space-y-4 text-gray-700">
-                <p className="text-lg">
-                  <strong>{user?.name}</strong>님, 안내견 관리 시스템에 오신 것을 환영합니다.
-                  {user?.dogName && (
-                    <span className="block mt-2 text-blue-600">
-                      담당 안내견: <strong>{user.dogName}</strong>
-                    </span>
-                  )}
-                </p>
-                <div className="mt-8 bg-blue-50 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">메뉴 안내</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li><strong>다이어리:</strong> 안내견과의 생활 경험을 기록합니다</li>
-                    <li><strong>강의실:</strong> 교육 자료 및 영상을 열람합니다</li>
-                    <li><strong>영상 시청실 📹:</strong> 안내견학교 영상과 스쿨오브안내견 영상을 시청합니다</li>
-                    <li><strong>보딩 폼:</strong> 안내견 위탁 신청서를 작성합니다</li>
-                    <li><strong>물품 신청:</strong> 필요한 물품을 신청합니다</li>
-                    <li><strong>진료 기록:</strong> 안내견의 진료 내역을 관리합니다</li>
-                    <li><strong>약품 체크:</strong> 매월 약품 복용/도포 여부를 체크합니다</li>
-                    {(user?.role === 'admin' || user?.role === 'moderator') && (
-                      <>
-                        <li><strong>안내견 관리:</strong> 전체 안내견 데이터를 관리합니다</li>
-                      </>
-                    )}
-                  </ul>
-                </div>
-              </div>
+              <h2 className="text-3xl font-bold text-gray-800 mb-6">GIMS에 오신 것을 환영합니다!</h2>
+              <p className="text-lg text-gray-700">
+                <strong>{user?.name}</strong>님, 반갑습니다.
+                {user?.dogName && (
+                  <span className="block mt-2 text-blue-600">
+                    담당 안내견: <strong>{user.dogName}</strong>
+                  </span>
+                )}
+              </p>
             </div>
           </div>
         );
+      case 'notice':
+        return <NoticeBoardPage />;
       case 'diary':
         return <DiaryPage />;
       case 'monthlyReport':
@@ -167,12 +151,15 @@ export const MainLayout = () => {
       <header className="bg-blue-600 text-white shadow-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold">안내견 관리 시스템</h1>
-              <p className="text-sm text-blue-100 mt-1">
-                {user?.role === 'admin' ? '관리자' : user?.role === 'moderator' ? '준관리자' : user?.name}님 환영합니다
-                {user?.dogName && ` (${user.dogName})`}
-              </p>
+            <div className="flex items-center space-x-4">
+              <img src="/logo.svg" alt="GIMS Logo" className="w-12 h-12" />
+              <div>
+                <h1 className="text-2xl font-bold">GIMS <span className="text-sm font-normal opacity-75">0.9</span></h1>
+                <p className="text-sm text-blue-100">
+                  {user?.role === 'admin' ? '관리자' : user?.role === 'moderator' ? '준관리자' : user?.name}님 환영합니다
+                  {user?.dogName && ` (${user.dogName})`}
+                </p>
+              </div>
             </div>
             <button
               onClick={handleLogout}
@@ -184,8 +171,8 @@ export const MainLayout = () => {
         </div>
       </header>
 
-      {/* 담당 안내견 정보 고정 표시 (일반 회원만) */}
-      {user && user.role !== 'admin' && myDogInfo && (
+      {/* 담당 안내견 정보 고정 표시 (일반 회원만, 홈 화면에서만) */}
+      {user && user.role !== 'admin' && myDogInfo && currentPage === 'home' && (
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b-2 border-blue-200 shadow-sm">
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center justify-between">
@@ -235,6 +222,7 @@ export const MainLayout = () => {
             </button>
             <div className="flex-1 text-center">
               <span className="text-lg font-bold text-gray-800">
+                {currentPage === 'notice' && '공지사항'}
                 {currentPage === 'diary' && '다이어리'}
                 {currentPage === 'monthlyReport' && '월간 보고서'}
                 {currentPage === 'lecture' && '강의실'}
@@ -270,6 +258,19 @@ export const MainLayout = () => {
                   aria-current={currentPage === 'home' ? 'page' : undefined}
                 >
                   🏠 홈
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigateToPage('notice')}
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                    currentPage === 'notice'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  aria-current={currentPage === 'notice' ? 'page' : undefined}
+                >
+                  📢 공지사항
                 </button>
               </li>
               <li>

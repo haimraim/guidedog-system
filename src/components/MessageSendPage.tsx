@@ -7,14 +7,14 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import type { MessageRecipient, MessageType, User, UserRole } from '../types/types';
 import { getUsers, getGuideDogs, getPartners, getActivities } from '../utils/storage';
-import { sendSMS, sendAlimtalk, replaceMessageVariables, validatePhoneNumber } from '../services/naverSensService';
+import { sendSMS, replaceMessageVariables, validatePhoneNumber, getRemainingCount } from '../services/aligoSmsService';
 
 export const MessageSendPage = () => {
   const { user: currentUser } = useAuth();
-  const [messageType, setMessageType] = useState<MessageType>('sms');
+  const [messageType, setMessageType] = useState<'sms' | 'lms'>('sms');
   const [subject, setSubject] = useState(''); // LMS 제목
   const [message, setMessage] = useState('');
-  const [templateCode, setTemplateCode] = useState(''); // 카카오 알림톡 템플릿 코드
+  const [testMode, setTestMode] = useState(false); // 테스트 모드
 
   // 수신자 선택
   const [selectMode, setSelectMode] = useState<'all' | 'role' | 'custom'>('all');
@@ -25,6 +25,7 @@ export const MessageSendPage = () => {
   // 발송 상태
   const [isSending, setIsSending] = useState(false);
   const [sendResult, setSendResult] = useState<string>('');
+  const [remainingCount, setRemainingCount] = useState<number>(0);
 
   // 미리보기
   const [previewMessage, setPreviewMessage] = useState('');
@@ -32,8 +33,14 @@ export const MessageSendPage = () => {
   useEffect(() => {
     if (currentUser?.role === 'admin') {
       loadAllRecipients();
+      loadRemainingCount();
     }
   }, [currentUser]);
+
+  const loadRemainingCount = async () => {
+    const count = await getRemainingCount();
+    setRemainingCount(count);
+  };
 
   // 메시지 미리보기 업데이트
   useEffect(() => {
@@ -193,47 +200,39 @@ export const MessageSendPage = () => {
         return;
       }
 
-      if (!confirm(`${recipients.length}명에게 메시지를 발송하시겠습니까?`)) {
+      const confirmMsg = testMode
+        ? `[테스트 모드] ${recipients.length}명에게 테스트 발송하시겠습니까?\n(실제로 문자가 발송되지 않습니다)`
+        : `${recipients.length}명에게 메시지를 발송하시겠습니까?`;
+
+      if (!confirm(confirmMsg)) {
         return;
       }
 
       setIsSending(true);
       setSendResult('');
 
-      // 메시지 발송
-      if (messageType === 'kakao') {
-        if (!templateCode.trim()) {
-          alert('카카오 알림톡 템플릿 코드를 입력해주세요.');
-          setIsSending(false);
-          return;
-        }
+      // SMS/LMS 발송 (Aligo)
+      const result = await sendSMS({
+        receivers: recipients,
+        message,
+        subject: messageType === 'lms' ? subject : undefined,
+        msgType: messageType === 'lms' ? 'LMS' : 'SMS',
+        testMode,
+      });
 
-        const result = await sendAlimtalk({
-          receivers: recipients,
-          templateCode,
-          content: message,
-        });
-
-        setSendResult(`✅ 발송 완료!\n요청 ID: ${result.requestId}\n상태: ${result.statusName}`);
-      } else {
-        // SMS 또는 LMS
-        const result = await sendSMS({
-          receivers: recipients,
-          message,
-          subject: messageType === 'lms' ? subject : undefined,
-          msgType: messageType === 'lms' ? 'LMS' : 'SMS',
-        });
-
-        setSendResult(`✅ 발송 완료!\n요청 ID: ${result.requestId}\n상태: ${result.statusName}`);
-      }
+      const modeText = testMode ? '[테스트]' : '';
+      setSendResult(`${modeText} 발송 완료!\n메시지 ID: ${result.msg_id}\n성공: ${result.success_cnt}건 / 실패: ${result.error_cnt}건`);
 
       // 발송 후 초기화
       setMessage('');
       setSubject('');
       setSelectedRecipients(new Set());
+
+      // 잔여 건수 새로고침
+      loadRemainingCount();
     } catch (error: any) {
       console.error('메시지 발송 실패:', error);
-      setSendResult(`❌ 발송 실패: ${error.message}`);
+      setSendResult(`발송 실패: ${error.message}`);
     } finally {
       setIsSending(false);
     }
@@ -278,6 +277,22 @@ export const MessageSendPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 왼쪽: 메시지 작성 */}
         <div className="space-y-6">
+          {/* 잔여 건수 표시 */}
+          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md p-4 text-white">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm opacity-90">Aligo SMS 잔여 건수</p>
+                <p className="text-2xl font-bold">{remainingCount.toLocaleString()}건</p>
+              </div>
+              <button
+                onClick={loadRemainingCount}
+                className="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-sm transition-colors"
+              >
+                새로고침
+              </button>
+            </div>
+          </div>
+
           {/* 메시지 타입 선택 */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-bold text-gray-800 mb-4">메시지 타입</h3>
@@ -302,17 +317,10 @@ export const MessageSendPage = () => {
               >
                 LMS (장문)
               </button>
-              <button
-                onClick={() => setMessageType('kakao')}
-                className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors ${
-                  messageType === 'kakao'
-                    ? 'bg-yellow-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                카카오 알림톡
-              </button>
             </div>
+            <p className="text-xs text-gray-500 mt-3">
+              SMS: 90자 이내 (8.4원) / LMS: 2000자 이내 (25원)
+            </p>
           </div>
 
           {/* 템플릿 선택 */}
@@ -347,21 +355,6 @@ export const MessageSendPage = () => {
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-bold text-gray-800 mb-4">메시지 내용</h3>
 
-            {messageType === 'kakao' && (
-              <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  템플릿 코드
-                </label>
-                <input
-                  type="text"
-                  value={templateCode}
-                  onChange={(e) => setTemplateCode(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  placeholder="알림톡 템플릿 코드 입력"
-                />
-              </div>
-            )}
-
             {messageType === 'lms' && (
               <div className="mb-4">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -391,9 +384,27 @@ export const MessageSendPage = () => {
                 {message.length} / {messageType === 'sms' ? '90' : '2000'}자
               </p>
               <p className="text-xs text-gray-500">
-                예상 비용: {messageType === 'kakao' ? '약 8원' : messageType === 'lms' ? '약 30원' : '약 9원'} × {filteredRecipients.length}명
+                예상 비용: {messageType === 'lms' ? '25원' : '8.4원'} x {filteredRecipients.length}명 = {((messageType === 'lms' ? 25 : 8.4) * filteredRecipients.length).toLocaleString()}원
               </p>
             </div>
+          </div>
+
+          {/* 테스트 모드 */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <label className="flex items-center space-x-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={testMode}
+                onChange={(e) => setTestMode(e.target.checked)}
+                className="w-5 h-5 rounded border-yellow-400 text-yellow-600 focus:ring-yellow-500"
+              />
+              <div>
+                <span className="font-semibold text-yellow-800">테스트 모드</span>
+                <p className="text-xs text-yellow-700">
+                  체크하면 실제로 문자가 발송되지 않고 API 테스트만 수행합니다. (무료)
+                </p>
+              </div>
+            </label>
           </div>
 
           {/* 미리보기 */}

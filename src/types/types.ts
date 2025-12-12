@@ -192,6 +192,39 @@ export interface DiaryPost {
   }>;
   additionalNotes?: string; // 그 밖에 오늘 하고 싶은 말
 
+  // 파트너(안내견) 전용 설문 필드
+  partnerSurvey?: {
+    dtPattern?: string; // 1. 전반적인 DT 패턴
+    dtPatternNote?: string;
+    dtWalking?: string; // 2. 보행 중 DT 패턴
+    dtWalkingNote?: string;
+    externalStimulus?: string; // 3. 외부 자극 반응
+    externalStimulusNote?: string;
+    droppedFood?: string; // 4. 떨어진 음식 반응
+    droppedFoodNote?: string;
+    aloneState?: string; // 5. 혼자 있을 때 상태
+    aloneStateNote?: string;
+    visitorResponse?: string; // 6. 방문자 대응 태도
+    visitorResponseNote?: string;
+    walkingFocus?: string; // 7. 보행 중 집중력
+    walkingFocusNote?: string;
+    obstacleAvoidance?: string; // 8. 장애물 회피 능력
+    obstacleAvoidanceNote?: string;
+    targetGuidance?: string; // 9. 목표 지점 안내 능력
+    targetGuidanceNote?: string;
+    otherDogsReaction?: string; // 10. 다른 동물과의 만남 반응
+    otherDogsReactionNote?: string;
+    commandPerformance?: string; // 11. 일상 명령 수행
+    commandPerformanceNote?: string;
+    harnessFeeling?: string; // 12. 하네스 안내 느낌
+    harnessFeelingNote?: string;
+    healthStatus?: string; // 13. 건강 상태
+    healthStatusNote?: string;
+    partnerBond?: string; // 14. 파트너와의 유대감
+    partnerBondNote?: string;
+    additionalComment?: string; // 추가 의견
+  };
+
   // 하위 호환성을 위한 기존 필드 (deprecated)
   foodType?: string;
   feedingTime?: string;
@@ -584,6 +617,12 @@ export interface MonthlyReport {
   social_cafeRestaurant?: string; // 카페/식당
   social_cafeRestaurant_detail?: string;
   social_difficulties?: string; // 어려운 점
+
+  // 상태 및 피드백
+  status?: 'draft' | 'completed'; // 상태 (임시저장/완료)
+  feedback?: string; // 관리자 피드백 내용
+  feedbackAuthor?: string; // 피드백 작성자 이름
+  feedbackDate?: string; // 피드백 작성일시
 
   createdAt: string; // 작성일시
   updatedAt: string; // 수정일시

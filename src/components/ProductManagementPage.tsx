@@ -71,6 +71,19 @@ export const ProductManagementPage = () => {
       return;
     }
 
+    // 옵션 재고 합계 검증
+    if (options.length > 0) {
+      const totalOptionStock = options.reduce((total, option) => {
+        const optionSum = option.values.reduce((sum, value) => sum + (value.stock || 0), 0);
+        return total + optionSum;
+      }, 0);
+
+      if (totalOptionStock > stockNum) {
+        alert(`옵션 재고 합계(${totalOptionStock})가 기본 재고 수량(${stockNum})을 초과할 수 없습니다.`);
+        return;
+      }
+    }
+
     const product: Product = {
       id: editingProduct?.id || generateId(),
       category,
@@ -210,9 +223,21 @@ export const ProductManagementPage = () => {
                 type="number"
                 id="stock"
                 value={stock}
-                onChange={(e) => setStock(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // 숫자만 허용 (빈 문자열 또는 숫자)
+                  if (value === '' || /^\d+$/.test(value)) {
+                    setStock(value);
+                  }
+                }}
+                onKeyPress={(e) => {
+                  // 숫자가 아닌 키 입력 방지
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                placeholder="재고 수량을 입력하세요"
+                placeholder="재고 수량을 입력하세요 (숫자만)"
                 min="0"
                 required
               />
@@ -297,7 +322,19 @@ export const ProductManagementPage = () => {
                                   <input
                                     type="number"
                                     value={optValue.stock}
-                                    onChange={(e) => updateOptionValueStock(index, valueIndex, parseInt(e.target.value) || 0)}
+                                    onChange={(e) => {
+                                      const value = e.target.value;
+                                      // 빈 문자열이거나 숫자인 경우에만 허용
+                                      if (value === '' || /^\d+$/.test(value)) {
+                                        updateOptionValueStock(index, valueIndex, parseInt(value) || 0);
+                                      }
+                                    }}
+                                    onKeyPress={(e) => {
+                                      // 숫자가 아닌 키 입력 방지
+                                      if (!/[0-9]/.test(e.key)) {
+                                        e.preventDefault();
+                                      }
+                                    }}
                                     className="w-20 px-2 py-1 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                                     placeholder="재고"
                                     min="0"

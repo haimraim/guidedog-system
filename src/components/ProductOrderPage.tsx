@@ -8,6 +8,7 @@ import type { Product, ProductOrder, ProductCategory, ProductOption, ProductOpti
 import { generateId } from '../utils/storage';
 import { getProducts, saveProduct, deleteProduct, getProductOrders, saveProductOrder, deleteProductOrder } from '../utils/firestoreLectures';
 import { ProductExcelImport } from './ProductExcelImport';
+import * as XLSX from 'xlsx';
 
 export const ProductOrderPage = () => {
   const { user } = useAuth();
@@ -239,6 +240,112 @@ export const ProductOrderPage = () => {
       setRegisterImage(base64);
     };
     reader.readAsDataURL(file);
+  };
+
+  // 물품 리스트 엑셀 다운로드
+  const handleDownloadProductList = () => {
+    if (products.length === 0) {
+      alert('다운로드할 물품이 없습니다.');
+      return;
+    }
+
+    // 엑셀 템플릿 형식에 맞춰 데이터 생성
+    const headers = [
+      '카테고리*', '물품명*', '재고수량', '설명',
+      '옵션1-명', '옵션1-값1', '옵션1-재고1', '옵션1-값2', '옵션1-재고2', '옵션1-값3', '옵션1-재고3', '옵션1-값4', '옵션1-재고4', '옵션1-값5', '옵션1-재고5',
+      '옵션2-명', '옵션2-값1', '옵션2-재고1', '옵션2-값2', '옵션2-재고2', '옵션2-값3', '옵션2-재고3', '옵션2-값4', '옵션2-재고4', '옵션2-값5', '옵션2-재고5'
+    ];
+
+    const data: (string | number)[][] = products.map(product => {
+      const row: (string | number)[] = [
+        product.category,
+        product.name,
+        product.options && product.options.length > 0 ? 0 : product.stock,
+        product.description || ''
+      ];
+
+      // 옵션1 처리
+      const option1 = product.options?.[0];
+      if (option1) {
+        row.push(option1.name);
+        for (let i = 0; i < 5; i++) {
+          if (option1.values[i]) {
+            row.push(option1.values[i].value);
+            row.push(option1.values[i].stock);
+          } else {
+            row.push('');
+            row.push('');
+          }
+        }
+      } else {
+        // 옵션1이 없는 경우 빈 값
+        row.push(''); // 옵션1-명
+        for (let i = 0; i < 5; i++) {
+          row.push(''); // 옵션1-값N
+          row.push(''); // 옵션1-재고N
+        }
+      }
+
+      // 옵션2 처리
+      const option2 = product.options?.[1];
+      if (option2) {
+        row.push(option2.name);
+        for (let i = 0; i < 5; i++) {
+          if (option2.values[i]) {
+            row.push(option2.values[i].value);
+            row.push(option2.values[i].stock);
+          } else {
+            row.push('');
+            row.push('');
+          }
+        }
+      } else {
+        // 옵션2가 없는 경우 빈 값
+        row.push(''); // 옵션2-명
+        for (let i = 0; i < 5; i++) {
+          row.push(''); // 옵션2-값N
+          row.push(''); // 옵션2-재고N
+        }
+      }
+
+      return row;
+    });
+
+    // 워크시트 생성
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, '물품 목록');
+
+    // 열 너비 설정
+    const colWidths = [
+      { wch: 12 }, // 카테고리*
+      { wch: 20 }, // 물품명*
+      { wch: 10 }, // 재고수량
+      { wch: 20 }, // 설명
+    ];
+
+    // 옵션1 컬럼 너비
+    colWidths.push({ wch: 12 }); // 옵션1-명
+    for (let i = 0; i < 5; i++) {
+      colWidths.push({ wch: 12 }); // 옵션1-값N
+      colWidths.push({ wch: 10 }); // 옵션1-재고N
+    }
+
+    // 옵션2 컬럼 너비
+    colWidths.push({ wch: 12 }); // 옵션2-명
+    for (let i = 0; i < 5; i++) {
+      colWidths.push({ wch: 12 }); // 옵션2-값N
+      colWidths.push({ wch: 10 }); // 옵션2-재고N
+    }
+
+    worksheet['!cols'] = colWidths;
+
+    // 파일 다운로드
+    const today = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(workbook, `물품_목록_${today}.xlsx`, {
+      bookType: 'xlsx',
+      type: 'binary',
+    });
   };
 
   const loadUserInfo = () => {
@@ -1168,6 +1275,12 @@ export const ProductOrderPage = () => {
               📋 엑셀 일괄 등록
             </button>
             <button
+              onClick={handleDownloadProductList}
+              className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-colors"
+            >
+              📥 물품 목록 다운로드
+            </button>
+            <button
               onClick={() => setAdminView('orders')}
               className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
             >
@@ -1234,9 +1347,29 @@ export const ProductOrderPage = () => {
                       </td>
                       <td className="px-6 py-4 text-sm font-semibold text-gray-800">{product.name}</td>
                       <td className="px-6 py-4 text-center">
-                        <span className={`text-lg font-bold ${product.stock === 0 ? 'text-red-600' : product.stock < 10 ? 'text-orange-600' : 'text-green-600'}`}>
-                          {product.stock}개
-                        </span>
+                        {product.options && product.options.length > 0 ? (
+                          <div className="text-left">
+                            {product.options.map((option, optIdx) => (
+                              <div key={optIdx} className="mb-2 last:mb-0">
+                                <span className="text-xs font-semibold text-gray-500">{option.name}:</span>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {option.values.map((val, valIdx) => (
+                                    <span
+                                      key={valIdx}
+                                      className={`text-xs px-2 py-1 rounded ${val.stock === 0 ? 'bg-red-100 text-red-700' : val.stock < 10 ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}
+                                    >
+                                      {val.value}: {val.stock}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className={`text-lg font-bold ${product.stock === 0 ? 'text-red-600' : product.stock < 10 ? 'text-orange-600' : 'text-green-600'}`}>
+                            {product.stock}개
+                          </span>
+                        )}
                       </td>
                       <td className="px-6 py-4 text-center space-x-2">
                         <button
