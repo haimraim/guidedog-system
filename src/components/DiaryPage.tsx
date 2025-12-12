@@ -1481,7 +1481,7 @@ export const DiaryPage = () => {
                       {q.question}
                     </h3>
                     <div className="space-y-2">
-                      {q.options.map((option) => (
+                      {q.options.map((option, optionIndex) => (
                         <label
                           key={option}
                           className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
@@ -1503,7 +1503,7 @@ export const DiaryPage = () => {
                             }
                             className="w-5 h-5 text-blue-600 focus:ring-blue-500"
                           />
-                          <span className="ml-3 text-gray-700">{option}</span>
+                          <span className="ml-3 text-gray-700">{optionIndex + 1}. {option}</span>
                         </label>
                       ))}
                     </div>
