@@ -637,8 +637,51 @@ export const DiaryPage = () => {
             )}
           </div>
 
-          {/* 퍼피티칭 다이어리 상세보기 */}
-          {viewingPost.diaryDate ? (
+          {/* 파트너 설문 상세보기 (partnerSurvey가 있으면 먼저 표시) */}
+          {viewingPost.partnerSurvey ? (
+            <div className="space-y-6">
+              {[
+                { key: 'dtPattern', noteKey: 'dtPatternNote', label: '1. 전반적인 DT 패턴' },
+                { key: 'dtWalking', noteKey: 'dtWalkingNote', label: '2. 보행 중 DT 패턴' },
+                { key: 'externalStimulus', noteKey: 'externalStimulusNote', label: '3. 외부 자극 반응' },
+                { key: 'droppedFood', noteKey: 'droppedFoodNote', label: '4. 떨어진 음식 반응' },
+                { key: 'aloneState', noteKey: 'aloneStateNote', label: '5. 혼자 있을 때 상태' },
+                { key: 'visitorResponse', noteKey: 'visitorResponseNote', label: '6. 방문자 대응 태도' },
+                { key: 'walkingFocus', noteKey: 'walkingFocusNote', label: '7. 보행 중 집중력' },
+                { key: 'obstacleAvoidance', noteKey: 'obstacleAvoidanceNote', label: '8. 장애물 회피 능력' },
+                { key: 'targetGuidance', noteKey: 'targetGuidanceNote', label: '9. 목표 지점 안내 능력' },
+                { key: 'otherDogsReaction', noteKey: 'otherDogsReactionNote', label: '10. 다른 동물과의 만남 반응' },
+                { key: 'commandPerformance', noteKey: 'commandPerformanceNote', label: '11. 일상 명령 수행' },
+                { key: 'harnessFeeling', noteKey: 'harnessFeelingNote', label: '12. 하네스 안내 느낌' },
+                { key: 'healthStatus', noteKey: 'healthStatusNote', label: '13. 건강 상태' },
+                { key: 'partnerBond', noteKey: 'partnerBondNote', label: '14. 파트너와의 유대감' },
+              ].map(({ key, noteKey, label }) => {
+                const value = viewingPost.partnerSurvey?.[key as keyof typeof viewingPost.partnerSurvey];
+                const note = viewingPost.partnerSurvey?.[noteKey as keyof typeof viewingPost.partnerSurvey];
+                if (!value) return null;
+                return (
+                  <div key={key} className="border-b pb-4">
+                    <h3 className="font-semibold text-gray-800 mb-2">{label}</h3>
+                    <p className="text-gray-700 bg-gray-50 px-4 py-2 rounded-lg">{value}</p>
+                    {note && (
+                      <p className="text-sm text-gray-600 mt-2 pl-4 border-l-2 border-blue-300">
+                        {note}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+              {viewingPost.partnerSurvey.additionalComment && (
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">추가 의견</h3>
+                  <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+                    {viewingPost.partnerSurvey.additionalComment}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : viewingPost.diaryDate ? (
+            /* 퍼피티칭 다이어리 상세보기 */
             <div className="space-y-6">
               {/* 급식 */}
               {((viewingPost.feedings && viewingPost.feedings.length > 0) || viewingPost.feedingTime) && (
@@ -790,49 +833,6 @@ export const DiaryPage = () => {
                   <h3 className="text-lg font-bold text-gray-800 mb-3">그 밖에 오늘 하고 싶은 말</h3>
                   <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
                     {viewingPost.additionalNotes}
-                  </p>
-                </div>
-              )}
-            </div>
-          ) : viewingPost.partnerSurvey ? (
-            /* 파트너 설문 상세보기 */
-            <div className="space-y-6">
-              {[
-                { key: 'dtPattern', noteKey: 'dtPatternNote', label: '1. 전반적인 DT 패턴' },
-                { key: 'dtWalking', noteKey: 'dtWalkingNote', label: '2. 보행 중 DT 패턴' },
-                { key: 'externalStimulus', noteKey: 'externalStimulusNote', label: '3. 외부 자극 반응' },
-                { key: 'droppedFood', noteKey: 'droppedFoodNote', label: '4. 떨어진 음식 반응' },
-                { key: 'aloneState', noteKey: 'aloneStateNote', label: '5. 혼자 있을 때 상태' },
-                { key: 'visitorResponse', noteKey: 'visitorResponseNote', label: '6. 방문자 대응 태도' },
-                { key: 'walkingFocus', noteKey: 'walkingFocusNote', label: '7. 보행 중 집중력' },
-                { key: 'obstacleAvoidance', noteKey: 'obstacleAvoidanceNote', label: '8. 장애물 회피 능력' },
-                { key: 'targetGuidance', noteKey: 'targetGuidanceNote', label: '9. 목표 지점 안내 능력' },
-                { key: 'otherDogsReaction', noteKey: 'otherDogsReactionNote', label: '10. 다른 동물과의 만남 반응' },
-                { key: 'commandPerformance', noteKey: 'commandPerformanceNote', label: '11. 일상 명령 수행' },
-                { key: 'harnessFeeling', noteKey: 'harnessFeelingNote', label: '12. 하네스 안내 느낌' },
-                { key: 'healthStatus', noteKey: 'healthStatusNote', label: '13. 건강 상태' },
-                { key: 'partnerBond', noteKey: 'partnerBondNote', label: '14. 파트너와의 유대감' },
-              ].map(({ key, noteKey, label }) => {
-                const value = viewingPost.partnerSurvey?.[key as keyof typeof viewingPost.partnerSurvey];
-                const note = viewingPost.partnerSurvey?.[noteKey as keyof typeof viewingPost.partnerSurvey];
-                if (!value) return null;
-                return (
-                  <div key={key} className="border-b pb-4">
-                    <h3 className="font-semibold text-gray-800 mb-2">{label}</h3>
-                    <p className="text-gray-700 bg-gray-50 px-4 py-2 rounded-lg">{value}</p>
-                    {note && (
-                      <p className="text-sm text-gray-600 mt-2 pl-4 border-l-2 border-blue-300">
-                        {note}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
-              {viewingPost.partnerSurvey.additionalComment && (
-                <div className="border-t pt-4">
-                  <h3 className="text-lg font-bold text-gray-800 mb-3">추가 의견</h3>
-                  <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
-                    {viewingPost.partnerSurvey.additionalComment}
                   </p>
                 </div>
               )}
