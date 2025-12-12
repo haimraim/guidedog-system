@@ -409,7 +409,7 @@ export const NoticeBoardPage = () => {
             </div>
             <button
               onClick={() => {
-                window.location.hash = '';
+                window.history.pushState(null, '', window.location.pathname);
                 setViewingNotice(null);
               }}
               className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
@@ -428,7 +428,7 @@ export const NoticeBoardPage = () => {
             <div className="flex space-x-3 mt-6 pt-6 border-t border-gray-200">
               <button
                 onClick={() => {
-                  window.location.hash = '';
+                  window.history.pushState(null, '', window.location.pathname);
                   setViewingNotice(null);
                   openEditForm(viewingNotice);
                 }}
@@ -438,7 +438,7 @@ export const NoticeBoardPage = () => {
               </button>
               <button
                 onClick={() => {
-                  window.location.hash = '';
+                  window.history.pushState(null, '', window.location.pathname);
                   setViewingNotice(null);
                   handleDelete(viewingNotice.id);
                 }}
@@ -495,6 +495,11 @@ export const NoticeBoardPage = () => {
                   </div>
                   <a
                     href={`#notice-${notice.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.history.pushState(null, '', `#notice-${notice.id}`);
+                      setViewingNotice(notice);
+                    }}
                     className="text-xl font-bold text-blue-600 hover:text-blue-800 underline block mb-2 focus:ring-2 focus:ring-blue-500 outline-none"
                   >
                     {notice.title}
