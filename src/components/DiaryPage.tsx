@@ -1644,11 +1644,14 @@ export const DiaryPage = () => {
     const dogs = getDogsByAdminCategory();
     const { start, end } = getDateRange();
 
-    // 기간 내 날짜 목록 생성
+    // 기간 내 날짜 목록 생성 (로컬 시간대 사용)
     const dates: string[] = [];
     const currentDate = new Date(start);
     while (currentDate <= end) {
-      const dateStr = currentDate.toISOString().split('T')[0];
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
       dates.push(dateStr);
       currentDate.setDate(currentDate.getDate() + 1);
     }
