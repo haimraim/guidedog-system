@@ -166,19 +166,40 @@ export const deleteLecture = async (id: string) => {
   await deleteDoc(doc(db, COLLECTIONS.LECTURES, id));
 };
 
-// === 전체 데이터 삭제 ===
+// === 전체 데이터 삭제 (모든 개인정보 포함) ===
 export const clearAllData = async () => {
-  const [dogs, partners, activities] = await Promise.all([
-    getDocs(collection(db, COLLECTIONS.DOGS)),
-    getDocs(collection(db, COLLECTIONS.PARTNERS)),
-    getDocs(collection(db, COLLECTIONS.ACTIVITIES)),
-  ]);
-
-  const deletePromises = [
-    ...dogs.docs.map(doc => deleteDoc(doc.ref)),
-    ...partners.docs.map(doc => deleteDoc(doc.ref)),
-    ...activities.docs.map(doc => deleteDoc(doc.ref)),
+  // ⚠️ 모든 컬렉션 이름 (개인정보 보호법 준수)
+  const allCollections = [
+    COLLECTIONS.DOGS,              // guide_dogs
+    COLLECTIONS.PARTNERS,          // partners
+    COLLECTIONS.ACTIVITIES,        // activities
+    COLLECTIONS.DIARY,             // diary_posts
+    COLLECTIONS.MEDICAL,           // medical_records (민감!)
+    COLLECTIONS.MEDICATION,        // medication_checks
+    COLLECTIONS.PRODUCTS,          // products
+    COLLECTIONS.ORDERS,            // product_orders
+    COLLECTIONS.LECTURES,          // lectures
+    'staff_courses',               // 직원 과정
+    'staff_lectures',              // 직원 강의
+    'school_videos',               // 학교 영상
+    'boarding_forms',              // 보딩 폼
+    'monthly_reports',             // 월간 보고서
+    'notices',                     // 공지사항
+    'users',                       // 사용자 (매우 민감!)
   ];
 
+  // 모든 컬렉션에서 데이터 가져오기
+  const snapshots = await Promise.all(
+    allCollections.map(collectionName =>
+      getDocs(collection(db, collectionName)).catch(() => ({ docs: [] }))
+    )
+  );
+
+  // 모든 문서 삭제
+  const deletePromises = snapshots.flatMap(snapshot =>
+    snapshot.docs.map(doc => deleteDoc(doc.ref))
+  );
+
   await Promise.all(deletePromises);
+  console.log(`✅ 모든 Firestore 데이터 완전 삭제 완료 (${deletePromises.length}개 문서, 개인정보 포함)`);
 };

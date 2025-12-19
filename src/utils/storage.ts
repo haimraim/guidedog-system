@@ -229,10 +229,33 @@ export const deleteUser = (id: string): void => {
 };
 
 export const clearAllData = async (): Promise<void> => {
-  // localStorage 삭제
-  localStorage.removeItem(STORAGE_KEYS.GUIDE_DOGS);
-  localStorage.removeItem(STORAGE_KEYS.PARTNERS);
-  localStorage.removeItem(STORAGE_KEYS.ACTIVITIES);
+  // ⚠️ 모든 localStorage 데이터 완전 삭제 (개인정보 보호)
+  const allKeys = [
+    // 안내견 기본 데이터
+    STORAGE_KEYS.GUIDE_DOGS,
+    STORAGE_KEYS.PARTNERS,
+    STORAGE_KEYS.ACTIVITIES,
+    STORAGE_KEYS.USERS,
+    // 추가 개인정보 데이터
+    'guidedog_user',
+    'guidedog_guidedogs',
+    'guidedog_diary',
+    'guidedog_boarding_forms',
+    'guidedog_medical',  // 진료 기록 (민감)
+    'guidedog_medication',
+    'guidedog_products',
+    'guidedog_orders',
+    'guidedog_monthly_reports',
+    'guidedog_lectures',
+    'guidedog_staff_courses',
+    'guidedog_staff_lectures',
+    'guidedog_school_videos',
+    'guidedog_caregiver_passwords',  // 비밀번호 (매우 민감)
+  ];
+
+  // 모든 키 삭제
+  allKeys.forEach(key => localStorage.removeItem(key));
+  console.log('✅ 모든 localStorage 데이터 삭제 완료');
 
   // Firestore에서도 삭제
   try {
