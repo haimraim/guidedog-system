@@ -1863,16 +1863,23 @@ export const DiaryPage = () => {
       {/* 1일 다이어리 */}
       {(currentTab === 'daily' || (user?.role !== 'puppyTeacher' && user?.role !== 'admin')) && (
         <>
-          <div className="flex justify-between items-center mb-6">
+          <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-800">
-              {user?.role === 'puppyTeacher' ? '1일 다이어리' : '다이어리'}
+              {user?.role === 'puppyTeacher' ? '1일 다이어리' : user?.category === '안내견' ? '월간 관리' : '다이어리'}
             </h2>
-            <button
-              onClick={() => setIsWriting(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-            >
-              글쓰기
-            </button>
+            {user?.category === '안내견' && (
+              <p className="mt-2 text-gray-600">
+                안내견의 원활한 사후관리를 위해 현재 안내견의 품행, 건강, 보행 상태를 기록하는 공간입니다.
+              </p>
+            )}
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setIsWriting(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                글쓰기
+              </button>
+            </div>
           </div>
 
           {posts.length === 0 ? (

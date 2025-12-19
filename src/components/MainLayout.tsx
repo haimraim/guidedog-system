@@ -16,14 +16,12 @@ import { LecturePage } from './LecturePage';
 import { VideoRoomPage } from './VideoRoomPage';
 import { PrivacyPolicyPage } from './PrivacyPolicyPage';
 import { TermsOfServicePage } from './TermsOfServicePage';
-import { UserManagementPage } from './UserManagementPage';
 import { MessageSendPage } from './MessageSendPage';
 import { NoticeBoardPage } from './NoticeBoardPage';
-import { PushNotificationButton } from './PushNotificationButton';
 import { getCombinedData, calculateAgeWithMonths } from '../utils/storage';
 import type { CombinedData } from '../types/types';
 
-type MenuItem = 'home' | 'notice' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'users' | 'message' | 'privacy' | 'terms';
+type MenuItem = 'home' | 'notice' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'message' | 'privacy' | 'terms';
 
 export const MainLayout = () => {
   const { user, logout } = useAuth();
@@ -35,7 +33,7 @@ export const MainLayout = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = urlParams.get('page') as MenuItem;
 
-    if (pageParam && ['home', 'notice', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'users', 'message', 'privacy', 'terms'].includes(pageParam)) {
+    if (pageParam && ['home', 'notice', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'message', 'privacy', 'terms'].includes(pageParam)) {
       setCurrentPage(pageParam);
       window.history.replaceState({ page: pageParam }, '', `?page=${pageParam}`);
     } else {
@@ -133,8 +131,6 @@ export const MainLayout = () => {
         return <MedicationCheckPage />;
       case 'admin':
         return <DataTableEnhanced />;
-      case 'users':
-        return <UserManagementPage />;
       case 'message':
         return <MessageSendPage />;
       case 'privacy':
@@ -163,7 +159,6 @@ export const MainLayout = () => {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <PushNotificationButton />
               <button
                 onClick={handleLogout}
                 className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 outline-none"
@@ -227,7 +222,7 @@ export const MainLayout = () => {
             <div className="flex-1 text-center">
               <span className="text-lg font-bold text-gray-800">
                 {currentPage === 'notice' && '공지사항'}
-                {currentPage === 'diary' && '다이어리'}
+                {currentPage === 'diary' && (user?.category === '안내견' ? '월간 관리' : '다이어리')}
                 {currentPage === 'monthlyReport' && '월간 보고서'}
                 {currentPage === 'lecture' && '강의실'}
                 {currentPage === 'videoroom' && '영상 시청실 📹'}
@@ -236,7 +231,6 @@ export const MainLayout = () => {
                 {currentPage === 'medical' && '진료 기록'}
                 {currentPage === 'medication' && '약품 체크'}
                 {currentPage === 'admin' && '안내견 관리'}
-                {currentPage === 'users' && '회원 관리'}
                 {currentPage === 'message' && '메시지 발송'}
                 {currentPage === 'privacy' && '개인정보 처리방침'}
                 {currentPage === 'terms' && '이용약관'}
@@ -287,10 +281,10 @@ export const MainLayout = () => {
                   }`}
                   aria-current={currentPage === 'diary' ? 'page' : undefined}
                 >
-                  다이어리
+                  {user?.category === '안내견' ? '월간 관리' : '다이어리'}
                 </button>
               </li>
-              {(user?.role === 'puppyTeacher' || user?.role === 'admin') && (
+              {user?.role === 'admin' && (
                 <li>
                   <button
                     onClick={() => navigateToPage('monthlyReport')}
@@ -399,34 +393,19 @@ export const MainLayout = () => {
                 </li>
               )}
               {user?.id === 'guidedog' && (
-                <>
-                  <li>
-                    <button
-                      onClick={() => navigateToPage('users')}
-                      className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
-                        currentPage === 'users'
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                      aria-current={currentPage === 'users' ? 'page' : undefined}
-                    >
-                      회원 관리
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => navigateToPage('message')}
-                      className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
-                        currentPage === 'message'
-                          ? 'bg-green-600 text-white'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                      aria-current={currentPage === 'message' ? 'page' : undefined}
-                    >
-                      📨 메시지 발송
-                    </button>
-                  </li>
-                </>
+                <li>
+                  <button
+                    onClick={() => navigateToPage('message')}
+                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                      currentPage === 'message'
+                        ? 'bg-green-600 text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                    aria-current={currentPage === 'message' ? 'page' : undefined}
+                  >
+                    📨 메시지 발송
+                  </button>
+                </li>
               )}
             </ul>
           </div>

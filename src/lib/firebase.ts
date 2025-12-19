@@ -2,7 +2,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { getMessaging, getToken, onMessage, isSupported, Messaging } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDFpZyTGYzi2N8SrK8JmWJi-iSRSZZ0NHk",
@@ -21,18 +20,3 @@ export const db = getFirestore(app);
 
 // Firebase Authentication 인스턴스
 export const auth = getAuth(app);
-
-// Firebase Cloud Messaging 인스턴스 (브라우저 지원 확인 후)
-let messaging: Messaging | null = null;
-
-export const initMessaging = async (): Promise<Messaging | null> => {
-  if (messaging) return messaging;
-
-  const supported = await isSupported();
-  if (supported) {
-    messaging = getMessaging(app);
-  }
-  return messaging;
-};
-
-export { getToken, onMessage };
