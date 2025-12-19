@@ -314,15 +314,15 @@ export const DataTableEnhanced = () => {
     printData(filteredData);
   };
 
-  const handleClearAllData = () => {
+  const handleClearAllData = async () => {
     const confirmMessage = '⚠️ 경고!\n\n모든 데이터를 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.\n계속하려면 "확인"을 클릭하세요.';
 
     if (window.confirm(confirmMessage)) {
       const doubleConfirm = '정말로 모든 데이터를 삭제하시겠습니까?\n\n마지막 확인입니다.';
       if (window.confirm(doubleConfirm)) {
         try {
-          clearAllData();
-          setDeleteStatus('✅ 모든 데이터가 삭제되었습니다.');
+          await clearAllData();
+          setDeleteStatus('✅ 모든 데이터가 삭제되었습니다 (localStorage + Firestore).');
           loadData();
           setTimeout(() => setDeleteStatus(null), 3000);
         } catch (error) {

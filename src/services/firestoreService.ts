@@ -165,3 +165,20 @@ export const getLectures = async (): Promise<Lecture[]> => {
 export const deleteLecture = async (id: string) => {
   await deleteDoc(doc(db, COLLECTIONS.LECTURES, id));
 };
+
+// === 전체 데이터 삭제 ===
+export const clearAllData = async () => {
+  const [dogs, partners, activities] = await Promise.all([
+    getDocs(collection(db, COLLECTIONS.DOGS)),
+    getDocs(collection(db, COLLECTIONS.PARTNERS)),
+    getDocs(collection(db, COLLECTIONS.ACTIVITIES)),
+  ]);
+
+  const deletePromises = [
+    ...dogs.docs.map(doc => deleteDoc(doc.ref)),
+    ...partners.docs.map(doc => deleteDoc(doc.ref)),
+    ...activities.docs.map(doc => deleteDoc(doc.ref)),
+  ];
+
+  await Promise.all(deletePromises);
+};

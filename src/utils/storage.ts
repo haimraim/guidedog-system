@@ -228,8 +228,18 @@ export const deleteUser = (id: string): void => {
   localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
 };
 
-export const clearAllData = (): void => {
+export const clearAllData = async (): Promise<void> => {
+  // localStorage 삭제
   localStorage.removeItem(STORAGE_KEYS.GUIDE_DOGS);
   localStorage.removeItem(STORAGE_KEYS.PARTNERS);
   localStorage.removeItem(STORAGE_KEYS.ACTIVITIES);
+
+  // Firestore에서도 삭제
+  try {
+    await firestoreService.clearAllData();
+    console.log('✅ Firestore 데이터 삭제 완료');
+  } catch (error) {
+    console.error('❌ Firestore 데이터 삭제 실패:', error);
+    throw error;
+  }
 };
