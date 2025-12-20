@@ -531,7 +531,7 @@ export const DiaryPage = () => {
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-neutral-800">
               {selectedDogForOther} - {selectedCategory} 기록
             </h2>
             <button
@@ -540,7 +540,7 @@ export const DiaryPage = () => {
                 setSelectedDogForOther(null);
                 setSelectedCategory(null);
               }}
-              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+              className="bg-neutral-500 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition-colors"
             >
               닫기
             </button>
@@ -548,27 +548,27 @@ export const DiaryPage = () => {
 
           {categoryPosts.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">{selectedCategory} 기록이 없습니다.</p>
+              <p className="text-neutral-500">{selectedCategory} 기록이 없습니다.</p>
             </div>
           ) : (
             <div className="space-y-4">
               {categoryPosts.map((post) => (
                 <div
                   key={post.id}
-                  className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                  className="border rounded-lg p-4 hover:bg-neutral-50 transition-colors"
                 >
                   <div className="flex justify-between items-start">
                     <button
                       onClick={() => setViewingPost(post)}
-                      className="text-lg font-bold text-blue-600 hover:text-blue-800 underline text-left"
+                      className="text-lg font-bold text-primary-600 hover:text-primary-800 underline text-left"
                     >
                       {post.title}
                     </button>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-neutral-600">
                       작성: {post.userName}
                     </span>
                   </div>
-                  <div className="mt-2 text-sm text-gray-600">
+                  <div className="mt-2 text-sm text-neutral-600">
                     {post.diaryDate ? (
                       <span>날짜: {post.diaryDate}</span>
                     ) : (
@@ -601,7 +601,7 @@ export const DiaryPage = () => {
                   setSelectedCategory(null);
                 }
               }}
-              className="text-blue-600 hover:text-blue-800 font-semibold"
+              className="text-primary-600 hover:text-primary-800 font-semibold"
             >
               ← 목록으로
             </button>
@@ -609,13 +609,13 @@ export const DiaryPage = () => {
               <div className="space-x-2">
                 <button
                   onClick={() => handleEdit(viewingPost)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   수정
                 </button>
                 <button
                   onClick={() => handleDelete(viewingPost.id)}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="bg-error-600 hover:bg-error-700 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   삭제
                 </button>
@@ -623,11 +623,11 @@ export const DiaryPage = () => {
             )}
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          <h1 className="text-3xl font-bold text-neutral-800 mb-4">
             {viewingPost.title}
           </h1>
 
-          <div className="flex items-center text-sm text-gray-600 mb-6 space-x-4">
+          <div className="flex items-center text-sm text-neutral-600 mb-6 space-x-4">
             <span>작성자: {viewingPost.userName}</span>
             {viewingPost.dogName && <span>안내견: {viewingPost.dogName}</span>}
             {viewingPost.diaryDate && <span>날짜: {viewingPost.diaryDate}</span>}
@@ -644,7 +644,7 @@ export const DiaryPage = () => {
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-blue-600 text-white">
+                    <tr className="bg-primary-600 text-white">
                       <th className="border border-blue-700 px-4 py-3 text-left font-semibold w-1/2">질문</th>
                       <th className="border border-blue-700 px-4 py-3 text-left font-semibold w-1/2">응답</th>
                     </tr>
@@ -670,12 +670,12 @@ export const DiaryPage = () => {
                       const note = viewingPost.partnerSurvey?.[noteKey as keyof typeof viewingPost.partnerSurvey];
                       if (!value) return null;
                       return (
-                        <tr key={key} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                          <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">{label}</td>
-                          <td className="border border-gray-300 px-4 py-3">
-                            <span className="text-gray-700">{value}</span>
+                        <tr key={key} className={index % 2 === 0 ? 'bg-white' : 'bg-neutral-50'}>
+                          <td className="border border-neutral-300 px-4 py-3 font-semibold text-neutral-800">{label}</td>
+                          <td className="border border-neutral-300 px-4 py-3">
+                            <span className="text-neutral-700">{value}</span>
                             {note && (
-                              <p className="text-sm text-blue-600 mt-2 italic">※ {note}</p>
+                              <p className="text-sm text-primary-600 mt-2 italic">※ {note}</p>
                             )}
                           </td>
                         </tr>
@@ -687,9 +687,9 @@ export const DiaryPage = () => {
 
               {/* 추가 의견 */}
               {viewingPost.partnerSurvey.additionalComment && (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <h3 className="text-lg font-bold text-gray-800 mb-3">추가 의견</h3>
-                  <p className="text-gray-700 whitespace-pre-wrap">
+                <div className="bg-warning-50 border border-yellow-200 rounded-lg p-4">
+                  <h3 className="text-lg font-bold text-neutral-800 mb-3">추가 의견</h3>
+                  <p className="text-neutral-700 whitespace-pre-wrap">
                     {viewingPost.partnerSurvey.additionalComment}
                   </p>
                 </div>
@@ -701,13 +701,13 @@ export const DiaryPage = () => {
               {/* 급식 */}
               {((viewingPost.feedings && viewingPost.feedings.length > 0) || viewingPost.feedingTime) && (
                 <div className="border-t pt-4">
-                  <h3 className="text-lg font-bold text-gray-800 mb-3">급식</h3>
+                  <h3 className="text-lg font-bold text-neutral-800 mb-3">급식</h3>
                   {viewingPost.feedings && viewingPost.feedings.length > 0 ? (
                     <div className="space-y-4">
                       {viewingPost.feedings.map((feeding, index) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-gray-800 mb-2">급식 #{index + 1}</h4>
-                          <div className="space-y-1 text-gray-700">
+                        <div key={index} className="bg-neutral-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-neutral-800 mb-2">급식 #{index + 1}</h4>
+                          <div className="space-y-1 text-neutral-700">
                             {feeding.time && <p><span className="font-semibold">시간:</span> {feeding.time}</p>}
                             {feeding.foodType && <p><span className="font-semibold">사료 종류:</span> {feeding.foodType}</p>}
                             {feeding.amount && <p><span className="font-semibold">급식량:</span> {feeding.amount}g</p>}
@@ -717,7 +717,7 @@ export const DiaryPage = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="space-y-2 text-gray-700">
+                    <div className="space-y-2 text-neutral-700">
                       {viewingPost.foodType && <p><span className="font-semibold">사료 종류:</span> {viewingPost.foodType}</p>}
                       {viewingPost.feedingTime && <p><span className="font-semibold">급식 시간:</span> {viewingPost.feedingTime}</p>}
                       {viewingPost.feedingAmount && <p><span className="font-semibold">급식량:</span> {viewingPost.feedingAmount}g</p>}
@@ -730,13 +730,13 @@ export const DiaryPage = () => {
               {/* DT1 (소변) */}
               {((viewingPost.dt1Records && viewingPost.dt1Records.length > 0) || viewingPost.dt1Time || viewingPost.dt1Place || viewingPost.dt1Success || viewingPost.dt1Accident || viewingPost.dt1Notes) && (
                 <div className="border-t pt-4">
-                  <h3 className="text-lg font-bold text-gray-800 mb-3">배변 - DT1 (소변)</h3>
+                  <h3 className="text-lg font-bold text-neutral-800 mb-3">배변 - DT1 (소변)</h3>
                   {viewingPost.dt1Records && viewingPost.dt1Records.length > 0 ? (
                     <div className="space-y-4">
                       {viewingPost.dt1Records.map((dt1, index) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-gray-800 mb-2">DT1 #{index + 1}</h4>
-                          <div className="space-y-1 text-gray-700">
+                        <div key={index} className="bg-neutral-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-neutral-800 mb-2">DT1 #{index + 1}</h4>
+                          <div className="space-y-1 text-neutral-700">
                             {dt1.time && <p><span className="font-semibold">시간:</span> {dt1.time}</p>}
                             {dt1.place && <p><span className="font-semibold">장소:</span> {dt1.place}</p>}
                             {dt1.success && <p><span className="font-semibold">성공 정도:</span> {dt1.success}</p>}
@@ -747,7 +747,7 @@ export const DiaryPage = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="space-y-2 text-gray-700">
+                    <div className="space-y-2 text-neutral-700">
                       {viewingPost.dt1Time && (
                         <p><span className="font-semibold">시간:</span> {viewingPost.dt1Time}</p>
                       )}
@@ -771,13 +771,13 @@ export const DiaryPage = () => {
               {/* DT2 (대변) */}
               {((viewingPost.dt2Records && viewingPost.dt2Records.length > 0) || viewingPost.dt2Time || viewingPost.dt2Place || viewingPost.dt2Success || viewingPost.dt2Accident || viewingPost.dt2Notes) && (
                 <div className="border-t pt-4">
-                  <h3 className="text-lg font-bold text-gray-800 mb-3">배변 - DT2 (대변)</h3>
+                  <h3 className="text-lg font-bold text-neutral-800 mb-3">배변 - DT2 (대변)</h3>
                   {viewingPost.dt2Records && viewingPost.dt2Records.length > 0 ? (
                     <div className="space-y-4">
                       {viewingPost.dt2Records.map((dt2, index) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-gray-800 mb-2">DT2 #{index + 1}</h4>
-                          <div className="space-y-1 text-gray-700">
+                        <div key={index} className="bg-neutral-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-neutral-800 mb-2">DT2 #{index + 1}</h4>
+                          <div className="space-y-1 text-neutral-700">
                             {dt2.time && <p><span className="font-semibold">시간:</span> {dt2.time}</p>}
                             {dt2.place && <p><span className="font-semibold">장소:</span> {dt2.place}</p>}
                             {dt2.success && <p><span className="font-semibold">성공 정도:</span> {dt2.success}</p>}
@@ -788,7 +788,7 @@ export const DiaryPage = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="space-y-2 text-gray-700">
+                    <div className="space-y-2 text-neutral-700">
                       {viewingPost.dt2Time && (
                         <p><span className="font-semibold">시간:</span> {viewingPost.dt2Time}</p>
                       )}
@@ -812,13 +812,13 @@ export const DiaryPage = () => {
               {/* 외출 */}
               {((viewingPost.outings && viewingPost.outings.length > 0) || viewingPost.outingPlace || viewingPost.outingDuration || viewingPost.outingNotes) && (
                 <div className="border-t pt-4">
-                  <h3 className="text-lg font-bold text-gray-800 mb-3">외출</h3>
+                  <h3 className="text-lg font-bold text-neutral-800 mb-3">외출</h3>
                   {viewingPost.outings && viewingPost.outings.length > 0 ? (
                     <div className="space-y-4">
                       {viewingPost.outings.map((outing, index) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-gray-800 mb-2">외출 #{index + 1}</h4>
-                          <div className="space-y-1 text-gray-700">
+                        <div key={index} className="bg-neutral-50 p-4 rounded-lg">
+                          <h4 className="font-semibold text-neutral-800 mb-2">외출 #{index + 1}</h4>
+                          <div className="space-y-1 text-neutral-700">
                             {outing.place && <p><span className="font-semibold">장소:</span> {outing.place}</p>}
                             {outing.duration && <p><span className="font-semibold">외출 시간:</span> {outing.duration}</p>}
                             {outing.notes && <p><span className="font-semibold">특이사항:</span> {outing.notes}</p>}
@@ -827,7 +827,7 @@ export const DiaryPage = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="space-y-2 text-gray-700">
+                    <div className="space-y-2 text-neutral-700">
                       {viewingPost.outingPlace && (
                         <p><span className="font-semibold">장소:</span> {viewingPost.outingPlace}</p>
                       )}
@@ -845,8 +845,8 @@ export const DiaryPage = () => {
               {/* 그 밖에 오늘 하고 싶은 말 */}
               {viewingPost.additionalNotes && (
                 <div className="border-t pt-4">
-                  <h3 className="text-lg font-bold text-gray-800 mb-3">그 밖에 오늘 하고 싶은 말</h3>
-                  <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-bold text-neutral-800 mb-3">그 밖에 오늘 하고 싶은 말</h3>
+                  <p className="text-neutral-700 whitespace-pre-wrap bg-neutral-50 p-4 rounded-lg">
                     {viewingPost.additionalNotes}
                   </p>
                 </div>
@@ -855,7 +855,7 @@ export const DiaryPage = () => {
           ) : (
             /* 일반 다이어리 */
             <div className="prose max-w-none">
-              <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+              <p className="text-neutral-700 whitespace-pre-wrap leading-relaxed">
                 {viewingPost.content}
               </p>
             </div>
@@ -872,7 +872,7 @@ export const DiaryPage = () => {
       return (
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            <h2 className="text-2xl font-bold text-neutral-800 mb-6">
               {editingPost ? '일지 수정' : '일지 작성'}
             </h2>
 
@@ -882,7 +882,7 @@ export const DiaryPage = () => {
                 <button
                   type="button"
                   onClick={() => setIsFeedingOpen(!isFeedingOpen)}
-                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                  className="w-full flex items-center justify-between text-lg font-bold text-neutral-800 mb-4 hover:text-primary-600 transition-colors"
                 >
                   <span>급식</span>
                   <svg
@@ -898,14 +898,14 @@ export const DiaryPage = () => {
                 {isFeedingOpen && (
                   <div className="space-y-6">
                     {feedings.map((feeding, index) => (
-                      <div key={index} className="border rounded-lg p-4 bg-gray-50 space-y-4">
+                      <div key={index} className="border rounded-lg p-4 bg-neutral-50 space-y-4">
                         <div className="flex justify-between items-center">
-                          <h4 className="font-semibold text-gray-700">급식 #{index + 1}</h4>
+                          <h4 className="font-semibold text-neutral-700">급식 #{index + 1}</h4>
                           {feedings.length > 1 && (
                             <button
                               type="button"
                               onClick={() => setFeedings(feedings.filter((_, i) => i !== index))}
-                              className="text-red-600 hover:text-red-800 text-sm"
+                              className="text-error-600 hover:text-red-800 text-sm"
                             >
                               삭제
                             </button>
@@ -913,7 +913,7 @@ export const DiaryPage = () => {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">
                             급식 시간
                           </label>
                           <input
@@ -924,12 +924,12 @@ export const DiaryPage = () => {
                               newFeedings[index].time = e.target.value;
                               setFeedings(newFeedings);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">
                             사료 종류
                           </label>
                           <input
@@ -940,13 +940,13 @@ export const DiaryPage = () => {
                               newFeedings[index].foodType = e.target.value;
                               setFeedings(newFeedings);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="사료 종류"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">
                             급식량 (그램)
                           </label>
                           <input
@@ -957,13 +957,13 @@ export const DiaryPage = () => {
                               newFeedings[index].amount = e.target.value;
                               setFeedings(newFeedings);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="그램"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">
                             추가 내용
                           </label>
                           <textarea
@@ -974,7 +974,7 @@ export const DiaryPage = () => {
                               setFeedings(newFeedings);
                             }}
                             rows={2}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none resize-none"
                             placeholder="추가 내용"
                           />
                         </div>
@@ -983,7 +983,7 @@ export const DiaryPage = () => {
                     <button
                       type="button"
                       onClick={() => setFeedings([...feedings, { foodType: '', time: '', amount: '', notes: '' }])}
-                      className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                      className="w-full bg-primary-100 hover:bg-blue-200 text-primary-700 font-semibold py-2 px-4 rounded-lg transition-colors"
                     >
                       + 급식 시간 추가
                     </button>
@@ -996,7 +996,7 @@ export const DiaryPage = () => {
                 <button
                   type="button"
                   onClick={() => setIsDt1Open(!isDt1Open)}
-                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                  className="w-full flex items-center justify-between text-lg font-bold text-neutral-800 mb-4 hover:text-primary-600 transition-colors"
                 >
                   <span>배변 - DT1 (소변)</span>
                   <svg
@@ -1012,14 +1012,14 @@ export const DiaryPage = () => {
                 {isDt1Open && (
                   <div className="space-y-6">
                     {dt1Records.map((record, index) => (
-                      <div key={index} className="border rounded-lg p-4 bg-gray-50 space-y-4">
+                      <div key={index} className="border rounded-lg p-4 bg-neutral-50 space-y-4">
                         <div className="flex justify-between items-center">
-                          <h4 className="font-semibold text-gray-700">DT1 #{index + 1}</h4>
+                          <h4 className="font-semibold text-neutral-700">DT1 #{index + 1}</h4>
                           {dt1Records.length > 1 && (
                             <button
                               type="button"
                               onClick={() => setDt1Records(dt1Records.filter((_, i) => i !== index))}
-                              className="text-red-600 hover:text-red-800 text-sm"
+                              className="text-error-600 hover:text-red-800 text-sm"
                             >
                               삭제
                             </button>
@@ -1027,7 +1027,7 @@ export const DiaryPage = () => {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">시간</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">시간</label>
                           <input
                             type="time"
                             value={record.time}
@@ -1036,12 +1036,12 @@ export const DiaryPage = () => {
                               newRecords[index].time = e.target.value;
                               setDt1Records(newRecords);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">장소</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">장소</label>
                           <input
                             type="text"
                             value={record.place}
@@ -1050,13 +1050,13 @@ export const DiaryPage = () => {
                               newRecords[index].place = e.target.value;
                               setDt1Records(newRecords);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="배변 장소"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">성공 정도</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">성공 정도</label>
                           <input
                             type="text"
                             value={record.success}
@@ -1065,13 +1065,13 @@ export const DiaryPage = () => {
                               newRecords[index].success = e.target.value;
                               setDt1Records(newRecords);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="예: 잘함, 보통"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">실수 여부</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">실수 여부</label>
                           <input
                             type="text"
                             value={record.accident}
@@ -1080,13 +1080,13 @@ export const DiaryPage = () => {
                               newRecords[index].accident = e.target.value;
                               setDt1Records(newRecords);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="예: 없음, 1회"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">관련 사항</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">관련 사항</label>
                           <textarea
                             value={record.notes}
                             onChange={(e) => {
@@ -1095,7 +1095,7 @@ export const DiaryPage = () => {
                               setDt1Records(newRecords);
                             }}
                             rows={2}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none resize-none"
                             placeholder="추가 내용"
                           />
                         </div>
@@ -1104,7 +1104,7 @@ export const DiaryPage = () => {
                     <button
                       type="button"
                       onClick={() => setDt1Records([...dt1Records, { time: '', place: '', success: '', accident: '', notes: '' }])}
-                      className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                      className="w-full bg-primary-100 hover:bg-blue-200 text-primary-700 font-semibold py-2 px-4 rounded-lg transition-colors"
                     >
                       + DT1 시간 추가
                     </button>
@@ -1117,7 +1117,7 @@ export const DiaryPage = () => {
                 <button
                   type="button"
                   onClick={() => setIsDt2Open(!isDt2Open)}
-                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                  className="w-full flex items-center justify-between text-lg font-bold text-neutral-800 mb-4 hover:text-primary-600 transition-colors"
                 >
                   <span>배변 - DT2 (대변)</span>
                   <svg
@@ -1133,14 +1133,14 @@ export const DiaryPage = () => {
                 {isDt2Open && (
                   <div className="space-y-6">
                     {dt2Records.map((record, index) => (
-                      <div key={index} className="border rounded-lg p-4 bg-gray-50 space-y-4">
+                      <div key={index} className="border rounded-lg p-4 bg-neutral-50 space-y-4">
                         <div className="flex justify-between items-center">
-                          <h4 className="font-semibold text-gray-700">DT2 #{index + 1}</h4>
+                          <h4 className="font-semibold text-neutral-700">DT2 #{index + 1}</h4>
                           {dt2Records.length > 1 && (
                             <button
                               type="button"
                               onClick={() => setDt2Records(dt2Records.filter((_, i) => i !== index))}
-                              className="text-red-600 hover:text-red-800 text-sm"
+                              className="text-error-600 hover:text-red-800 text-sm"
                             >
                               삭제
                             </button>
@@ -1148,7 +1148,7 @@ export const DiaryPage = () => {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">시간</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">시간</label>
                           <input
                             type="time"
                             value={record.time}
@@ -1157,12 +1157,12 @@ export const DiaryPage = () => {
                               newRecords[index].time = e.target.value;
                               setDt2Records(newRecords);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">장소</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">장소</label>
                           <input
                             type="text"
                             value={record.place}
@@ -1171,13 +1171,13 @@ export const DiaryPage = () => {
                               newRecords[index].place = e.target.value;
                               setDt2Records(newRecords);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="배변 장소"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">성공 정도</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">성공 정도</label>
                           <input
                             type="text"
                             value={record.success}
@@ -1186,13 +1186,13 @@ export const DiaryPage = () => {
                               newRecords[index].success = e.target.value;
                               setDt2Records(newRecords);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="예: 잘함, 보통"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">실수 여부</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">실수 여부</label>
                           <input
                             type="text"
                             value={record.accident}
@@ -1201,13 +1201,13 @@ export const DiaryPage = () => {
                               newRecords[index].accident = e.target.value;
                               setDt2Records(newRecords);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="예: 없음, 1회"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">관련 사항</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">관련 사항</label>
                           <textarea
                             value={record.notes}
                             onChange={(e) => {
@@ -1216,7 +1216,7 @@ export const DiaryPage = () => {
                               setDt2Records(newRecords);
                             }}
                             rows={2}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none resize-none"
                             placeholder="추가 내용"
                           />
                         </div>
@@ -1225,7 +1225,7 @@ export const DiaryPage = () => {
                     <button
                       type="button"
                       onClick={() => setDt2Records([...dt2Records, { time: '', place: '', success: '', accident: '', notes: '' }])}
-                      className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                      className="w-full bg-primary-100 hover:bg-blue-200 text-primary-700 font-semibold py-2 px-4 rounded-lg transition-colors"
                     >
                       + DT2 시간 추가
                     </button>
@@ -1238,7 +1238,7 @@ export const DiaryPage = () => {
                 <button
                   type="button"
                   onClick={() => setIsOutingOpen(!isOutingOpen)}
-                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                  className="w-full flex items-center justify-between text-lg font-bold text-neutral-800 mb-4 hover:text-primary-600 transition-colors"
                 >
                   <span>외출</span>
                   <svg
@@ -1254,14 +1254,14 @@ export const DiaryPage = () => {
                 {isOutingOpen && (
                   <div className="space-y-6">
                     {outings.map((outing, index) => (
-                      <div key={index} className="border rounded-lg p-4 bg-gray-50 space-y-4">
+                      <div key={index} className="border rounded-lg p-4 bg-neutral-50 space-y-4">
                         <div className="flex justify-between items-center">
-                          <h4 className="font-semibold text-gray-700">외출 #{index + 1}</h4>
+                          <h4 className="font-semibold text-neutral-700">외출 #{index + 1}</h4>
                           {outings.length > 1 && (
                             <button
                               type="button"
                               onClick={() => setOutings(outings.filter((_, i) => i !== index))}
-                              className="text-red-600 hover:text-red-800 text-sm"
+                              className="text-error-600 hover:text-red-800 text-sm"
                             >
                               삭제
                             </button>
@@ -1269,7 +1269,7 @@ export const DiaryPage = () => {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">장소</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">장소</label>
                           <input
                             type="text"
                             value={outing.place}
@@ -1278,13 +1278,13 @@ export const DiaryPage = () => {
                               newOutings[index].place = e.target.value;
                               setOutings(newOutings);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="어디로 나갔는지"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">외출 시간</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">외출 시간</label>
                           <input
                             type="text"
                             value={outing.duration}
@@ -1293,13 +1293,13 @@ export const DiaryPage = () => {
                               newOutings[index].duration = e.target.value;
                               setOutings(newOutings);
                             }}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                             placeholder="예: 2시간 30분"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">특이사항</label>
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">특이사항</label>
                           <textarea
                             value={outing.notes}
                             onChange={(e) => {
@@ -1308,7 +1308,7 @@ export const DiaryPage = () => {
                               setOutings(newOutings);
                             }}
                             rows={2}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none resize-none"
                             placeholder="특이사항"
                           />
                         </div>
@@ -1317,7 +1317,7 @@ export const DiaryPage = () => {
                     <button
                       type="button"
                       onClick={() => setOutings([...outings, { place: '', duration: '', notes: '' }])}
-                      className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                      className="w-full bg-primary-100 hover:bg-blue-200 text-primary-700 font-semibold py-2 px-4 rounded-lg transition-colors"
                     >
                       + 외출 시간 추가
                     </button>
@@ -1330,7 +1330,7 @@ export const DiaryPage = () => {
                 <button
                   type="button"
                   onClick={() => setIsAdditionalOpen(!isAdditionalOpen)}
-                  className="w-full flex items-center justify-between text-lg font-bold text-gray-800 mb-4 hover:text-blue-600 transition-colors"
+                  className="w-full flex items-center justify-between text-lg font-bold text-neutral-800 mb-4 hover:text-primary-600 transition-colors"
                 >
                   <span>그 밖에 오늘 하고 싶은 말</span>
                   <svg
@@ -1348,7 +1348,7 @@ export const DiaryPage = () => {
                     value={additionalNotes}
                     onChange={(e) => setAdditionalNotes(e.target.value)}
                     rows={5}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none resize-none"
                     placeholder="자유롭게 작성하세요"
                   />
                 )}
@@ -1357,14 +1357,14 @@ export const DiaryPage = () => {
               <div className="flex space-x-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                 >
                   {editingPost ? '수정 완료' : '작성 완료'}
                 </button>
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                 >
                   취소
                 </button>
@@ -1453,21 +1453,21 @@ export const DiaryPage = () => {
       return (
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            <h2 className="text-2xl font-bold text-neutral-800 mb-6">
               {editingPost ? '설문 수정' : '안내견 생활 설문'}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* 날짜 선택 */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
                   날짜
                 </label>
                 <input
                   type="date"
                   value={diaryDate}
                   onChange={(e) => setDiaryDate(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                   required
                 />
               </div>
@@ -1477,7 +1477,7 @@ export const DiaryPage = () => {
                 const noteKey = `${q.key}Note` as keyof typeof partnerSurvey;
                 return (
                   <div key={q.key} className="border-t pt-6">
-                    <h3 className="text-base font-semibold text-gray-800 mb-4">
+                    <h3 className="text-base font-semibold text-neutral-800 mb-4">
                       {q.question}
                     </h3>
                     <div className="space-y-2">
@@ -1486,8 +1486,8 @@ export const DiaryPage = () => {
                           key={option}
                           className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
                             partnerSurvey[q.key as keyof typeof partnerSurvey] === option
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-300 hover:bg-gray-50'
+                              ? 'border-blue-500 bg-primary-50'
+                              : 'border-neutral-300 hover:bg-neutral-50'
                           }`}
                         >
                           <input
@@ -1501,14 +1501,14 @@ export const DiaryPage = () => {
                                 [q.key]: e.target.value,
                               })
                             }
-                            className="w-5 h-5 text-blue-600 focus:ring-blue-500"
+                            className="w-5 h-5 text-primary-600 focus:ring-primary-500"
                           />
-                          <span className="ml-3 text-gray-700">{optionIndex + 1}. {option}</span>
+                          <span className="ml-3 text-neutral-700">{optionIndex + 1}. {option}</span>
                         </label>
                       ))}
                     </div>
                     <div className="mt-3">
-                      <label htmlFor={`note-${index}`} className="block text-sm text-gray-600 mb-1">
+                      <label htmlFor={`note-${index}`} className="block text-sm text-neutral-600 mb-1">
                         추가 의견 (선택)
                       </label>
                       <input
@@ -1521,7 +1521,7 @@ export const DiaryPage = () => {
                             [noteKey]: e.target.value,
                           })
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm"
+                        className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none text-sm"
                         placeholder="이 항목에 대한 추가 의견이 있으면 입력하세요"
                       />
                     </div>
@@ -1531,7 +1531,7 @@ export const DiaryPage = () => {
 
               {/* 추가 의견 */}
               <div className="border-t pt-6">
-                <h3 className="text-base font-semibold text-gray-800 mb-4" id="additional-comment-label">
+                <h3 className="text-base font-semibold text-neutral-800 mb-4" id="additional-comment-label">
                   추가로 전달하고 싶은 내용이 있으시면 작성해주세요.
                 </h3>
                 <textarea
@@ -1543,7 +1543,7 @@ export const DiaryPage = () => {
                     })
                   }
                   rows={5}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none resize-none"
                   placeholder="자유롭게 작성하세요"
                   aria-labelledby="additional-comment-label"
                 />
@@ -1552,14 +1552,14 @@ export const DiaryPage = () => {
               <div className="flex space-x-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                 >
                   {editingPost ? '수정 완료' : '제출'}
                 </button>
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                 >
                   취소
                 </button>
@@ -1574,7 +1574,7 @@ export const DiaryPage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
             {editingPost ? '다이어리 수정' : '다이어리 작성'}
           </h2>
 
@@ -1582,7 +1582,7 @@ export const DiaryPage = () => {
             <div>
               <label
                 htmlFor="diaryDateGeneral"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 날짜
               </label>
@@ -1591,7 +1591,7 @@ export const DiaryPage = () => {
                 id="diaryDateGeneral"
                 value={diaryDate}
                 onChange={(e) => setDiaryDate(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                 required
               />
             </div>
@@ -1599,7 +1599,7 @@ export const DiaryPage = () => {
             <div>
               <label
                 htmlFor="title"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 제목
               </label>
@@ -1608,7 +1608,7 @@ export const DiaryPage = () => {
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                 placeholder="제목을 입력하세요"
                 required
               />
@@ -1617,7 +1617,7 @@ export const DiaryPage = () => {
             <div>
               <label
                 htmlFor="content"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 내용
               </label>
@@ -1625,7 +1625,7 @@ export const DiaryPage = () => {
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                 rows={15}
                 placeholder="안내견과의 생활 경험을 자유롭게 작성해주세요"
                 required
@@ -1635,14 +1635,14 @@ export const DiaryPage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 {editingPost ? '수정 완료' : '작성 완료'}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 취소
               </button>
@@ -1673,20 +1673,20 @@ export const DiaryPage = () => {
 
     return (
       <div className="max-w-full mx-auto px-4">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">다이어리 관리</h2>
+        <h2 className="text-2xl font-bold text-neutral-800 mb-6">다이어리 관리</h2>
 
         {/* 필터 섹션 */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 카테고리 선택 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 카테고리
               </label>
               <select
                 value={adminCategory}
                 onChange={(e) => setAdminCategory(e.target.value as DogCategory | 'all')}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
               >
                 <option value="퍼피티칭">퍼피티칭</option>
                 <option value="안내견">안내견</option>
@@ -1698,13 +1698,13 @@ export const DiaryPage = () => {
 
             {/* 기간 선택 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 기간
               </label>
               <select
                 value={periodFilter}
                 onChange={(e) => setPeriodFilter(e.target.value as any)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
               >
                 <option value="today">오늘</option>
                 <option value="3days">3일 이전</option>
@@ -1720,25 +1720,25 @@ export const DiaryPage = () => {
             {periodFilter === 'custom' && (
               <>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     시작일
                   </label>
                   <input
                     type="date"
                     value={customStartDate}
                     onChange={(e) => setCustomStartDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     종료일
                   </label>
                   <input
                     type="date"
                     value={customEndDate}
                     onChange={(e) => setCustomEndDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                   />
                 </div>
               </>
@@ -1749,19 +1749,19 @@ export const DiaryPage = () => {
         {/* 다이어리 목록 */}
         {dogs.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-500">선택한 카테고리에 해당하는 개가 없습니다.</p>
+            <p className="text-neutral-500">선택한 카테고리에 해당하는 개가 없습니다.</p>
           </div>
         ) : (
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-100">
+                <thead className="bg-neutral-100">
                   <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-800 border-b sticky left-0 bg-gray-100 z-10">
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-neutral-800 border-b sticky left-0 bg-neutral-100 z-10">
                       견명
                     </th>
                     {dates.slice().reverse().map(date => (
-                      <th key={date} className="px-4 py-3 text-center text-sm font-semibold text-gray-800 border-b whitespace-nowrap min-w-[120px]">
+                      <th key={date} className="px-4 py-3 text-center text-sm font-semibold text-neutral-800 border-b whitespace-nowrap min-w-[120px]">
                         {new Date(date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                       </th>
                     ))}
@@ -1771,10 +1771,10 @@ export const DiaryPage = () => {
                   {dogs.map(dog => {
                     const availableCategories = getAvailableCategories(dog.name);
                     return (
-                      <tr key={dog.id} className="hover:bg-gray-50 border-b">
+                      <tr key={dog.id} className="hover:bg-neutral-50 border-b">
                         <td className="px-4 py-3 sticky left-0 bg-white z-10">
                           <div className="flex flex-col gap-2">
-                            <span className="font-semibold text-gray-800">{dog.name}</span>
+                            <span className="font-semibold text-neutral-800">{dog.name}</span>
                             {availableCategories.length > 0 && (
                               <div className="flex flex-col gap-1">
                                 {availableCategories.map(category => (
@@ -1785,7 +1785,7 @@ export const DiaryPage = () => {
                                       setSelectedCategory(category);
                                       setShowOtherRecords(true);
                                     }}
-                                    className="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded transition-colors"
+                                    className="text-xs bg-primary-100 hover:bg-blue-200 text-primary-700 px-2 py-1 rounded transition-colors"
                                   >
                                     {category} 기록 보기
                                   </button>
@@ -1801,7 +1801,7 @@ export const DiaryPage = () => {
                               {diary ? (
                                 <button
                                   onClick={() => setViewingPost(diary)}
-                                  className="text-blue-600 hover:text-blue-800 font-semibold underline"
+                                  className="text-primary-600 hover:text-primary-800 font-semibold underline"
                                   aria-label={`${dog.name} ${date} 다이어리: ${diary.title}`}
                                 >
                                   {diary.title}
@@ -1830,13 +1830,13 @@ export const DiaryPage = () => {
       {/* 탭 메뉴 (퍼피티처 및 관리자) */}
       {(user?.role === 'puppyTeacher' || user?.role === 'admin') && (
         <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="flex border-b border-gray-200">
+          <div className="flex border-b border-neutral-200">
             <button
               onClick={() => setCurrentTab('daily')}
               className={`flex-1 px-6 py-4 font-semibold transition-colors ${
                 currentTab === 'daily'
-                  ? 'bg-blue-600 text-white border-b-2 border-blue-600'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  ? 'bg-primary-600 text-white border-b-2 border-blue-600'
+                  : 'text-neutral-700 hover:bg-neutral-50'
               }`}
             >
               1일 다이어리
@@ -1845,8 +1845,8 @@ export const DiaryPage = () => {
               onClick={() => setCurrentTab('monthly')}
               className={`flex-1 px-6 py-4 font-semibold transition-colors ${
                 currentTab === 'monthly'
-                  ? 'bg-blue-600 text-white border-b-2 border-blue-600'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  ? 'bg-primary-600 text-white border-b-2 border-blue-600'
+                  : 'text-neutral-700 hover:bg-neutral-50'
               }`}
             >
               월간 보고서
@@ -1864,18 +1864,18 @@ export const DiaryPage = () => {
       {(currentTab === 'daily' || (user?.role !== 'puppyTeacher' && user?.role !== 'admin')) && (
         <>
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-neutral-800">
               {user?.role === 'puppyTeacher' ? '1일 다이어리' : user?.category === '안내견' ? '월간 관리' : '다이어리'}
             </h2>
             {user?.category === '안내견' && (
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-neutral-600">
                 안내견의 원활한 사후관리를 위해 현재 안내견의 품행, 건강, 보행 상태를 기록하는 공간입니다.
               </p>
             )}
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setIsWriting(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 글쓰기
               </button>
@@ -1884,10 +1884,10 @@ export const DiaryPage = () => {
 
           {posts.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <p className="text-gray-500">작성된 다이어리가 없습니다.</p>
+              <p className="text-neutral-500">작성된 다이어리가 없습니다.</p>
               <button
                 onClick={() => setIsWriting(true)}
-                className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+                className="mt-4 text-primary-600 hover:text-primary-800 font-semibold"
               >
                 첫 다이어리 작성하기
               </button>
@@ -1901,11 +1901,11 @@ export const DiaryPage = () => {
                 >
                   <button
                     onClick={() => setViewingPost(post)}
-                    className="text-xl font-bold text-blue-600 hover:text-blue-800 underline mb-2 text-left w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+                    className="text-xl font-bold text-primary-600 hover:text-primary-800 underline mb-2 text-left w-full focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
                   >
                     {post.title}
                   </button>
-                  <div className="flex items-center text-sm text-gray-600 space-x-4">
+                  <div className="flex items-center text-sm text-neutral-600 space-x-4">
                     <span>{post.userName}</span>
                     {post.dogName && <span>{post.dogName}</span>}
                     <span>{formatDate(post.createdAt)}</span>

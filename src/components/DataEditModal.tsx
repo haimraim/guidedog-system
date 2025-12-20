@@ -181,7 +181,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
 
   return (
     <div
-      className="fixed inset-0 bg-gray-900 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-neutral-900 flex items-center justify-center z-50 p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
@@ -191,14 +191,14 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
         ref={modalRef}
         className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
       >
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+        <div className="sticky top-0 bg-white border-b border-neutral-200 px-6 py-4 flex justify-between items-center">
           <h2 id="modal-title" className="text-2xl font-bold">
             데이터 수정
           </h2>
           <button
             onClick={() => onClose(false)}
             aria-label="닫기"
-            className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+            className="text-neutral-500 hover:text-neutral-700 text-2xl font-bold"
           >
             ×
           </button>
@@ -206,13 +206,13 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
 
         <form onSubmit={handleSubmit} className="p-6">
           {/* 안내견 기본 정보 */}
-          <fieldset className="mb-8 border border-gray-300 p-4 rounded">
+          <fieldset className="mb-8 border border-neutral-300 p-4 rounded">
             <legend className="text-xl font-semibold px-2">안내견 기본 정보</legend>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div>
                 <label htmlFor="edit-dogCategory" className="block text-sm font-medium mb-1">
-                  분류 <span className="text-red-600">*</span>
+                  분류 <span className="text-error-600">*</span>
                 </label>
                 <select
                   id="edit-dogCategory"
@@ -221,7 +221,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   onChange={handleChange}
                   aria-required="true"
                   aria-invalid={!!errors.dogCategory}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 >
                   <option value="">선택하세요</option>
                   {categories.map(category => (
@@ -231,13 +231,13 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   ))}
                 </select>
                 {errors.dogCategory && (
-                  <p className="text-red-600 text-sm mt-1">{errors.dogCategory}</p>
+                  <p className="text-error-600 text-sm mt-1">{errors.dogCategory}</p>
                 )}
               </div>
 
               <div>
                 <label htmlFor="edit-dogName" className="block text-sm font-medium mb-1">
-                  견명 <span className="text-red-600">*</span>
+                  견명 <span className="text-error-600">*</span>
                 </label>
                 <input
                   type="text"
@@ -247,16 +247,16 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   onChange={handleChange}
                   aria-required="true"
                   aria-invalid={!!errors.dogName}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
                 {errors.dogName && (
-                  <p className="text-red-600 text-sm mt-1">{errors.dogName}</p>
+                  <p className="text-error-600 text-sm mt-1">{errors.dogName}</p>
                 )}
               </div>
 
               <div>
                 <label htmlFor="edit-dogBirthDate" className="block text-sm font-medium mb-1">
-                  생년월일 <span className="text-red-600">*</span>
+                  생년월일 <span className="text-error-600">*</span>
                 </label>
                 <input
                   type="date"
@@ -265,13 +265,13 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   value={formData.dogBirthDate}
                   onChange={handleChange}
                   aria-required="true"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
               <div>
                 <label htmlFor="edit-dogGender" className="block text-sm font-medium mb-1">
-                  성별 <span className="text-red-600">*</span>
+                  성별 <span className="text-error-600">*</span>
                 </label>
                 <select
                   id="edit-dogGender"
@@ -279,7 +279,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   value={formData.dogGender}
                   onChange={handleChange}
                   aria-required="true"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 >
                   <option value="">선택하세요</option>
                   <option value="수컷">수컷</option>
@@ -296,7 +296,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   id="edit-dogPhoto"
                   accept="image/*"
                   onChange={(e) => handlePhotoUpload(e, 'dog')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
                 {formData.dogPhoto && (
                   <img
@@ -311,8 +311,8 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
 
           {/* 퍼피티칭 카테고리일 때만 표시 */}
           {formData.dogCategory === '퍼피티칭' && (
-            <fieldset className="mb-8 border border-blue-300 p-4 rounded bg-blue-50">
-              <legend className="text-xl font-semibold px-2 text-blue-900">퍼피티칭 정보</legend>
+            <fieldset className="mb-8 border border-primary-300 p-4 rounded bg-primary-50">
+              <legend className="text-xl font-semibold px-2 text-primary-900">퍼피티칭 정보</legend>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
                   <label htmlFor="edit-puppyTeacherName" className="block text-sm font-medium mb-1">
@@ -324,7 +324,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     name="puppyTeacherName"
                     value={formData.puppyTeacherName}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -339,7 +339,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     value={formData.puppyTeacherPhone}
                     onChange={handleChange}
                     placeholder="010-1234-5678"
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -353,7 +353,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     name="puppyTeacherAddress"
                     value={formData.puppyTeacherAddress}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -375,7 +375,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     name="parentCaregiverName"
                     value={formData.parentCaregiverName}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -390,7 +390,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     value={formData.parentCaregiverPhone}
                     onChange={handleChange}
                     placeholder="010-1234-5678"
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -404,7 +404,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     name="parentCaregiverAddress"
                     value={formData.parentCaregiverAddress}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -413,8 +413,8 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
 
           {/* 은퇴견 카테고리일 때만 표시 */}
           {formData.dogCategory === '은퇴견' && (
-            <fieldset className="mb-8 border border-green-300 p-4 rounded bg-green-50">
-              <legend className="text-xl font-semibold px-2 text-green-900">은퇴견 홈케어 정보</legend>
+            <fieldset className="mb-8 border border-success-300 p-4 rounded bg-success-50">
+              <legend className="text-xl font-semibold px-2 text-success-900">은퇴견 홈케어 정보</legend>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
                   <label htmlFor="edit-retiredHomeCareName" className="block text-sm font-medium mb-1">
@@ -426,7 +426,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     name="retiredHomeCareName"
                     value={formData.retiredHomeCareName}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -441,7 +441,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     value={formData.retiredHomeCarePhone}
                     onChange={handleChange}
                     placeholder="010-1234-5678"
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
 
@@ -455,7 +455,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     name="retiredHomeCareAddress"
                     value={formData.retiredHomeCareAddress}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -464,8 +464,8 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
 
           {/* 안내견 카테고리일 때만: 파트너 정보 */}
           {formData.dogCategory === '안내견' && (
-          <fieldset className="mb-8 border border-orange-300 p-4 rounded bg-orange-50">
-            <legend className="text-xl font-semibold px-2 text-orange-900">파트너 정보</legend>
+          <fieldset className="mb-8 border border-warning-300 p-4 rounded bg-warning-50">
+            <legend className="text-xl font-semibold px-2 text-warning-900">파트너 정보</legend>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div>
@@ -478,7 +478,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   name="partnerName"
                   value={formData.partnerName}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -493,7 +493,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="010-1234-5678"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -507,7 +507,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -520,7 +520,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                   id="edit-partnerPhoto"
                   accept="image/*"
                   onChange={(e) => handlePhotoUpload(e, 'partner')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
                 {formData.partnerPhoto && (
                   <img
@@ -539,13 +539,13 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
             <button
               type="button"
               onClick={() => onClose(false)}
-              className="px-6 py-3 bg-gray-500 text-white font-semibold rounded hover:bg-gray-600 focus:ring-4 focus:ring-gray-300"
+              className="px-6 py-3 bg-neutral-500 text-white font-semibold rounded hover:bg-neutral-600 focus:ring-4 focus:ring-neutral-300"
             >
               취소
             </button>
             <button
               type="submit"
-              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+              className="px-6 py-3 bg-primary-600 text-white font-semibold rounded hover:bg-primary-700 focus:ring-4 focus:ring-primary-300"
             >
               저장
             </button>

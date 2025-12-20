@@ -215,7 +215,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
         <div
           role="alert"
           aria-live="polite"
-          className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded"
+          className="mb-4 p-4 bg-success-100 border border-success-400 text-success-700 rounded"
         >
           데이터가 성공적으로 저장되었습니다.
         </div>
@@ -225,7 +225,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
         <div
           role="alert"
           aria-live="assertive"
-          className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded"
+          className="mb-4 p-4 bg-error-100 border border-error-400 text-error-700 rounded"
         >
           <p className="font-bold mb-2">입력 오류가 있습니다:</p>
           <ul className="list-disc list-inside">
@@ -238,14 +238,14 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
 
       <form onSubmit={handleSubmit} noValidate>
         {/* 안내견 기본 정보 */}
-        <fieldset className="mb-8 border border-gray-300 p-4 rounded">
+        <fieldset className="mb-8 border border-neutral-300 p-4 rounded">
           <legend className="text-xl font-semibold px-2">안내견 기본 정보</legend>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             {/* 분류 */}
             <div>
               <label htmlFor="dogCategory" className="block text-sm font-medium mb-1">
-                분류 <span className="text-red-600" aria-label="필수">*</span>
+                분류 <span className="text-error-600" aria-label="필수">*</span>
               </label>
               <select
                 id="dogCategory"
@@ -255,7 +255,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 aria-required="true"
                 aria-invalid={!!errors.dogCategory}
                 aria-describedby={errors.dogCategory ? 'dogCategory-error' : undefined}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">선택하세요</option>
                 {dogCategories.map(category => (
@@ -265,7 +265,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 ))}
               </select>
               {errors.dogCategory && (
-                <p id="dogCategory-error" className="text-red-600 text-sm mt-1" role="alert">
+                <p id="dogCategory-error" className="text-error-600 text-sm mt-1" role="alert">
                   {errors.dogCategory}
                 </p>
               )}
@@ -274,7 +274,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
             {/* 견명 */}
             <div>
               <label htmlFor="dogName" className="block text-sm font-medium mb-1">
-                견명 <span className="text-red-600" aria-label="필수">*</span>
+                견명 <span className="text-error-600" aria-label="필수">*</span>
               </label>
               <input
                 type="text"
@@ -285,10 +285,10 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 aria-required="true"
                 aria-invalid={!!errors.dogName}
                 aria-describedby={errors.dogName ? 'dogName-error' : undefined}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               />
               {errors.dogName && (
-                <p id="dogName-error" className="text-red-600 text-sm mt-1" role="alert">
+                <p id="dogName-error" className="text-error-600 text-sm mt-1" role="alert">
                   {errors.dogName}
                 </p>
               )}
@@ -297,7 +297,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
             {/* 생년월일 */}
             <div>
               <label htmlFor="dogBirthDate" className="block text-sm font-medium mb-1">
-                생년월일 <span className="text-red-600" aria-label="필수">*</span>
+                생년월일 <span className="text-error-600" aria-label="필수">*</span>
               </label>
               <input
                 type="date"
@@ -308,10 +308,10 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 aria-required="true"
                 aria-invalid={!!errors.dogBirthDate}
                 aria-describedby={errors.dogBirthDate ? 'dogBirthDate-error' : undefined}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               />
               {errors.dogBirthDate && (
-                <p id="dogBirthDate-error" className="text-red-600 text-sm mt-1" role="alert">
+                <p id="dogBirthDate-error" className="text-error-600 text-sm mt-1" role="alert">
                   {errors.dogBirthDate}
                 </p>
               )}
@@ -329,14 +329,14 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 onChange={handleChange}
                 aria-invalid={!!errors.dogGender}
                 aria-describedby={errors.dogGender ? 'dogGender-error' : undefined}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">선택하세요 (기본값: 수컷)</option>
                 <option value="수컷">수컷</option>
                 <option value="암컷">암컷</option>
               </select>
               {errors.dogGender && (
-                <p id="dogGender-error" className="text-red-600 text-sm mt-1" role="alert">
+                <p id="dogGender-error" className="text-error-600 text-sm mt-1" role="alert">
                   {errors.dogGender}
                 </p>
               )}
@@ -354,7 +354,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 value={formData.dogPhoto}
                 onChange={handleChange}
                 placeholder="https://example.com/photo.jpg"
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               />
             </div>
           </div>
@@ -362,8 +362,8 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
 
         {/* 퍼피티칭 카테고리일 때만 표시 */}
         {formData.dogCategory === '퍼피티칭' && (
-          <fieldset className="mb-8 border border-blue-300 p-4 rounded bg-blue-50">
-            <legend className="text-xl font-semibold px-2 text-blue-900">퍼피티칭 정보</legend>
+          <fieldset className="mb-8 border border-primary-300 p-4 rounded bg-primary-50">
+            <legend className="text-xl font-semibold px-2 text-primary-900">퍼피티칭 정보</legend>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div>
                 <label htmlFor="puppyTeacherName" className="block text-sm font-medium mb-1">
@@ -375,7 +375,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   name="puppyTeacherName"
                   value={formData.puppyTeacherName}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -390,7 +390,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   value={formData.puppyTeacherPhone}
                   onChange={handleChange}
                   placeholder="010-1234-5678"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -404,7 +404,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   name="puppyTeacherAddress"
                   value={formData.puppyTeacherAddress}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
@@ -413,8 +413,8 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
 
         {/* 은퇴견 카테고리일 때만 표시 */}
         {formData.dogCategory === '은퇴견' && (
-          <fieldset className="mb-8 border border-green-300 p-4 rounded bg-green-50">
-            <legend className="text-xl font-semibold px-2 text-green-900">은퇴견 홈케어 정보</legend>
+          <fieldset className="mb-8 border border-success-300 p-4 rounded bg-success-50">
+            <legend className="text-xl font-semibold px-2 text-success-900">은퇴견 홈케어 정보</legend>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div>
                 <label htmlFor="retiredHomeCareName" className="block text-sm font-medium mb-1">
@@ -426,7 +426,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   name="retiredHomeCareName"
                   value={formData.retiredHomeCareName}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -441,7 +441,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   value={formData.retiredHomeCarePhone}
                   onChange={handleChange}
                   placeholder="010-1234-5678"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -455,7 +455,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   name="retiredHomeCareAddress"
                   value={formData.retiredHomeCareAddress}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
@@ -477,7 +477,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   name="parentCaregiverName"
                   value={formData.parentCaregiverName}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -492,7 +492,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   value={formData.parentCaregiverPhone}
                   onChange={handleChange}
                   placeholder="010-1234-5678"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
 
@@ -506,7 +506,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   name="parentCaregiverAddress"
                   value={formData.parentCaregiverAddress}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
@@ -515,8 +515,8 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
 
         {/* 안내견 카테고리일 때만: 파트너 정보 */}
         {formData.dogCategory === '안내견' && (
-        <fieldset className="mb-8 border border-orange-300 p-4 rounded bg-orange-50">
-          <legend className="text-xl font-semibold px-2 text-orange-900">파트너 정보</legend>
+        <fieldset className="mb-8 border border-warning-300 p-4 rounded bg-warning-50">
+          <legend className="text-xl font-semibold px-2 text-warning-900">파트너 정보</legend>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             {/* 파트너 성명 */}
@@ -530,7 +530,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 name="partnerName"
                 value={formData.partnerName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               />
             </div>
 
@@ -546,7 +546,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="010-1234-5678"
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               />
             </div>
 
@@ -561,7 +561,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               />
             </div>
 
@@ -577,7 +577,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 value={formData.partnerPhoto}
                 onChange={handleChange}
                 placeholder="https://example.com/photo.jpg"
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               />
             </div>
           </div>
@@ -588,7 +588,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+            className="px-6 py-3 bg-primary-600 text-white font-semibold rounded hover:bg-primary-700 focus:ring-4 focus:ring-primary-300"
             aria-label="데이터 저장"
           >
             저장

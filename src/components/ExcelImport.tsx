@@ -378,7 +378,7 @@ export const ExcelImport = ({ onSuccess }: { onSuccess: () => void }) => {
       <h3 className="text-xl font-bold mb-4">엑셀 일괄 등록</h3>
 
       {/* 템플릿 다운로드 안내 */}
-      <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded">
+      <div className="mb-6 p-4 bg-success-50 border border-success-200 rounded">
         <h4 className="font-semibold mb-2 text-green-800">템플릿 다운로드</h4>
         <p className="text-sm mb-3">
           아래 버튼을 클릭하여 <strong>엑셀 템플릿 파일</strong>을 다운로드하세요.
@@ -419,7 +419,7 @@ export const ExcelImport = ({ onSuccess }: { onSuccess: () => void }) => {
           id="excelFile"
           accept=".xlsx,.xls"
           onChange={handleFileChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
         />
       </div>
 
@@ -435,22 +435,22 @@ export const ExcelImport = ({ onSuccess }: { onSuccess: () => void }) => {
         <div className="mb-6">
           <h4 className="font-semibold mb-2">데이터 미리보기 (처음 5개)</h4>
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300 text-sm">
+            <table className="w-full border-collapse border border-neutral-300 text-sm">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-2 py-1">분류</th>
-                  <th className="border border-gray-300 px-2 py-1">견명</th>
-                  <th className="border border-gray-300 px-2 py-1">파트너명</th>
-                  <th className="border border-gray-300 px-2 py-1">연락처</th>
+                <tr className="bg-neutral-100">
+                  <th className="border border-neutral-300 px-2 py-1">분류</th>
+                  <th className="border border-neutral-300 px-2 py-1">견명</th>
+                  <th className="border border-neutral-300 px-2 py-1">파트너명</th>
+                  <th className="border border-neutral-300 px-2 py-1">연락처</th>
                 </tr>
               </thead>
               <tbody>
                 {preview.map((row, index) => (
                   <tr key={index}>
-                    <td className="border border-gray-300 px-2 py-1">{row.분류}</td>
-                    <td className="border border-gray-300 px-2 py-1">{row['견명*'] || row.견명}</td>
-                    <td className="border border-gray-300 px-2 py-1">{row['파트너 이름*'] || row['파트너 이름']}</td>
-                    <td className="border border-gray-300 px-2 py-1">{row['파트너 연락처*'] || row['파트너 연락처']}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row.분류}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row['견명*'] || row.견명}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row['파트너 이름*'] || row['파트너 이름']}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row['파트너 연락처*'] || row['파트너 연락처']}</td>
                   </tr>
                 ))}
               </tbody>
@@ -464,7 +464,7 @@ export const ExcelImport = ({ onSuccess }: { onSuccess: () => void }) => {
         <button
           onClick={handleImport}
           disabled={!file || importing}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 disabled:bg-gray-300 disabled:cursor-not-allowed font-semibold"
+          className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-blue-300 disabled:bg-gray-300 disabled:cursor-not-allowed font-semibold"
         >
           {importing ? '등록 중...' : '등록하기'}
         </button>

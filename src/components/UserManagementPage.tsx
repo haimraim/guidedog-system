@@ -486,7 +486,7 @@ export const UserManagementPage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-500">관리자만 접근할 수 있습니다.</p>
+          <p className="text-neutral-500">관리자만 접근할 수 있습니다.</p>
         </div>
       </div>
     );
@@ -497,13 +497,13 @@ export const UserManagementPage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
             담당자 정보 수정 ({editingPartner.category})
           </h2>
 
           <form onSubmit={handleSubmitPartner} className="space-y-6">
             <div>
-              <label htmlFor="partnerName" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="partnerName" className="block text-sm font-semibold text-neutral-700 mb-2">
                 이름 *
               </label>
               <input
@@ -511,14 +511,14 @@ export const UserManagementPage = () => {
                 id="partnerName"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="담당자 이름"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="partnerPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="partnerPassword" className="block text-sm font-semibold text-neutral-700 mb-2">
                 비밀번호 *
               </label>
               <input
@@ -526,14 +526,14 @@ export const UserManagementPage = () => {
                 id="partnerPassword"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="비밀번호"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="partnerPhone" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="partnerPhone" className="block text-sm font-semibold text-neutral-700 mb-2">
                 연락처
               </label>
               <input
@@ -541,27 +541,27 @@ export const UserManagementPage = () => {
                 id="partnerPhone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="연락처"
               />
             </div>
 
             <div>
-              <label htmlFor="partnerAddress" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="partnerAddress" className="block text-sm font-semibold text-neutral-700 mb-2">
                 주소
               </label>
               <textarea
                 id="partnerAddress"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="주소"
                 rows={3}
               />
             </div>
 
             <div>
-              <label htmlFor="partnerDogName" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="partnerDogName" className="block text-sm font-semibold text-neutral-700 mb-2">
                 담당 안내견
               </label>
               <input
@@ -569,10 +569,10 @@ export const UserManagementPage = () => {
                 id="partnerDogName"
                 value={dogName}
                 disabled
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg bg-neutral-100 text-neutral-600 cursor-not-allowed"
                 placeholder="안내견 관리에서 연결된 안내견"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-neutral-500 mt-1">
                 * 안내견 정보는 안내견 관리 메뉴에서 수정할 수 있습니다
               </p>
             </div>
@@ -580,14 +580,14 @@ export const UserManagementPage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 수정 완료
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 취소
               </button>
@@ -603,7 +603,7 @@ export const UserManagementPage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
             {editingUser ? '회원 정보 수정' : '회원 등록'}
           </h2>
 
@@ -611,7 +611,7 @@ export const UserManagementPage = () => {
             <div>
               <label
                 htmlFor="userId"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 아이디 *
               </label>
@@ -620,13 +620,13 @@ export const UserManagementPage = () => {
                 id="userId"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="로그인 아이디"
                 required
                 disabled={!!editingUser}
               />
               {editingUser && (
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-neutral-500 mt-1">
                   아이디는 수정할 수 없습니다.
                 </p>
               )}
@@ -635,7 +635,7 @@ export const UserManagementPage = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 비밀번호 *
               </label>
@@ -644,7 +644,7 @@ export const UserManagementPage = () => {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="비밀번호"
                 required
               />
@@ -653,7 +653,7 @@ export const UserManagementPage = () => {
             <div>
               <label
                 htmlFor="role"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 권한 *
               </label>
@@ -661,7 +661,7 @@ export const UserManagementPage = () => {
                 id="role"
                 value={role}
                 onChange={(e) => setRole(e.target.value as UserRole)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 required
               >
                 <option value="admin">관리자</option>
@@ -676,7 +676,7 @@ export const UserManagementPage = () => {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 이름 *
               </label>
@@ -685,7 +685,7 @@ export const UserManagementPage = () => {
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="사용자 이름"
                 required
               />
@@ -694,7 +694,7 @@ export const UserManagementPage = () => {
             <div>
               <label
                 htmlFor="dogName"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 안내견 이름
               </label>
@@ -703,7 +703,7 @@ export const UserManagementPage = () => {
                 id="dogName"
                 value={dogName}
                 onChange={(e) => setDogName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="담당 안내견 이름 (선택사항)"
               />
             </div>
@@ -711,14 +711,14 @@ export const UserManagementPage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 {editingUser ? '수정 완료' : '등록 완료'}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 취소
               </button>
@@ -733,18 +733,18 @@ export const UserManagementPage = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">회원 관리</h2>
+        <h2 className="text-2xl font-bold text-neutral-800">회원 관리</h2>
         {activeTab === 'users' && (
           <div className="flex gap-3">
             <button
               onClick={initializeSampleUsers}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              className="bg-success-600 hover:bg-success-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
             >
               📝 샘플 데이터 추가
             </button>
             <button
               onClick={() => setIsEditing(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
             >
               회원 등록
             </button>
@@ -754,13 +754,13 @@ export const UserManagementPage = () => {
 
       {/* 탭 메뉴 */}
       <div className="bg-white rounded-lg shadow-md mb-6">
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-neutral-200">
           <button
             onClick={() => setActiveTab('firebase')}
             className={`flex-1 px-6 py-4 font-semibold transition-colors ${
               activeTab === 'firebase'
-                ? 'bg-green-600 text-white border-b-2 border-green-600'
-                : 'text-gray-700 hover:bg-gray-50'
+                ? 'bg-success-600 text-white border-b-2 border-success-600'
+                : 'text-neutral-700 hover:bg-neutral-50'
             }`}
           >
             🔐 Firebase 가입 회원 ({firebaseUsers.length})
@@ -769,8 +769,8 @@ export const UserManagementPage = () => {
             onClick={() => setActiveTab('users')}
             className={`flex-1 px-6 py-4 font-semibold transition-colors ${
               activeTab === 'users'
-                ? 'bg-blue-600 text-white border-b-2 border-blue-600'
-                : 'text-gray-700 hover:bg-gray-50'
+                ? 'bg-primary-600 text-white border-b-2 border-primary-600'
+                : 'text-neutral-700 hover:bg-neutral-50'
             }`}
           >
             시스템 회원 ({users.length})
@@ -779,8 +779,8 @@ export const UserManagementPage = () => {
             onClick={() => setActiveTab('partners')}
             className={`flex-1 px-6 py-4 font-semibold transition-colors ${
               activeTab === 'partners'
-                ? 'bg-purple-600 text-white border-b-2 border-purple-600'
-                : 'text-gray-700 hover:bg-gray-50'
+                ? 'bg-primary-600 text-white border-b-2 border-purple-600'
+                : 'text-neutral-700 hover:bg-neutral-50'
             }`}
           >
             안내견 담당자 ({partners.length})
@@ -793,57 +793,57 @@ export const UserManagementPage = () => {
         <>
           {firebaseUsers.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <p className="text-gray-500">Firebase로 가입한 회원이 없습니다.</p>
-              <p className="text-sm text-gray-400 mt-2">
+              <p className="text-neutral-500">Firebase로 가입한 회원이 없습니다.</p>
+              <p className="text-sm text-neutral-400 mt-2">
                 회원가입 페이지에서 가입하면 여기에 표시됩니다.
               </p>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="bg-green-50 border-b border-green-200 px-6 py-3">
-                <p className="text-sm text-green-800">
+              <div className="bg-success-50 border-b border-success-200 px-6 py-3">
+                <p className="text-sm text-success-800">
                   🔐 Firebase Authentication으로 가입한 사용자 목록입니다.
                 </p>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-neutral-50 border-b border-neutral-200">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         이메일
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         이름
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         권한
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         안내견 이름
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         Firebase UID
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     {firebaseUsers.map((user) => (
-                      <tr key={user.firebaseUid} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm text-gray-800 font-semibold">
+                      <tr key={user.firebaseUid} className="hover:bg-neutral-50">
+                        <td className="px-6 py-4 text-sm text-neutral-800 font-semibold">
                           {user.id}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-800">
+                        <td className="px-6 py-4 text-sm text-neutral-800">
                           {user.name}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-800">
-                          <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
+                        <td className="px-6 py-4 text-sm text-neutral-800">
+                          <span className="px-3 py-1 bg-success-100 text-success-800 rounded-full text-xs font-semibold">
                             {getRoleName(user.role)}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
+                        <td className="px-6 py-4 text-sm text-neutral-600">
                           {user.dogName || '-'}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-400 font-mono text-xs">
+                        <td className="px-6 py-4 text-sm text-neutral-400 font-mono text-xs">
                           {user.firebaseUid?.substring(0, 8)}...
                         </td>
                       </tr>
@@ -861,10 +861,10 @@ export const UserManagementPage = () => {
         <>
           {users.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <p className="text-gray-500">등록된 회원이 없습니다.</p>
+              <p className="text-neutral-500">등록된 회원이 없습니다.</p>
               <button
                 onClick={() => setIsEditing(true)}
-                className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+                className="mt-4 text-primary-600 hover:text-primary-800 font-semibold"
               >
                 첫 회원 등록하기
               </button>
@@ -873,24 +873,24 @@ export const UserManagementPage = () => {
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-neutral-50 border-b border-neutral-200">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         아이디
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         이름
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         권한
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         안내견 이름
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">
                         등록일
                       </th>
-                      <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">
+                      <th className="px-6 py-4 text-center text-sm font-semibold text-neutral-700">
                         관리
                       </th>
                     </tr>
@@ -899,42 +899,42 @@ export const UserManagementPage = () => {
                     {users.map((user) => {
                       const isSystemAccount = user.id === 'guidedog' || user.id === '박태진';
                       return (
-                        <tr key={user.id} className={`hover:bg-gray-50 ${isSystemAccount ? 'bg-yellow-50' : ''}`}>
-                          <td className="px-6 py-4 text-sm text-gray-800">
+                        <tr key={user.id} className={`hover:bg-neutral-50 ${isSystemAccount ? 'bg-warning-50' : ''}`}>
+                          <td className="px-6 py-4 text-sm text-neutral-800">
                             {user.id}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-800">
+                          <td className="px-6 py-4 text-sm text-neutral-800">
                             {user.name}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-800">
+                          <td className="px-6 py-4 text-sm text-neutral-800">
                             <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                               isSystemAccount
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-blue-100 text-blue-800'
+                                ? 'bg-warning-100 text-warning-800'
+                                : 'bg-primary-100 text-primary-800'
                             }`}>
                               {getRoleName(user.role)}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-600">
+                          <td className="px-6 py-4 text-sm text-neutral-600">
                             {user.dogName || '-'}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-600">
+                          <td className="px-6 py-4 text-sm text-neutral-600">
                             {formatDate(user.createdAt)}
                           </td>
                           <td className="px-6 py-4 text-center">
                             {isSystemAccount ? (
-                              <span className="text-xs text-yellow-600 font-semibold">시스템 계정</span>
+                              <span className="text-xs text-warning-600 font-semibold">시스템 계정</span>
                             ) : (
                               <div className="flex justify-center space-x-2">
                                 <button
                                   onClick={() => handleEdit(user)}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   수정
                                 </button>
                                 <button
                                   onClick={() => handleDelete(user.id)}
-                                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-error-600 hover:bg-error-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   삭제
                                 </button>
@@ -957,8 +957,8 @@ export const UserManagementPage = () => {
         <>
           {partners.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <p className="text-gray-500">등록된 담당자가 없습니다.</p>
-              <p className="text-sm text-gray-400 mt-2">
+              <p className="text-neutral-500">등록된 담당자가 없습니다.</p>
+              <p className="text-sm text-neutral-400 mt-2">
                 안내견 관리 메뉴에서 담당자를 등록하면 여기에 표시됩니다.
               </p>
             </div>
@@ -967,30 +967,30 @@ export const UserManagementPage = () => {
               {/* 퍼피티처 */}
               {partners.filter(p => p.category === '퍼피티처').length > 0 && (
                 <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="bg-purple-600 text-white px-6 py-3">
+                  <div className="bg-primary-600 text-white px-6 py-3">
                     <h3 className="text-lg font-bold">퍼피티처 ({partners.filter(p => p.category === '퍼피티처').length})</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full">
-                      <thead className="bg-gray-50 border-b border-gray-200">
+                      <thead className="bg-neutral-50 border-b border-neutral-200">
                         <tr>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">이름</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">비밀번호</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">연락처</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">주소</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">담당 안내견</th>
-                          <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">관리</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">이름</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">비밀번호</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">연락처</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">주소</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">담당 안내견</th>
+                          <th className="px-6 py-4 text-center text-sm font-semibold text-neutral-700">관리</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200">
                         {partners.filter(p => p.category === '퍼피티처').map((partner) => (
-                          <tr key={partner.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 text-sm text-gray-800 font-semibold">{partner.name}</td>
-                            <td className="px-6 py-4 text-sm text-gray-800 font-mono">{partner.password}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{partner.phone || '-'}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{partner.address || '-'}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">
-                              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
+                          <tr key={partner.id} className="hover:bg-neutral-50">
+                            <td className="px-6 py-4 text-sm text-neutral-800 font-semibold">{partner.name}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-800 font-mono">{partner.password}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">{partner.phone || '-'}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">{partner.address || '-'}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">
+                              <span className="px-3 py-1 bg-success-100 text-success-800 rounded-full text-xs font-semibold">
                                 {partner.dogName}
                               </span>
                             </td>
@@ -998,13 +998,13 @@ export const UserManagementPage = () => {
                               <div className="flex justify-center space-x-2">
                                 <button
                                   onClick={() => handleEditPartner(partner)}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   수정
                                 </button>
                                 <button
                                   onClick={() => handleDeletePartner(partner.id)}
-                                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-error-600 hover:bg-error-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   삭제
                                 </button>
@@ -1021,30 +1021,30 @@ export const UserManagementPage = () => {
               {/* 안내견 파트너 */}
               {partners.filter(p => p.category === '안내견파트너').length > 0 && (
                 <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="bg-blue-600 text-white px-6 py-3">
+                  <div className="bg-primary-600 text-white px-6 py-3">
                     <h3 className="text-lg font-bold">안내견 파트너 ({partners.filter(p => p.category === '안내견파트너').length})</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full">
-                      <thead className="bg-gray-50 border-b border-gray-200">
+                      <thead className="bg-neutral-50 border-b border-neutral-200">
                         <tr>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">이름</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">비밀번호</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">연락처</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">주소</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">담당 안내견</th>
-                          <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">관리</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">이름</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">비밀번호</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">연락처</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">주소</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">담당 안내견</th>
+                          <th className="px-6 py-4 text-center text-sm font-semibold text-neutral-700">관리</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200">
                         {partners.filter(p => p.category === '안내견파트너').map((partner) => (
-                          <tr key={partner.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 text-sm text-gray-800 font-semibold">{partner.name}</td>
-                            <td className="px-6 py-4 text-sm text-gray-800 font-mono">{partner.password}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{partner.phone || '-'}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{partner.address || '-'}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">
-                              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
+                          <tr key={partner.id} className="hover:bg-neutral-50">
+                            <td className="px-6 py-4 text-sm text-neutral-800 font-semibold">{partner.name}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-800 font-mono">{partner.password}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">{partner.phone || '-'}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">{partner.address || '-'}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">
+                              <span className="px-3 py-1 bg-success-100 text-success-800 rounded-full text-xs font-semibold">
                                 {partner.dogName}
                               </span>
                             </td>
@@ -1052,13 +1052,13 @@ export const UserManagementPage = () => {
                               <div className="flex justify-center space-x-2">
                                 <button
                                   onClick={() => handleEditPartner(partner)}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   수정
                                 </button>
                                 <button
                                   onClick={() => handleDeletePartner(partner.id)}
-                                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-error-600 hover:bg-error-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   삭제
                                 </button>
@@ -1075,30 +1075,30 @@ export const UserManagementPage = () => {
               {/* 은퇴견홈케어 */}
               {partners.filter(p => p.category === '은퇴견홈케어').length > 0 && (
                 <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="bg-orange-600 text-white px-6 py-3">
+                  <div className="bg-warning-600 text-white px-6 py-3">
                     <h3 className="text-lg font-bold">은퇴견홈케어 ({partners.filter(p => p.category === '은퇴견홈케어').length})</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full">
-                      <thead className="bg-gray-50 border-b border-gray-200">
+                      <thead className="bg-neutral-50 border-b border-neutral-200">
                         <tr>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">이름</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">비밀번호</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">연락처</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">주소</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">담당 안내견</th>
-                          <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">관리</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">이름</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">비밀번호</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">연락처</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">주소</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">담당 안내견</th>
+                          <th className="px-6 py-4 text-center text-sm font-semibold text-neutral-700">관리</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200">
                         {partners.filter(p => p.category === '은퇴견홈케어').map((partner) => (
-                          <tr key={partner.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 text-sm text-gray-800 font-semibold">{partner.name}</td>
-                            <td className="px-6 py-4 text-sm text-gray-800 font-mono">{partner.password}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{partner.phone || '-'}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{partner.address || '-'}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">
-                              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
+                          <tr key={partner.id} className="hover:bg-neutral-50">
+                            <td className="px-6 py-4 text-sm text-neutral-800 font-semibold">{partner.name}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-800 font-mono">{partner.password}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">{partner.phone || '-'}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">{partner.address || '-'}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">
+                              <span className="px-3 py-1 bg-success-100 text-success-800 rounded-full text-xs font-semibold">
                                 {partner.dogName}
                               </span>
                             </td>
@@ -1106,13 +1106,13 @@ export const UserManagementPage = () => {
                               <div className="flex justify-center space-x-2">
                                 <button
                                   onClick={() => handleEditPartner(partner)}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   수정
                                 </button>
                                 <button
                                   onClick={() => handleDeletePartner(partner.id)}
-                                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-error-600 hover:bg-error-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   삭제
                                 </button>
@@ -1129,30 +1129,30 @@ export const UserManagementPage = () => {
               {/* 부모견홈케어 */}
               {partners.filter(p => p.category === '부모견홈케어').length > 0 && (
                 <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="bg-green-600 text-white px-6 py-3">
+                  <div className="bg-success-600 text-white px-6 py-3">
                     <h3 className="text-lg font-bold">부모견홈케어 ({partners.filter(p => p.category === '부모견홈케어').length})</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full">
-                      <thead className="bg-gray-50 border-b border-gray-200">
+                      <thead className="bg-neutral-50 border-b border-neutral-200">
                         <tr>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">이름</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">비밀번호</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">연락처</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">주소</th>
-                          <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">담당 안내견</th>
-                          <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">관리</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">이름</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">비밀번호</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">연락처</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">주소</th>
+                          <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">담당 안내견</th>
+                          <th className="px-6 py-4 text-center text-sm font-semibold text-neutral-700">관리</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200">
                         {partners.filter(p => p.category === '부모견홈케어').map((partner) => (
-                          <tr key={partner.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 text-sm text-gray-800 font-semibold">{partner.name}</td>
-                            <td className="px-6 py-4 text-sm text-gray-800 font-mono">{partner.password}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{partner.phone || '-'}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{partner.address || '-'}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">
-                              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
+                          <tr key={partner.id} className="hover:bg-neutral-50">
+                            <td className="px-6 py-4 text-sm text-neutral-800 font-semibold">{partner.name}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-800 font-mono">{partner.password}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">{partner.phone || '-'}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">{partner.address || '-'}</td>
+                            <td className="px-6 py-4 text-sm text-neutral-600">
+                              <span className="px-3 py-1 bg-success-100 text-success-800 rounded-full text-xs font-semibold">
                                 {partner.dogName}
                               </span>
                             </td>
@@ -1160,13 +1160,13 @@ export const UserManagementPage = () => {
                               <div className="flex justify-center space-x-2">
                                 <button
                                   onClick={() => handleEditPartner(partner)}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   수정
                                 </button>
                                 <button
                                   onClick={() => handleDeletePartner(partner.id)}
-                                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors text-sm"
+                                  className="bg-error-600 hover:bg-error-700 text-white px-3 py-1 rounded transition-colors text-sm"
                                 >
                                   삭제
                                 </button>
@@ -1180,8 +1180,8 @@ export const UserManagementPage = () => {
                 </div>
               )}
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-blue-800">
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+                <p className="text-sm text-primary-800">
                   💡 담당자 정보는 안내견 관리 메뉴의 데이터와 동기화됩니다.
                   담당 안내견 정보는 안내견 관리에서 수정할 수 있습니다.
                 </p>

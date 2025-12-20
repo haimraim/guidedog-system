@@ -256,21 +256,21 @@ export const MedicalRecordPage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
             {isEditing ? '진료 기록 수정' : '진료 기록 작성'}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* 카테고리 선택 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-neutral-700 mb-3">
                 카테고리 *
               </label>
               <div className="grid grid-cols-2 gap-4">
                 <label className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
                   category === '일반 진료'
-                    ? 'bg-blue-50 border-blue-500'
-                    : 'border-gray-300 hover:border-blue-300'
+                    ? 'bg-primary-50 border-blue-500'
+                    : 'border-neutral-300 hover:border-primary-300'
                 }`}>
                   <input
                     type="radio"
@@ -285,7 +285,7 @@ export const MedicalRecordPage = () => {
                 <label className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
                   category === '백신 접종'
                     ? 'bg-green-50 border-green-500'
-                    : 'border-gray-300 hover:border-green-300'
+                    : 'border-neutral-300 hover:border-green-300'
                 }`}>
                   <input
                     type="radio"
@@ -302,7 +302,7 @@ export const MedicalRecordPage = () => {
 
             {/* 날짜 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 {category === '일반 진료' ? '진료 날짜' : '접종 날짜'} *
               </label>
               {category === '백신 접종' && (
@@ -310,14 +310,14 @@ export const MedicalRecordPage = () => {
                   <button
                     type="button"
                     onClick={setTodayDate}
-                    className="px-4 py-3 bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold rounded-lg transition-colors border-2 border-blue-300"
+                    className="px-4 py-3 bg-primary-100 hover:bg-blue-200 text-primary-800 font-semibold rounded-lg transition-colors border-2 border-primary-300"
                   >
                     오늘
                   </button>
                   <button
                     type="button"
                     onClick={setYesterdayDate}
-                    className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-lg transition-colors border-2 border-gray-300"
+                    className="px-4 py-3 bg-neutral-100 hover:bg-gray-200 text-neutral-800 font-semibold rounded-lg transition-colors border-2 border-neutral-300"
                   >
                     어제
                   </button>
@@ -327,21 +327,21 @@ export const MedicalRecordPage = () => {
                 type="date"
                 value={visitDate}
                 onChange={(e) => setVisitDate(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                 required
               />
             </div>
 
             {/* 병원명 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 병원명 *
               </label>
               <input
                 type="text"
                 value={hospital}
                 onChange={(e) => setHospital(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                 placeholder="병원 이름을 입력하세요"
                 required
               />
@@ -351,40 +351,40 @@ export const MedicalRecordPage = () => {
             {category === '일반 진료' && (
               <>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     진단 내용 *
                   </label>
                   <textarea
                     value={diagnosis}
                     onChange={(e) => setDiagnosis(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                     rows={4}
                     placeholder="진단 내용을 입력하세요"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     치료 내용 *
                   </label>
                   <textarea
                     value={treatment}
                     onChange={(e) => setTreatment(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                     rows={4}
                     placeholder="치료 내용을 입력하세요"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     진료비 *
                   </label>
                   <input
                     type="number"
                     value={cost}
                     onChange={(e) => setCost(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                     placeholder="금액을 입력하세요"
                     required
                   />
@@ -396,7 +396,7 @@ export const MedicalRecordPage = () => {
             {category === '백신 접종' && (
               <>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-3">
                     접종한 백신 *
                   </label>
                   <div className="grid grid-cols-2 gap-3">
@@ -406,7 +406,7 @@ export const MedicalRecordPage = () => {
                         className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
                           selectedVaccines.includes(vaccine)
                             ? 'bg-green-50 border-green-500'
-                            : 'border-gray-300 hover:border-green-300'
+                            : 'border-neutral-300 hover:border-green-300'
                         }`}
                       >
                         <input
@@ -423,7 +423,7 @@ export const MedicalRecordPage = () => {
 
                 {/* 참고사항 */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     참고사항
                   </label>
                   <textarea
@@ -431,7 +431,7 @@ export const MedicalRecordPage = () => {
                     onChange={(e) => setNotes(e.target.value)}
                     rows={4}
                     placeholder="백신 접종과 관련된 추가 정보를 입력하세요"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none resize-none"
                   />
                 </div>
               </>
@@ -439,7 +439,7 @@ export const MedicalRecordPage = () => {
 
             {/* 영수증 사진 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 영수증 사진
               </label>
               <input
@@ -447,7 +447,7 @@ export const MedicalRecordPage = () => {
                 accept="image/*"
                 multiple
                 onChange={handlePhotoUpload}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
               />
               {receiptPhotos.length > 0 && (
                 <div className="mt-4 grid grid-cols-3 gap-4">
@@ -461,7 +461,7 @@ export const MedicalRecordPage = () => {
                       <button
                         type="button"
                         onClick={() => handleRemovePhoto(index)}
-                        className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700"
+                        className="absolute top-2 right-2 bg-error-600 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-error-700"
                       >
                         ×
                       </button>
@@ -474,14 +474,14 @@ export const MedicalRecordPage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 {isEditing ? '수정하기' : '저장하기'}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-neutral-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 취소
               </button>
@@ -500,7 +500,7 @@ export const MedicalRecordPage = () => {
           <div className="flex justify-between items-start mb-6">
             <button
               onClick={() => setViewingRecord(null)}
-              className="text-blue-600 hover:text-blue-800 font-semibold"
+              className="text-primary-600 hover:text-primary-800 font-semibold"
             >
               ← 목록으로
             </button>
@@ -508,13 +508,13 @@ export const MedicalRecordPage = () => {
               <div className="flex gap-3">
                 <button
                   onClick={() => handleEdit(viewingRecord)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   수정
                 </button>
                 <button
                   onClick={() => handleDelete(viewingRecord.id)}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="bg-error-600 hover:bg-error-700 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   삭제
                 </button>
@@ -525,37 +525,37 @@ export const MedicalRecordPage = () => {
           <div className="mb-4">
             <span className={`inline-block px-4 py-2 rounded-lg font-semibold ${
               viewingRecord.category === '일반 진료'
-                ? 'bg-blue-100 text-blue-800'
+                ? 'bg-primary-100 text-primary-800'
                 : 'bg-green-100 text-green-800'
             }`}>
               {viewingRecord.category}
             </span>
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          <h1 className="text-3xl font-bold text-neutral-800 mb-6">
             {viewingRecord.category === '일반 진료' ? '진료 기록' : '백신 접종 기록'}
           </h1>
 
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-600 mb-1">
+                <p className="text-sm text-neutral-600 mb-1">
                   {viewingRecord.category === '일반 진료' ? '진료 날짜' : '접종 날짜'}
                 </p>
                 <p className="text-lg font-semibold">{formatDate(viewingRecord.visitDate)}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">병원명</p>
+                <p className="text-sm text-neutral-600 mb-1">병원명</p>
                 <p className="text-lg font-semibold">{viewingRecord.hospital}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">안내견</p>
+                <p className="text-sm text-neutral-600 mb-1">안내견</p>
                 <p className="text-lg font-semibold">{viewingRecord.dogName}</p>
               </div>
               {viewingRecord.category === '일반 진료' && viewingRecord.cost !== undefined && (
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">진료비</p>
-                  <p className="text-lg font-semibold text-blue-600">
+                  <p className="text-sm text-neutral-600 mb-1">진료비</p>
+                  <p className="text-lg font-semibold text-primary-600">
                     {formatCurrency(viewingRecord.cost)}
                   </p>
                 </div>
@@ -566,16 +566,16 @@ export const MedicalRecordPage = () => {
               <>
                 {viewingRecord.diagnosis && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">진단 내용</p>
-                    <p className="text-gray-800 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+                    <p className="text-sm text-neutral-600 mb-2">진단 내용</p>
+                    <p className="text-neutral-800 whitespace-pre-wrap bg-neutral-50 p-4 rounded-lg">
                       {viewingRecord.diagnosis}
                     </p>
                   </div>
                 )}
                 {viewingRecord.treatment && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">치료 내용</p>
-                    <p className="text-gray-800 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+                    <p className="text-sm text-neutral-600 mb-2">치료 내용</p>
+                    <p className="text-neutral-800 whitespace-pre-wrap bg-neutral-50 p-4 rounded-lg">
                       {viewingRecord.treatment}
                     </p>
                   </div>
@@ -587,7 +587,7 @@ export const MedicalRecordPage = () => {
               <>
                 {viewingRecord.vaccines && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">접종한 백신</p>
+                    <p className="text-sm text-neutral-600 mb-2">접종한 백신</p>
                     <div className="flex flex-wrap gap-3">
                       {viewingRecord.vaccines.map((vaccine) => (
                         <span
@@ -602,8 +602,8 @@ export const MedicalRecordPage = () => {
                 )}
                 {viewingRecord.notes && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">참고사항</p>
-                    <p className="text-gray-800 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">
+                    <p className="text-sm text-neutral-600 mb-2">참고사항</p>
+                    <p className="text-neutral-800 whitespace-pre-wrap bg-neutral-50 p-4 rounded-lg">
                       {viewingRecord.notes}
                     </p>
                   </div>
@@ -613,7 +613,7 @@ export const MedicalRecordPage = () => {
 
             {viewingRecord.receiptPhotos.length > 0 && (
               <div>
-                <p className="text-sm text-gray-600 mb-2">영수증 사진</p>
+                <p className="text-sm text-neutral-600 mb-2">영수증 사진</p>
                 <div className="grid grid-cols-2 gap-4">
                   {viewingRecord.receiptPhotos.map((photo, index) => (
                     <img
@@ -639,17 +639,17 @@ export const MedicalRecordPage = () => {
 
     return (
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">진료 기록 관리 (관리자)</h2>
+        <h2 className="text-2xl font-bold text-neutral-800 mb-6">진료 기록 관리 (관리자)</h2>
 
         {/* 하위 메뉴 */}
         <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="flex border-b border-gray-200">
+          <div className="flex border-b border-neutral-200">
             <button
               onClick={() => setAdminView('general')}
               className={`flex-1 px-6 py-4 font-semibold transition-colors ${
                 adminView === 'general'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-primary-600 text-white'
+                  : 'text-neutral-700 hover:bg-neutral-100'
               }`}
             >
               일반 진료
@@ -658,8 +658,8 @@ export const MedicalRecordPage = () => {
               onClick={() => setAdminView('vaccine')}
               className={`flex-1 px-6 py-4 font-semibold transition-colors ${
                 adminView === 'vaccine'
-                  ? 'bg-green-600 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-success-600 text-white'
+                  : 'text-neutral-700 hover:bg-neutral-100'
               }`}
             >
               백신 접종
@@ -672,16 +672,16 @@ export const MedicalRecordPage = () => {
           <>
             {/* 필터 섹션 */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">필터</h3>
+              <h3 className="text-lg font-bold text-neutral-800 mb-4">필터</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     카테고리
                   </label>
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value as CategoryFilter)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
                   >
                     <option value="안내견">안내견</option>
                     <option value="퍼피">퍼피</option>
@@ -690,13 +690,13 @@ export const MedicalRecordPage = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     년도
                   </label>
                   <select
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(Number(e.target.value))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
                   >
                     {[2025, 2024, 2023, 2022, 2021].map(year => (
                       <option key={year} value={year}>{year}년</option>
@@ -708,7 +708,7 @@ export const MedicalRecordPage = () => {
 
             {/* 일반 진료 목록 */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
+              <h3 className="text-xl font-bold text-neutral-800 mb-4">
                 {selectedCategory} - {selectedYear}년 일반 진료 기록
               </h3>
               {(() => {
@@ -735,7 +735,7 @@ export const MedicalRecordPage = () => {
                 );
 
                 return sortedRecords.length === 0 ? (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-12 text-neutral-500">
                     진료 기록이 없습니다.
                   </div>
                 ) : (
@@ -743,20 +743,20 @@ export const MedicalRecordPage = () => {
                     {sortedRecords.map(record => (
                       <div
                         key={record.id}
-                        className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 transition-colors cursor-pointer"
+                        className="border border-neutral-200 rounded-lg p-6 hover:bg-neutral-50 transition-colors cursor-pointer"
                         onClick={() => setViewingRecord(record)}
                       >
                         <div className="flex justify-between items-start">
                           <div>
-                            <h4 className="text-lg font-bold text-gray-800">
+                            <h4 className="text-lg font-bold text-neutral-800">
                               {record.dogName} - {record.userName}
                             </h4>
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-sm text-neutral-600 mt-1">
                               {formatDate(record.visitDate)} | {record.hospital}
                             </p>
                           </div>
                           {record.cost !== undefined && (
-                            <span className="text-lg font-semibold text-blue-600">
+                            <span className="text-lg font-semibold text-primary-600">
                               {formatCurrency(record.cost)}
                             </span>
                           )}
@@ -775,16 +775,16 @@ export const MedicalRecordPage = () => {
           <>
             {/* 필터 섹션 */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">필터</h3>
+              <h3 className="text-lg font-bold text-neutral-800 mb-4">필터</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     카테고리
                   </label>
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value as CategoryFilter)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
                   >
                     <option value="안내견">안내견</option>
                     <option value="퍼피">퍼피</option>
@@ -793,13 +793,13 @@ export const MedicalRecordPage = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     년도
                   </label>
                   <select
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(Number(e.target.value))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
                   >
                     {[2025, 2024, 2023, 2022, 2021].map(year => (
                       <option key={year} value={year}>{year}년</option>
@@ -811,49 +811,49 @@ export const MedicalRecordPage = () => {
 
             {/* 백신 접종 현황 테이블 */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
+              <h3 className="text-xl font-bold text-neutral-800 mb-4">
                 {selectedCategory} - {selectedYear}년 백신 접종 현황
               </h3>
               {vaccineTableData.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-neutral-500">
                   해당 카테고리에 안내견이 없습니다.
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
+                      <tr className="bg-neutral-100">
+                        <th className="border border-neutral-300 px-4 py-3 text-left font-semibold text-neutral-800">
                           견명
                         </th>
-                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                        <th className="border border-neutral-300 px-4 py-3 text-center font-semibold text-neutral-800">
                           DHPPL
                         </th>
-                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                        <th className="border border-neutral-300 px-4 py-3 text-center font-semibold text-neutral-800">
                           광견병
                         </th>
-                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                        <th className="border border-neutral-300 px-4 py-3 text-center font-semibold text-neutral-800">
                           켄넬코프
                         </th>
-                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                        <th className="border border-neutral-300 px-4 py-3 text-center font-semibold text-neutral-800">
                           코로나
                         </th>
-                        <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                        <th className="border border-neutral-300 px-4 py-3 text-center font-semibold text-neutral-800">
                           인플루엔자
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {vaccineTableData.map((row) => (
-                        <tr key={row.dogName} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">
+                        <tr key={row.dogName} className="hover:bg-neutral-50">
+                          <td className="border border-neutral-300 px-4 py-3 font-semibold text-neutral-800">
                             {row.dogName}
                           </td>
                           {row.vaccines.map((vaccine, idx) => (
                             <td
                               key={idx}
-                              className={`border border-gray-300 px-4 py-3 text-center ${
-                                vaccine.records.length > 0 ? 'bg-green-50' : 'bg-gray-50'
+                              className={`border border-neutral-300 px-4 py-3 text-center ${
+                                vaccine.records.length > 0 ? 'bg-green-50' : 'bg-neutral-50'
                               }`}
                             >
                               {vaccine.records.length > 0 ? (
@@ -861,9 +861,9 @@ export const MedicalRecordPage = () => {
                                   {vaccine.records.map((record, recIdx) => (
                                     <div key={recIdx} className="text-xs">
                                       <div className="font-semibold text-green-600">{record.date}</div>
-                                      <div className="text-gray-600">{record.hospital}</div>
+                                      <div className="text-neutral-600">{record.hospital}</div>
                                       {record.notes && (
-                                        <div className="mt-1 text-gray-700 bg-yellow-50 p-2 rounded border border-yellow-200">
+                                        <div className="mt-1 text-neutral-700 bg-yellow-50 p-2 rounded border border-yellow-200">
                                           {record.notes}
                                         </div>
                                       )}
@@ -892,23 +892,23 @@ export const MedicalRecordPage = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">진료 기록</h2>
+        <h2 className="text-2xl font-bold text-neutral-800">진료 기록</h2>
         <button
           onClick={() => setIsWriting(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+          className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
         >
           기록 작성
         </button>
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">나의 진료 기록</h3>
+        <h3 className="text-xl font-bold text-neutral-800 mb-4">나의 진료 기록</h3>
         {records.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-neutral-500">
             <p>진료 기록이 없습니다.</p>
             <button
               onClick={() => setIsWriting(true)}
-              className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+              className="mt-4 text-primary-600 hover:text-primary-800 font-semibold"
             >
               첫 기록 작성하기
             </button>
@@ -918,24 +918,24 @@ export const MedicalRecordPage = () => {
             {records.map(record => (
               <div
                 key={record.id}
-                className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 transition-colors cursor-pointer"
+                className="border border-neutral-200 rounded-lg p-6 hover:bg-neutral-50 transition-colors cursor-pointer"
                 onClick={() => setViewingRecord(record)}
               >
                 <div className="flex justify-between items-start mb-2">
                   <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                     record.category === '일반 진료'
-                      ? 'bg-blue-100 text-blue-800'
+                      ? 'bg-primary-100 text-primary-800'
                       : 'bg-green-100 text-green-800'
                   }`}>
                     {record.category}
                   </span>
                   {record.category === '일반 진료' && record.cost !== undefined && (
-                    <span className="text-lg font-semibold text-blue-600">
+                    <span className="text-lg font-semibold text-primary-600">
                       {formatCurrency(record.cost)}
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-gray-600 mb-2">
+                <p className="text-sm text-neutral-600 mb-2">
                   {formatDate(record.visitDate)} | {record.hospital}
                 </p>
                 {record.category === '백신 접종' && record.vaccines && (

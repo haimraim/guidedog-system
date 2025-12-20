@@ -417,78 +417,78 @@ export const ProductExcelImport = ({ onSuccess }: { onSuccess: () => void }) => 
       <h3 className="text-xl font-bold mb-4">물품 엑셀 일괄 등록</h3>
 
       {/* 템플릿 다운로드 안내 */}
-      <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded">
-        <h4 className="font-semibold mb-2 text-green-800">템플릿 다운로드</h4>
+      <div className="mb-6 p-4 bg-success-50 border border-success-200 rounded">
+        <h4 className="font-semibold mb-2 text-success-800">템플릿 다운로드</h4>
         <p className="text-sm mb-3">
           아래 버튼을 클릭하여 <strong>엑셀 템플릿 파일</strong>을 다운로드하세요.
           템플릿에는 예시 데이터 5개가 포함되어 있습니다.
         </p>
         <button
           onClick={handleDownloadTemplate}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-semibold"
+          className="px-4 py-2 bg-success-600 text-white rounded hover:bg-success-700 focus:ring-4 focus:ring-success-300 font-semibold"
         >
           📥 템플릿 다운로드
         </button>
       </div>
 
       {/* 사용 안내 */}
-      <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded">
+      <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded">
         <h4 className="font-semibold mb-2">작성 안내</h4>
-        <div className="bg-green-50 p-3 rounded border border-green-300 mb-3">
-          <p className="text-sm font-bold text-green-900 mb-2">✨ 새로운 가로 입력 방식!</p>
-          <p className="text-xs text-gray-700 mb-1">• <strong>한 물품 = 한 행</strong>으로 관리</p>
-          <p className="text-xs text-gray-700 mb-1">• 옵션값과 재고를 가로로 나란히 입력</p>
-          <p className="text-xs text-gray-700">• 더 이상 같은 물품을 여러 행에 반복하지 않아도 됩니다!</p>
+        <div className="bg-success-50 p-3 rounded border border-success-300 mb-3">
+          <p className="text-sm font-bold text-success-900 mb-2">✨ 새로운 가로 입력 방식!</p>
+          <p className="text-xs text-neutral-700 mb-1">• <strong>한 물품 = 한 행</strong>으로 관리</p>
+          <p className="text-xs text-neutral-700 mb-1">• 옵션값과 재고를 가로로 나란히 입력</p>
+          <p className="text-xs text-neutral-700">• 더 이상 같은 물품을 여러 행에 반복하지 않아도 됩니다!</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-blue-300 mb-3">
-          <p className="text-xs font-bold text-blue-900 mb-2">✓ 옵션 없는 물품</p>
-          <p className="text-xs text-gray-700">• 카테고리, 물품명, 재고수량, 설명 입력</p>
-          <p className="text-xs text-gray-700">• 옵션 컬럼은 비워두기</p>
+        <div className="bg-white p-3 rounded border border-primary-300 mb-3">
+          <p className="text-xs font-bold text-primary-900 mb-2">✓ 옵션 없는 물품</p>
+          <p className="text-xs text-neutral-700">• 카테고리, 물품명, 재고수량, 설명 입력</p>
+          <p className="text-xs text-neutral-700">• 옵션 컬럼은 비워두기</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-blue-300 mb-3">
-          <p className="text-xs font-bold text-blue-900 mb-2">✓ 옵션 있는 물품</p>
-          <p className="text-xs text-gray-700 mb-1">• <strong className="text-red-600">재고수량*은 반드시 0으로!</strong></p>
-          <p className="text-xs text-gray-700 mb-1">• 옵션1-명에 옵션 이름 입력 (예: 사이즈)</p>
-          <p className="text-xs text-gray-700">• 옵션1-값1, 값2, 값3... 가로로 입력하고 바로 아래에 재고 입력</p>
+        <div className="bg-white p-3 rounded border border-primary-300 mb-3">
+          <p className="text-xs font-bold text-primary-900 mb-2">✓ 옵션 있는 물품</p>
+          <p className="text-xs text-neutral-700 mb-1">• <strong className="text-error-600">재고수량*은 반드시 0으로!</strong></p>
+          <p className="text-xs text-neutral-700 mb-1">• 옵션1-명에 옵션 이름 입력 (예: 사이즈)</p>
+          <p className="text-xs text-neutral-700">• 옵션1-값1, 값2, 값3... 가로로 입력하고 바로 아래에 재고 입력</p>
         </div>
 
-        <div className="bg-yellow-50 p-3 rounded border border-yellow-300">
+        <div className="bg-warning-50 p-3 rounded border border-warning-300">
           <p className="text-xs font-bold mb-2">📌 예시: 하네스 (사이즈: 1호 200개 / 2호 34개 / 3호 22개)</p>
           <table className="text-xs w-full border-collapse">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">카테고리*</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">물품명*</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">재고*</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">설명</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">옵션1-명</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">값1</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">재고1</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">값2</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">재고2</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">값3</th>
-                <th className="border border-gray-300 px-1 py-0.5 text-xs">재고3</th>
+              <tr className="bg-neutral-100">
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">카테고리*</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">물품명*</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">재고*</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">설명</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">옵션1-명</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">값1</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">재고1</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">값2</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">재고2</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">값3</th>
+                <th className="border border-neutral-300 px-1 py-0.5 text-xs">재고3</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-1 py-0.5">견옷</td>
-                <td className="border border-gray-300 px-1 py-0.5">하네스</td>
-                <td className="border border-gray-300 px-1 py-0.5 text-red-600 font-bold">0</td>
-                <td className="border border-gray-300 px-1 py-0.5">안내견용</td>
-                <td className="border border-gray-300 px-1 py-0.5 bg-blue-50 font-bold">사이즈</td>
-                <td className="border border-gray-300 px-1 py-0.5 bg-green-50">1호</td>
-                <td className="border border-gray-300 px-1 py-0.5 bg-green-50">200</td>
-                <td className="border border-gray-300 px-1 py-0.5 bg-green-50">2호</td>
-                <td className="border border-gray-300 px-1 py-0.5 bg-green-50">34</td>
-                <td className="border border-gray-300 px-1 py-0.5 bg-green-50">3호</td>
-                <td className="border border-gray-300 px-1 py-0.5 bg-green-50">22</td>
+                <td className="border border-neutral-300 px-1 py-0.5">견옷</td>
+                <td className="border border-neutral-300 px-1 py-0.5">하네스</td>
+                <td className="border border-neutral-300 px-1 py-0.5 text-error-600 font-bold">0</td>
+                <td className="border border-neutral-300 px-1 py-0.5">안내견용</td>
+                <td className="border border-neutral-300 px-1 py-0.5 bg-primary-50 font-bold">사이즈</td>
+                <td className="border border-neutral-300 px-1 py-0.5 bg-success-50">1호</td>
+                <td className="border border-neutral-300 px-1 py-0.5 bg-success-50">200</td>
+                <td className="border border-neutral-300 px-1 py-0.5 bg-success-50">2호</td>
+                <td className="border border-neutral-300 px-1 py-0.5 bg-success-50">34</td>
+                <td className="border border-neutral-300 px-1 py-0.5 bg-success-50">3호</td>
+                <td className="border border-neutral-300 px-1 py-0.5 bg-success-50">22</td>
               </tr>
             </tbody>
           </table>
-          <p className="text-xs text-gray-600 mt-2">→ 한 행에 모든 옵션값과 재고를 가로로 입력!</p>
+          <p className="text-xs text-neutral-600 mt-2">→ 한 행에 모든 옵션값과 재고를 가로로 입력!</p>
         </div>
       </div>
 
@@ -502,13 +502,13 @@ export const ProductExcelImport = ({ onSuccess }: { onSuccess: () => void }) => 
           id="productExcelFile"
           accept=".xlsx,.xls"
           onChange={handleFileChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
         />
       </div>
 
       {/* 에러 메시지 */}
       {error && (
-        <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        <div className="mb-6 p-4 bg-error-100 border border-error-400 text-error-700 rounded">
           <div className="whitespace-pre-line font-semibold">{error}</div>
         </div>
       )}
@@ -518,26 +518,26 @@ export const ProductExcelImport = ({ onSuccess }: { onSuccess: () => void }) => 
         <div className="mb-6">
           <h4 className="font-semibold mb-2">데이터 미리보기 (처음 5개)</h4>
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300 text-sm">
+            <table className="w-full border-collapse border border-neutral-300 text-sm">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-2 py-1">카테고리</th>
-                  <th className="border border-gray-300 px-2 py-1">물품명</th>
-                  <th className="border border-gray-300 px-2 py-1">재고수량</th>
-                  <th className="border border-gray-300 px-2 py-1">옵션명</th>
-                  <th className="border border-gray-300 px-2 py-1">옵션값</th>
-                  <th className="border border-gray-300 px-2 py-1">옵션재고</th>
+                <tr className="bg-neutral-100">
+                  <th className="border border-neutral-300 px-2 py-1">카테고리</th>
+                  <th className="border border-neutral-300 px-2 py-1">물품명</th>
+                  <th className="border border-neutral-300 px-2 py-1">재고수량</th>
+                  <th className="border border-neutral-300 px-2 py-1">옵션명</th>
+                  <th className="border border-neutral-300 px-2 py-1">옵션값</th>
+                  <th className="border border-neutral-300 px-2 py-1">옵션재고</th>
                 </tr>
               </thead>
               <tbody>
                 {preview.map((row, index) => (
                   <tr key={index}>
-                    <td className="border border-gray-300 px-2 py-1">{row['카테고리*'] || row.카테고리}</td>
-                    <td className="border border-gray-300 px-2 py-1">{row['물품명*'] || row.물품명}</td>
-                    <td className="border border-gray-300 px-2 py-1">{row['재고수량*'] || row.재고수량}</td>
-                    <td className="border border-gray-300 px-2 py-1">{row['옵션명'] || ''}</td>
-                    <td className="border border-gray-300 px-2 py-1">{row['옵션값'] || ''}</td>
-                    <td className="border border-gray-300 px-2 py-1">{row['옵션재고'] || ''}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row['카테고리*'] || row.카테고리}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row['물품명*'] || row.물품명}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row['재고수량*'] || row.재고수량}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row['옵션명'] || ''}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row['옵션값'] || ''}</td>
+                    <td className="border border-neutral-300 px-2 py-1">{row['옵션재고'] || ''}</td>
                   </tr>
                 ))}
               </tbody>
@@ -551,7 +551,7 @@ export const ProductExcelImport = ({ onSuccess }: { onSuccess: () => void }) => 
         <button
           onClick={handleImport}
           disabled={!file || importing}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 disabled:bg-gray-300 disabled:cursor-not-allowed font-semibold"
+          className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 disabled:bg-neutral-300 disabled:cursor-not-allowed font-semibold"
         >
           {importing ? '등록 중...' : '📤 일괄 등록하기'}
         </button>

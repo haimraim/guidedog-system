@@ -99,11 +99,11 @@ export const MainLayout = () => {
         return (
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">GIMS에 오신 것을 환영합니다!</h2>
-              <p className="text-lg text-gray-700">
+              <h2 className="text-3xl font-bold text-neutral-800 mb-6">GIMS에 오신 것을 환영합니다!</h2>
+              <p className="text-lg text-neutral-700">
                 <strong>{user?.name}</strong>님, 반갑습니다.
                 {user?.dogName && (
-                  <span className="block mt-2 text-blue-600">
+                  <span className="block mt-2 text-primary-600">
                     담당 안내견: <strong>{user.dogName}</strong>
                   </span>
                 )}
@@ -143,16 +143,16 @@ export const MainLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-screen bg-neutral-50 flex flex-col">
       {/* 헤더 */}
-      <header className="bg-blue-600 text-white shadow-lg">
+      <header className="bg-primary-600 text-white shadow-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <img src="/logo.svg" alt="GIMS Logo" className="w-12 h-12" />
               <div>
                 <h1 className="text-2xl font-bold">GIMS <span className="text-sm font-normal opacity-75">0.9</span></h1>
-                <p className="text-sm text-blue-100">
+                <p className="text-sm text-primary-100">
                   {user?.role === 'admin' ? '관리자' : user?.role === 'moderator' ? '준관리자' : user?.name}님 환영합니다
                   {user?.dogName && ` (${user.dogName})`}
                 </p>
@@ -161,7 +161,7 @@ export const MainLayout = () => {
             <div className="flex items-center space-x-3">
               <button
                 onClick={handleLogout}
-                className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 outline-none"
+                className="bg-primary-700 hover:bg-primary-800 px-4 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-primary-300 outline-none"
               >
                 로그아웃
               </button>
@@ -172,27 +172,27 @@ export const MainLayout = () => {
 
       {/* 담당 안내견 정보 고정 표시 (일반 회원만, 홈 화면에서만) */}
       {user && user.role !== 'admin' && myDogInfo && currentPage === 'home' && (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b-2 border-blue-200 shadow-sm">
+        <div className="bg-primary-50 border-b border-neutral-200 shadow-sm">
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-semibold text-gray-600">견명:</span>
-                  <span className="text-lg font-bold text-blue-700">{myDogInfo.guideDog.name}</span>
+                  <span className="text-sm font-semibold text-neutral-600">견명:</span>
+                  <span className="text-lg font-bold text-primary-700">{myDogInfo.guideDog.name}</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-semibold text-gray-600">성별:</span>
-                  <span className="text-base font-semibold text-gray-800">{myDogInfo.guideDog.gender}</span>
+                  <span className="text-sm font-semibold text-neutral-600">성별:</span>
+                  <span className="text-base font-semibold text-neutral-800">{myDogInfo.guideDog.gender}</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-semibold text-gray-600">생년월일:</span>
-                  <span className="text-base font-semibold text-gray-800">
+                  <span className="text-sm font-semibold text-neutral-600">생년월일:</span>
+                  <span className="text-base font-semibold text-neutral-800">
                     {new Date(myDogInfo.guideDog.birthDate).toLocaleDateString('ko-KR')}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm font-semibold text-gray-600">나이:</span>
-                  <span className="text-base font-bold text-indigo-600">
+                  <span className="text-sm font-semibold text-neutral-600">나이:</span>
+                  <span className="text-base font-bold text-primary-700">
                     {calculateAgeWithMonths(myDogInfo.guideDog.birthDate)}
                   </span>
                 </div>
@@ -208,19 +208,19 @@ export const MainLayout = () => {
           <div className="container mx-auto px-4 py-3 flex items-center space-x-4">
             <button
               onClick={navigateBack}
-              className="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 outline-none"
+              className="flex items-center space-x-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-semibold rounded-lg transition-colors focus:ring-2 focus:ring-primary-500 outline-none"
               aria-label="이전 페이지로 돌아가기 (Alt + 왼쪽 화살표)"
             >
               <span>← 뒤로</span>
             </button>
             <button
               onClick={navigateHome}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors focus:ring-2 focus:ring-blue-300 outline-none"
+              className="flex items-center space-x-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors focus:ring-2 focus:ring-primary-300 outline-none"
             >
               <span>🏠 홈</span>
             </button>
             <div className="flex-1 text-center">
-              <span className="text-lg font-bold text-gray-800">
+              <span className="text-lg font-bold text-neutral-800">
                 {currentPage === 'notice' && '공지사항'}
                 {currentPage === 'diary' && (user?.category === '안내견' ? '월간 관리' : '다이어리')}
                 {currentPage === 'monthlyReport' && '월간 보고서'}
@@ -248,10 +248,10 @@ export const MainLayout = () => {
               <li>
                 <button
                   onClick={() => navigateToPage('home')}
-                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                     currentPage === 'home'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
                   }`}
                   aria-current={currentPage === 'home' ? 'page' : undefined}
                 >
@@ -261,10 +261,10 @@ export const MainLayout = () => {
               <li>
                 <button
                   onClick={() => navigateToPage('notice')}
-                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                     currentPage === 'notice'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
                   }`}
                   aria-current={currentPage === 'notice' ? 'page' : undefined}
                 >
@@ -274,10 +274,10 @@ export const MainLayout = () => {
               <li>
                 <button
                   onClick={() => navigateToPage('diary')}
-                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                     currentPage === 'diary'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
                   }`}
                   aria-current={currentPage === 'diary' ? 'page' : undefined}
                 >
@@ -288,10 +288,10 @@ export const MainLayout = () => {
                 <li>
                   <button
                     onClick={() => navigateToPage('monthlyReport')}
-                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                       currentPage === 'monthlyReport'
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'bg-primary-600 text-white'
+                        : 'text-neutral-700 hover:bg-neutral-100'
                     }`}
                     aria-current={currentPage === 'monthlyReport' ? 'page' : undefined}
                   >
@@ -302,10 +302,10 @@ export const MainLayout = () => {
               <li>
                 <button
                   onClick={() => navigateToPage('lecture')}
-                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                     currentPage === 'lecture'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
                   }`}
                   aria-current={currentPage === 'lecture' ? 'page' : undefined}
                 >
@@ -315,10 +315,10 @@ export const MainLayout = () => {
               <li>
                 <button
                   onClick={() => navigateToPage('videoroom')}
-                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                     currentPage === 'videoroom'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
                   }`}
                   aria-current={currentPage === 'videoroom' ? 'page' : undefined}
                 >
@@ -328,10 +328,10 @@ export const MainLayout = () => {
               <li>
                 <button
                   onClick={() => navigateToPage('boarding')}
-                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                     currentPage === 'boarding'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
                   }`}
                   aria-current={currentPage === 'boarding' ? 'page' : undefined}
                 >
@@ -341,10 +341,10 @@ export const MainLayout = () => {
               <li>
                 <button
                   onClick={() => navigateToPage('products')}
-                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                     currentPage === 'products'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
                   }`}
                   aria-current={currentPage === 'products' ? 'page' : undefined}
                 >
@@ -354,10 +354,10 @@ export const MainLayout = () => {
               <li>
                 <button
                   onClick={() => navigateToPage('medical')}
-                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                     currentPage === 'medical'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
                   }`}
                   aria-current={currentPage === 'medical' ? 'page' : undefined}
                 >
@@ -367,10 +367,10 @@ export const MainLayout = () => {
               <li>
                 <button
                   onClick={() => navigateToPage('medication')}
-                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                     currentPage === 'medication'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
                   }`}
                   aria-current={currentPage === 'medication' ? 'page' : undefined}
                 >
@@ -381,10 +381,10 @@ export const MainLayout = () => {
                 <li>
                   <button
                     onClick={() => navigateToPage('admin')}
-                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                       currentPage === 'admin'
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'bg-primary-600 text-white'
+                        : 'text-neutral-700 hover:bg-neutral-100'
                     }`}
                     aria-current={currentPage === 'admin' ? 'page' : undefined}
                   >
@@ -396,10 +396,10 @@ export const MainLayout = () => {
                 <li>
                   <button
                     onClick={() => navigateToPage('message')}
-                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-blue-500 outline-none ${
+                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
                       currentPage === 'message'
-                        ? 'bg-green-600 text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'bg-success-600 text-white'
+                        : 'text-neutral-700 hover:bg-neutral-100'
                     }`}
                     aria-current={currentPage === 'message' ? 'page' : undefined}
                   >
@@ -418,11 +418,11 @@ export const MainLayout = () => {
       </main>
 
       {/* 푸터 */}
-      <footer className="bg-gray-800 text-white py-6 mt-auto">
+      <footer className="bg-neutral-800 text-white py-6 mt-auto">
         <div className="container mx-auto px-4">
           <div className="text-center space-y-2">
             <p className="text-sm">안내견학교 &copy; 2025. All rights reserved.</p>
-            <div className="text-xs text-gray-400 space-y-1">
+            <div className="text-xs text-neutral-400 space-y-1">
               <p>주소: 경기도 용인시 처인구 포곡읍 에버랜드로376번길 1-27</p>
               <p>연락처: 031-320-8922 | 팩스: 031-320-9233</p>
               <p className="space-x-4">

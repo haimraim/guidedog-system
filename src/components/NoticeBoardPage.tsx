@@ -239,34 +239,34 @@ export const NoticeBoardPage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
             {editingNotice ? '공지사항 수정' : '공지사항 작성'}
           </h2>
 
           <div className="space-y-4">
             {/* 제목 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 제목
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="공지사항 제목을 입력하세요"
               />
             </div>
 
             {/* 내용 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 내용
               </label>
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 rows={10}
                 placeholder="공지사항 내용을 입력하세요"
               />
@@ -275,7 +275,7 @@ export const NoticeBoardPage = () => {
             {/* 공지 대상 */}
             <div>
               <fieldset>
-                <legend className="block text-sm font-semibold text-gray-700 mb-3">
+                <legend className="block text-sm font-semibold text-neutral-700 mb-3">
                   공지 대상 (다중 선택 가능)
                 </legend>
                 <div className="space-y-3">
@@ -285,9 +285,9 @@ export const NoticeBoardPage = () => {
                       id="audience-all"
                       checked={targetAudience.includes('all')}
                       onChange={(e) => handleTargetAudienceToggle('all', e.target.checked)}
-                      className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      className="w-5 h-5 text-primary-600 border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                     />
-                    <label htmlFor="audience-all" className="ml-3 text-base font-semibold text-gray-700 cursor-pointer">
+                    <label htmlFor="audience-all" className="ml-3 text-base font-semibold text-neutral-700 cursor-pointer">
                       전체
                     </label>
                   </div>
@@ -297,9 +297,9 @@ export const NoticeBoardPage = () => {
                       id="audience-puppy"
                       checked={targetAudience.includes('puppy')}
                       onChange={(e) => handleTargetAudienceToggle('puppy', e.target.checked)}
-                      className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      className="w-5 h-5 text-primary-600 border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                     />
-                    <label htmlFor="audience-puppy" className="ml-3 text-base font-semibold text-gray-700 cursor-pointer">
+                    <label htmlFor="audience-puppy" className="ml-3 text-base font-semibold text-neutral-700 cursor-pointer">
                       퍼피티칭
                     </label>
                   </div>
@@ -309,9 +309,9 @@ export const NoticeBoardPage = () => {
                       id="audience-guide"
                       checked={targetAudience.includes('guide')}
                       onChange={(e) => handleTargetAudienceToggle('guide', e.target.checked)}
-                      className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      className="w-5 h-5 text-primary-600 border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                     />
-                    <label htmlFor="audience-guide" className="ml-3 text-base font-semibold text-gray-700 cursor-pointer">
+                    <label htmlFor="audience-guide" className="ml-3 text-base font-semibold text-neutral-700 cursor-pointer">
                       안내견
                     </label>
                   </div>
@@ -321,9 +321,9 @@ export const NoticeBoardPage = () => {
                       id="audience-retired"
                       checked={targetAudience.includes('retired')}
                       onChange={(e) => handleTargetAudienceToggle('retired', e.target.checked)}
-                      className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      className="w-5 h-5 text-primary-600 border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                     />
-                    <label htmlFor="audience-retired" className="ml-3 text-base font-semibold text-gray-700 cursor-pointer">
+                    <label htmlFor="audience-retired" className="ml-3 text-base font-semibold text-neutral-700 cursor-pointer">
                       은퇴견
                     </label>
                   </div>
@@ -333,9 +333,9 @@ export const NoticeBoardPage = () => {
                       id="audience-parent"
                       checked={targetAudience.includes('parent')}
                       onChange={(e) => handleTargetAudienceToggle('parent', e.target.checked)}
-                      className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      className="w-5 h-5 text-primary-600 border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                     />
-                    <label htmlFor="audience-parent" className="ml-3 text-base font-semibold text-gray-700 cursor-pointer">
+                    <label htmlFor="audience-parent" className="ml-3 text-base font-semibold text-neutral-700 cursor-pointer">
                       부모견
                     </label>
                   </div>
@@ -352,7 +352,7 @@ export const NoticeBoardPage = () => {
                   onChange={(e) => setIsPinned(e.target.checked)}
                   className="w-5 h-5"
                 />
-                <span className="text-sm font-semibold text-gray-700">
+                <span className="text-sm font-semibold text-neutral-700">
                   상단 고정
                 </span>
               </label>
@@ -362,7 +362,7 @@ export const NoticeBoardPage = () => {
             <div className="flex space-x-3 pt-4">
               <button
                 onClick={handleSubmit}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 {editingNotice ? '수정' : '등록'}
               </button>
@@ -371,7 +371,7 @@ export const NoticeBoardPage = () => {
                   resetForm();
                   setIsWriting(false);
                 }}
-                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-neutral-300 hover:bg-neutral-400 text-neutral-800 font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 취소
               </button>
@@ -391,18 +391,18 @@ export const NoticeBoardPage = () => {
             <div className="flex-1">
               <div className="flex items-center space-x-2 mb-2">
                 {viewingNotice.isPinned && (
-                  <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-bold rounded">
+                  <span className="px-2 py-1 bg-error-100 text-error-800 text-xs font-bold rounded">
                     고정
                   </span>
                 )}
-                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded">
+                <span className="px-2 py-1 bg-primary-100 text-primary-800 text-xs font-semibold rounded">
                   {getAudienceLabel(viewingNotice.targetAudience)}
                 </span>
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              <h2 className="text-2xl font-bold text-neutral-800 mb-2">
                 {viewingNotice.title}
               </h2>
-              <div className="text-sm text-gray-600 space-x-4">
+              <div className="text-sm text-neutral-600 space-x-4">
                 <span>작성자: {viewingNotice.author}</span>
                 <span>작성일: {formatDate(viewingNotice.createdAt)}</span>
               </div>
@@ -412,27 +412,27 @@ export const NoticeBoardPage = () => {
                 window.history.pushState(null, '', window.location.pathname);
                 setViewingNotice(null);
               }}
-              className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
+              className="text-neutral-600 hover:text-neutral-800 text-2xl font-bold"
             >
               ×
             </button>
           </div>
 
-          <div className="border-t border-gray-200 pt-6">
-            <div className="prose max-w-none whitespace-pre-wrap text-gray-800">
+          <div className="border-t border-neutral-200 pt-6">
+            <div className="prose max-w-none whitespace-pre-wrap text-neutral-800">
               {viewingNotice.content}
             </div>
           </div>
 
           {user?.role === 'admin' && (
-            <div className="flex space-x-3 mt-6 pt-6 border-t border-gray-200">
+            <div className="flex space-x-3 mt-6 pt-6 border-t border-neutral-200">
               <button
                 onClick={() => {
                   window.history.pushState(null, '', window.location.pathname);
                   setViewingNotice(null);
                   openEditForm(viewingNotice);
                 }}
-                className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                className="bg-neutral-600 hover:bg-neutral-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
               >
                 수정
               </button>
@@ -442,7 +442,7 @@ export const NoticeBoardPage = () => {
                   setViewingNotice(null);
                   handleDelete(viewingNotice.id);
                 }}
-                className="text-red-600 hover:text-red-800 font-semibold py-2 px-6"
+                className="text-error-600 hover:text-error-800 font-semibold py-2 px-6"
               >
                 삭제
               </button>
@@ -457,11 +457,11 @@ export const NoticeBoardPage = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">공지사항</h2>
+        <h2 className="text-2xl font-bold text-neutral-800">공지사항</h2>
         {user?.role === 'admin' && (
           <button
             onClick={openWriteForm}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
           >
             글쓰기
           </button>
@@ -470,7 +470,7 @@ export const NoticeBoardPage = () => {
 
       {notices.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-500">등록된 공지사항이 없습니다.</p>
+          <p className="text-neutral-500">등록된 공지사항이 없습니다.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -478,18 +478,18 @@ export const NoticeBoardPage = () => {
             <div
               key={notice.id}
               className={`bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow ${
-                notice.isPinned ? 'border-l-4 border-red-500' : ''
+                notice.isPinned ? 'border-l-4 border-error-500' : ''
               }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-3">
                     {notice.isPinned && (
-                      <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-bold rounded">
+                      <span className="px-2 py-1 bg-error-100 text-error-800 text-xs font-bold rounded">
                         고정
                       </span>
                     )}
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded">
+                    <span className="px-2 py-1 bg-primary-100 text-primary-800 text-xs font-semibold rounded">
                       {getAudienceLabel(notice.targetAudience)}
                     </span>
                   </div>
@@ -500,11 +500,11 @@ export const NoticeBoardPage = () => {
                       window.history.pushState(null, '', `#notice-${notice.id}`);
                       setViewingNotice(notice);
                     }}
-                    className="text-xl font-bold text-blue-600 hover:text-blue-800 underline block mb-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="text-xl font-bold text-primary-600 hover:text-primary-800 underline block mb-2 focus:ring-2 focus:ring-primary-500 outline-none"
                   >
                     {notice.title}
                   </a>
-                  <div className="text-sm text-gray-600 space-x-4">
+                  <div className="text-sm text-neutral-600 space-x-4">
                     <span>작성자: {notice.author}</span>
                     <span>작성일: {formatDate(notice.createdAt)}</span>
                   </div>

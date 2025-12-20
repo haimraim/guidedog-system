@@ -352,11 +352,11 @@ export const StaffLecturePage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">과목 목록 📚</h2>
+          <h2 className="text-2xl font-bold text-neutral-800">과목 목록 📚</h2>
           {user?.role === 'admin' && (
             <button
               onClick={() => setViewMode('courseForm')}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
               aria-label="새 과목 개설"
             >
               과목 개설
@@ -366,11 +366,11 @@ export const StaffLecturePage = () => {
 
         {courses.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-500">개설된 과목이 없습니다.</p>
+            <p className="text-neutral-500">개설된 과목이 없습니다.</p>
             {user?.role === 'admin' && (
               <button
                 onClick={() => setViewMode('courseForm')}
-                className="mt-4 text-blue-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+                className="mt-4 text-primary-600 hover:text-primary-800 font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
                 aria-label="첫 과목 개설하기"
               >
                 첫 과목 개설하기
@@ -389,9 +389,9 @@ export const StaffLecturePage = () => {
                   <div className="flex justify-between items-start mb-3">
                     <button
                       onClick={() => selectCourse(course)}
-                      className="flex-1 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+                      className="flex-1 text-left focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
                     >
-                      <h3 className="text-xl font-bold text-blue-600 hover:text-blue-800">
+                      <h3 className="text-xl font-bold text-primary-600 hover:text-primary-800">
                         {course.name}
                       </h3>
                     </button>
@@ -399,14 +399,14 @@ export const StaffLecturePage = () => {
                       <div className="flex space-x-2">
                         <button
                           onClick={() => handleEditCourse(course)}
-                          className="text-sm text-gray-600 hover:text-blue-600"
+                          className="text-sm text-neutral-600 hover:text-primary-600"
                           aria-label="과목 수정"
                         >
                           수정
                         </button>
                         <button
                           onClick={() => handleDeleteCourse(course.id)}
-                          className="text-sm text-gray-600 hover:text-red-600"
+                          className="text-sm text-neutral-600 hover:text-error-600"
                           aria-label="과목 삭제"
                         >
                           삭제
@@ -415,9 +415,9 @@ export const StaffLecturePage = () => {
                     )}
                   </div>
                   {course.description && (
-                    <p className="text-sm text-gray-600 mb-3">{course.description}</p>
+                    <p className="text-sm text-neutral-600 mb-3">{course.description}</p>
                   )}
-                  <div className="flex justify-between items-center text-sm text-gray-500">
+                  <div className="flex justify-between items-center text-sm text-neutral-500">
                     <span>강의 {courseLectureCount}개</span>
                     <span>{formatDate(course.createdAt)}</span>
                   </div>
@@ -435,7 +435,7 @@ export const StaffLecturePage = () => {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
             {editingCourse ? '과목 수정' : '과목 개설'}
           </h2>
 
@@ -443,7 +443,7 @@ export const StaffLecturePage = () => {
             <div>
               <label
                 htmlFor="courseName"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 과목명 *
               </label>
@@ -452,7 +452,7 @@ export const StaffLecturePage = () => {
                 id="courseName"
                 value={courseName}
                 onChange={(e) => setCourseName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="예: 신입사원 교육"
                 required
                 aria-label="과목명"
@@ -462,7 +462,7 @@ export const StaffLecturePage = () => {
             <div>
               <label
                 htmlFor="courseDescription"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 과목 설명
               </label>
@@ -470,7 +470,7 @@ export const StaffLecturePage = () => {
                 id="courseDescription"
                 value={courseDescription}
                 onChange={(e) => setCourseDescription(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 rows={4}
                 placeholder="과목에 대한 간단한 설명을 입력하세요"
                 aria-label="과목 설명"
@@ -480,7 +480,7 @@ export const StaffLecturePage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                 aria-label={editingCourse ? '과목 수정 완료' : '과목 개설 완료'}
               >
                 {editingCourse ? '수정 완료' : '개설 완료'}
@@ -491,7 +491,7 @@ export const StaffLecturePage = () => {
                   resetCourseForm();
                   setViewMode('courses');
                 }}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                className="flex-1 bg-neutral-200 hover:bg-neutral-300 text-neutral-800 font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                 aria-label="취소"
               >
                 취소
@@ -513,7 +513,7 @@ export const StaffLecturePage = () => {
               setSelectedCourse(null);
               setViewMode('courses');
             }}
-            className="text-blue-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-4 py-2"
+            className="text-primary-600 hover:text-primary-800 font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded px-4 py-2"
             aria-label="과목 목록으로 돌아가기"
           >
             ← 과목 목록
@@ -522,15 +522,15 @@ export const StaffLecturePage = () => {
 
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">{selectedCourse.name}</h2>
+            <h2 className="text-2xl font-bold text-neutral-800">{selectedCourse.name}</h2>
             {selectedCourse.description && (
-              <p className="text-sm text-gray-600 mt-1">{selectedCourse.description}</p>
+              <p className="text-sm text-neutral-600 mt-1">{selectedCourse.description}</p>
             )}
           </div>
           {user?.role === 'admin' && (
             <button
               onClick={() => setViewMode('writing')}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
               aria-label="새 강의 등록"
             >
               강의 등록
@@ -540,11 +540,11 @@ export const StaffLecturePage = () => {
 
         {filteredLectures.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-500">등록된 강의가 없습니다.</p>
+            <p className="text-neutral-500">등록된 강의가 없습니다.</p>
             {user?.role === 'admin' && (
               <button
                 onClick={() => setViewMode('writing')}
-                className="mt-4 text-blue-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+                className="mt-4 text-primary-600 hover:text-primary-800 font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
                 aria-label="첫 강의 등록하기"
               >
                 첫 강의 등록하기
@@ -560,13 +560,13 @@ export const StaffLecturePage = () => {
                   setViewingLecture(lecture);
                   setViewMode('viewing');
                 }}
-                className="w-full text-left bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="w-full text-left bg-neutral-50 hover:bg-primary-50 border border-neutral-200 hover:border-primary-300 rounded-lg p-4 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                 aria-label={`${lecture.title} 강의 재생`}
               >
-                <h3 className="text-lg font-bold text-blue-600 hover:text-blue-800 mb-2">
+                <h3 className="text-lg font-bold text-primary-600 hover:text-primary-800 mb-2">
                   {lecture.title}
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-neutral-600">
                   {formatDate(lecture.createdAt)}
                 </p>
               </button>
@@ -590,7 +590,7 @@ export const StaffLecturePage = () => {
                 setViewingLecture(null);
                 setViewMode('lectures');
               }}
-              className="text-blue-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+              className="text-primary-600 hover:text-primary-800 font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
               aria-label="강의 목록으로 돌아가기"
             >
               ← 목록으로
@@ -599,14 +599,14 @@ export const StaffLecturePage = () => {
               <div className="space-x-2">
                 <button
                   onClick={() => handleEditLecture(viewingLecture)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                   aria-label="강의 수정"
                 >
                   수정
                 </button>
                 <button
                   onClick={() => handleDeleteLecture(viewingLecture.id)}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="bg-error-600 hover:bg-error-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2"
                   aria-label="강의 삭제"
                 >
                   삭제
@@ -615,11 +615,11 @@ export const StaffLecturePage = () => {
             )}
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          <h1 className="text-3xl font-bold text-neutral-800 mb-4">
             {viewingLecture.title}
           </h1>
 
-          <div className="text-sm text-gray-600 mb-6">
+          <div className="text-sm text-neutral-600 mb-6">
             작성일: {formatDate(viewingLecture.createdAt)}
             {viewingLecture.createdAt !== viewingLecture.updatedAt && (
               <span className="ml-2">(수정됨)</span>
@@ -628,7 +628,7 @@ export const StaffLecturePage = () => {
 
           {hasVideo && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">강의 영상</h3>
+              <h3 className="text-lg font-semibold text-neutral-800 mb-3">강의 영상</h3>
 
               {viewingLecture.youtubeUrl && isYouTubeUrl(viewingLecture.youtubeUrl) && (
                 <div className="mb-4">
@@ -642,7 +642,7 @@ export const StaffLecturePage = () => {
                       aria-label={`${viewingLecture.title} 유튜브 영상 플레이어`}
                     />
                   </div>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-neutral-600 mt-2">
                     키보드 단축키: 스페이스바(재생/일시정지), ↑↓(볼륨), ←→(10초 이동)
                   </p>
                 </div>
@@ -663,7 +663,7 @@ export const StaffLecturePage = () => {
                       JavaScript를 활성화하거나 HTML5 비디오를 지원하는 브라우저를 사용해주세요.
                     </p>
                   </video>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-neutral-600 mt-2">
                     키보드 단축키: 스페이스바(재생/일시정지), M(음소거), F(전체화면), ←→(10초 이동)
                   </p>
                 </div>
@@ -684,7 +684,7 @@ export const StaffLecturePage = () => {
                       JavaScript를 활성화하거나 HTML5 비디오를 지원하는 브라우저를 사용해주세요.
                     </p>
                   </video>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-neutral-600 mt-2">
                     키보드 단축키: 스페이스바(재생/일시정지), M(음소거), F(전체화면), ←→(10초 이동)
                   </p>
                 </div>
@@ -693,9 +693,9 @@ export const StaffLecturePage = () => {
           )}
 
           <div className="prose max-w-none">
-            <h3 className="text-lg font-semibold text-gray-800 mb-3">강의 내용</h3>
+            <h3 className="text-lg font-semibold text-neutral-800 mb-3">강의 내용</h3>
             <div
-              className="text-gray-700 whitespace-pre-wrap leading-relaxed select-none"
+              className="text-neutral-700 whitespace-pre-wrap leading-relaxed select-none"
               onContextMenu={(e) => e.preventDefault()}
               style={{ userSelect: 'none' }}
             >
@@ -712,7 +712,7 @@ export const StaffLecturePage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
             {editingLecture ? '강의 수정' : '강의 등록'}
           </h2>
 
@@ -720,7 +720,7 @@ export const StaffLecturePage = () => {
             <div>
               <label
                 htmlFor="title"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 제목 *
               </label>
@@ -729,7 +729,7 @@ export const StaffLecturePage = () => {
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="강의 제목을 입력하세요"
                 required
                 aria-label="강의 제목"
@@ -739,7 +739,7 @@ export const StaffLecturePage = () => {
             <div>
               <label
                 htmlFor="content"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 내용 *
               </label>
@@ -747,7 +747,7 @@ export const StaffLecturePage = () => {
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 rows={10}
                 placeholder="강의 내용을 입력하세요"
                 required
@@ -758,7 +758,7 @@ export const StaffLecturePage = () => {
             <div>
               <label
                 htmlFor="youtubeUrl"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 영상 링크 (유튜브 또는 NAS)
               </label>
@@ -767,11 +767,11 @@ export const StaffLecturePage = () => {
                 id="youtubeUrl"
                 value={youtubeUrl}
                 onChange={(e) => setYoutubeUrl(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="https://www.youtube.com/watch?v=... 또는 https://dogjong.synology.me/..."
                 aria-label="영상 링크"
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-neutral-500 mt-1">
                 <strong>유튜브 링크</strong> 또는 <strong>NAS 영상 URL</strong>을 입력하세요
               </p>
             </div>
@@ -779,7 +779,7 @@ export const StaffLecturePage = () => {
             <div>
               <label
                 htmlFor="video"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 영상 파일 첨부
               </label>
@@ -788,12 +788,12 @@ export const StaffLecturePage = () => {
                 id="video"
                 accept="video/*"
                 onChange={handleVideoChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 aria-label="영상 파일 첨부"
               />
               {videoUrl && (
                 <div className="mt-3">
-                  <p className="text-sm text-green-600 mb-2">영상이 업로드되었습니다.</p>
+                  <p className="text-sm text-success-600 mb-2">영상이 업로드되었습니다.</p>
                   <video
                     controls
                     controlsList="nodownload"
@@ -804,7 +804,7 @@ export const StaffLecturePage = () => {
                   </video>
                 </div>
               )}
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-neutral-500 mt-1">
                 영상 파일은 500MB 이하만 업로드 가능합니다.
               </p>
             </div>
@@ -812,7 +812,7 @@ export const StaffLecturePage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                 aria-label={editingLecture ? '강의 수정 완료' : '강의 등록 완료'}
               >
                 {editingLecture ? '수정 완료' : '등록 완료'}
@@ -823,7 +823,7 @@ export const StaffLecturePage = () => {
                   resetLectureForm();
                   setViewMode('lectures');
                 }}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                className="flex-1 bg-neutral-200 hover:bg-neutral-300 text-neutral-800 font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                 aria-label="취소"
               >
                 취소

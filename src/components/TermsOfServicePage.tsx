@@ -5,16 +5,16 @@
 export const TermsOfServicePage = () => {
   return (
     <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">이용약관</h1>
+      <h1 className="text-3xl font-bold text-neutral-800 mb-6">이용약관</h1>
 
-      <div className="space-y-6 text-gray-700">
+      <div className="space-y-6 text-neutral-700">
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제1장 서비스 이용</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제1장 서비스 이용</h2>
           <div className="space-y-3">
             <p>
               본 서비스는 본 회사가 제공하는 guide dog 관련 종합 정보 서비스입니다.
             </p>
-            <div className="bg-gray-50 p-4 rounded">
+            <div className="bg-neutral-50 p-4 rounded">
               <h3 className="font-semibold mb-2">회원이 제공해야 하는 정보</h3>
               <ul className="list-disc list-inside space-y-1">
                 <li>회원 ID</li>
@@ -29,7 +29,7 @@ export const TermsOfServicePage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제2장 회원가입 및 관리</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제2장 회원가입 및 관리</h2>
           <div className="space-y-3">
             <p>
               <strong>회원의 책임:</strong>
@@ -43,7 +43,7 @@ export const TermsOfServicePage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제3장 서비스 이용 제한</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제3장 서비스 이용 제한</h2>
           <p className="mb-3">
             회사는 다음의 경우 서비스 이용을 제한할 수 있습니다:
           </p>
@@ -57,7 +57,7 @@ export const TermsOfServicePage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제4장 회사의 의무</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제4장 회사의 의무</h2>
           <div className="space-y-3">
             <p>
               회사는 관계 법령과 본 약관이 금지하거나 미풍양속에 반하는 행위를 하지 않으며,
@@ -71,7 +71,7 @@ export const TermsOfServicePage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제5장 회원의 의무</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제5장 회원의 의무</h2>
           <p className="mb-3">
             회원은 다음 행위를 하여서는 안 됩니다:
           </p>
@@ -87,7 +87,7 @@ export const TermsOfServicePage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제6장 콘텐츠 관련 규정</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제6장 콘텐츠 관련 규정</h2>
           <div className="space-y-3">
             <p>
               회사는 회원이 게시하거나 전달하는 서비스 내의 내용물에 대해 책임을 지지 않습니다.
@@ -99,7 +99,7 @@ export const TermsOfServicePage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제7장 서비스 이용 시간</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제7장 서비스 이용 시간</h2>
           <p>
             서비스의 이용은 회사의 업무상 또는 기술상 특별한 지장이 없는 한 연중무휴, 1일 24시간을
             원칙으로 합니다. 다만, 정기점검 등의 필요로 회사가 정한 날이나 시간은 예외로 합니다.
@@ -107,7 +107,7 @@ export const TermsOfServicePage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제8장 손해배상</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제8장 손해배상</h2>
           <p>
             회사는 무료로 제공되는 서비스와 관련하여 회원에게 어떠한 손해가 발생하더라도
             회사가 고의로 행한 범죄행위를 제외하고는 이에 대하여 책임을 부담하지 아니합니다.
@@ -115,7 +115,7 @@ export const TermsOfServicePage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제9장 분쟁의 해결</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제9장 분쟁의 해결</h2>
           <p>
             회사는 회원으로부터 제출되는 불만사항 및 의견을 우선적으로 처리합니다.
             다만, 신속한 처리가 곤란한 경우에는 회원에게 그 사유와 처리일정을 통보합니다.
@@ -123,18 +123,18 @@ export const TermsOfServicePage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">제10장 재판권 및 준거법</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">제10장 재판권 및 준거법</h2>
           <p>
             본 약관은 대한민국 법률에 따라 규율되고 해석됩니다. 회사와 회원 간에 발생한 분쟁으로
             소송이 제기되는 경우에는 법령에 정한 절차에 따른 법원을 관할 법원으로 합니다.
           </p>
         </section>
 
-        <section className="mt-8 pt-6 border-t border-gray-300">
-          <p className="text-sm text-gray-600">
+        <section className="mt-8 pt-6 border-t border-neutral-300">
+          <p className="text-sm text-neutral-600">
             본 약관은 2004년 7월 8일부터 적용됩니다.
           </p>
-          <p className="text-sm text-gray-600 mt-2">
+          <p className="text-sm text-neutral-600 mt-2">
             본 약관의 내용 추가, 삭제 및 수정이 있을 시에는 개정 최소 7일 전부터 홈페이지의
             공지사항을 통해 고지할 것입니다.
           </p>

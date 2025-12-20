@@ -104,14 +104,14 @@ export const SchoolOfGuideDogPage = () => {
           <div className="flex justify-between items-center mb-6">
             <button
               onClick={handleCloseVideo}
-              className="text-blue-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-4 py-2"
+              className="text-primary-600 hover:text-primary-800 font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded px-4 py-2"
               aria-label="영상 목록으로 돌아가기"
             >
               ← 목록으로
             </button>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-4">
             {selectedVideo.title}
           </h2>
 
@@ -126,14 +126,14 @@ export const SchoolOfGuideDogPage = () => {
             />
           </div>
 
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-neutral-600 mb-4">
             키보드 단축키: 스페이스바(재생/일시정지), ↑↓(볼륨), ←→(10초 이동)
           </p>
 
           {selectedVideo.description && (
             <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">영상 설명</h3>
-              <p className="text-gray-700 whitespace-pre-wrap">
+              <h3 className="text-lg font-semibold text-neutral-800 mb-2">영상 설명</h3>
+              <p className="text-neutral-700 whitespace-pre-wrap">
                 {selectedVideo.description}
               </p>
             </div>
@@ -147,26 +147,26 @@ export const SchoolOfGuideDogPage = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+        <h2 className="text-3xl font-bold text-neutral-800 mb-2">
           스쿨오브안내견 🐾
         </h2>
-        <p className="text-gray-600 mb-4">
+        <p className="text-neutral-600 mb-4">
           삼성화재 공식 채널 - 안내견 교육 영상 모음
         </p>
 
         {loading && (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">영상 목록을 불러오는 중...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <p className="text-neutral-600">영상 목록을 불러오는 중...</p>
           </div>
         )}
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-            <p className="text-red-600">{error}</p>
+          <div className="bg-error-50 border border-error-200 rounded-lg p-4 mb-4">
+            <p className="text-error-600">{error}</p>
             <button
               onClick={loadVideos}
-              className="mt-2 text-blue-600 hover:text-blue-800 underline"
+              className="mt-2 text-primary-600 hover:text-primary-800 underline"
             >
               다시 시도
             </button>
@@ -175,13 +175,13 @@ export const SchoolOfGuideDogPage = () => {
 
         {!loading && !error && videos.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600">영상이 없습니다.</p>
+            <p className="text-neutral-600">영상이 없습니다.</p>
           </div>
         )}
 
         {!loading && !error && videos.length > 0 && (
           <div>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-neutral-500 mb-4">
               총 {videos.length}개의 영상 (24시간마다 자동 업데이트)
             </p>
             <div className="space-y-3">
@@ -189,7 +189,7 @@ export const SchoolOfGuideDogPage = () => {
                 <button
                   key={video.id}
                   onClick={() => handleVideoClick(video)}
-                  className="w-full text-left bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="w-full text-left bg-neutral-50 hover:bg-primary-50 border border-neutral-200 hover:border-primary-300 rounded-lg p-4 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                   aria-label={`${video.title} 영상 재생`}
                 >
                   <div className="flex items-start space-x-4">
@@ -199,11 +199,11 @@ export const SchoolOfGuideDogPage = () => {
                       className="w-32 h-24 object-cover rounded-md flex-shrink-0"
                     />
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold text-blue-600 hover:text-blue-800 mb-2">
+                      <h3 className="text-lg font-bold text-primary-600 hover:text-primary-800 mb-2">
                         {video.title}
                       </h3>
                       {video.description && (
-                        <p className="text-sm text-gray-600 line-clamp-2">
+                        <p className="text-sm text-neutral-600 line-clamp-2">
                           {video.description}
                         </p>
                       )}
@@ -216,9 +216,9 @@ export const SchoolOfGuideDogPage = () => {
         )}
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">💡 안내</h3>
-        <ul className="text-sm text-gray-700 space-y-1">
+      <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+        <h3 className="text-lg font-semibold text-neutral-800 mb-2">💡 안내</h3>
+        <ul className="text-sm text-neutral-700 space-y-1">
           <li>• 제목을 클릭하면 영상이 바로 재생됩니다</li>
           <li>• 영상 목록은 24시간마다 자동으로 업데이트됩니다</li>
           <li>• 키보드 단축키: 스페이스바(재생/일시정지), ↑↓(볼륨), ←→(10초 이동)</li>

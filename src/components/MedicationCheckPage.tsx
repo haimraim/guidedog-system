@@ -258,12 +258,12 @@ export const MedicationCheckPage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">약품 체크 기록</h2>
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">약품 체크 기록</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* 약품 선택 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-neutral-700 mb-3">
                 약품 선택 *
               </label>
               <div className="space-y-3">
@@ -274,8 +274,8 @@ export const MedicationCheckPage = () => {
                       key={type}
                       className={`block p-4 rounded-lg border-2 cursor-pointer transition-colors ${
                         selectedMedication === type
-                          ? 'bg-blue-50 border-blue-500'
-                          : 'border-gray-300 hover:border-blue-300'
+                          ? 'bg-primary-50 border-primary-500'
+                          : 'border-neutral-300 hover:border-primary-300'
                       }`}
                     >
                       <div className="flex items-start">
@@ -284,11 +284,11 @@ export const MedicationCheckPage = () => {
                           name="medication"
                           checked={selectedMedication === type}
                           onChange={() => setSelectedMedication(type)}
-                          className="w-5 h-5 text-blue-600 mt-1 focus:ring-2 focus:ring-blue-500"
+                          className="w-5 h-5 text-primary-600 mt-1 focus:ring-2 focus:ring-primary-500"
                         />
                         <div className="ml-3 flex-1">
-                          <div className="font-semibold text-gray-800">{info.name}</div>
-                          <div className="text-sm text-gray-600 mt-1">
+                          <div className="font-semibold text-neutral-800">{info.name}</div>
+                          <div className="text-sm text-neutral-600 mt-1">
                             <div>형태: {info.form}</div>
                             <div>일정: {info.schedule}</div>
                             <div>용량: {info.dosage}</div>
@@ -303,14 +303,14 @@ export const MedicationCheckPage = () => {
 
             {/* 선택된 약품 정보 표시 */}
             {selectedMedication && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-2">복용/도포 방법</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700 mb-3">
+              <div className="bg-warning-50 border border-warning-200 rounded-lg p-4">
+                <h3 className="font-semibold text-neutral-800 mb-2">복용/도포 방법</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm text-neutral-700 mb-3">
                   {MEDICATION_INFO[selectedMedication].instructions.map((instruction, index) => (
                     <li key={index}>{instruction}</li>
                   ))}
                 </ul>
-                <div className="text-sm font-semibold text-red-600">
+                <div className="text-sm font-semibold text-error-600">
                   ※ {MEDICATION_INFO[selectedMedication].warning}
                 </div>
               </div>
@@ -318,7 +318,7 @@ export const MedicationCheckPage = () => {
 
             {/* 체크 날짜 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 체크 날짜 *
               </label>
               <div className="grid grid-cols-2 gap-4 mb-3">
@@ -331,7 +331,7 @@ export const MedicationCheckPage = () => {
                     const day = String(today.getDate()).padStart(2, '0');
                     setCheckDate(`${year}-${month}-${day}`);
                   }}
-                  className="px-4 py-3 bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold rounded-lg transition-colors border-2 border-blue-300"
+                  className="px-4 py-3 bg-primary-100 hover:bg-primary-200 text-primary-800 font-semibold rounded-lg transition-colors border-2 border-primary-300"
                 >
                   오늘
                 </button>
@@ -345,7 +345,7 @@ export const MedicationCheckPage = () => {
                     const day = String(yesterday.getDate()).padStart(2, '0');
                     setCheckDate(`${year}-${month}-${day}`);
                   }}
-                  className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-lg transition-colors border-2 border-gray-300"
+                  className="px-4 py-3 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-semibold rounded-lg transition-colors border-2 border-neutral-300"
                 >
                   어제
                 </button>
@@ -355,7 +355,7 @@ export const MedicationCheckPage = () => {
                 id="checkDate"
                 value={checkDate}
                 onChange={(e) => setCheckDate(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 required
               />
             </div>
@@ -364,7 +364,7 @@ export const MedicationCheckPage = () => {
             <div>
               <label
                 htmlFor="notes"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 메모 (선택)
               </label>
@@ -372,7 +372,7 @@ export const MedicationCheckPage = () => {
                 id="notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 rows={3}
                 placeholder="특이사항이나 추가 메모를 입력하세요"
               />
@@ -381,14 +381,14 @@ export const MedicationCheckPage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 체크 완료
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 취소
               </button>
@@ -403,21 +403,21 @@ export const MedicationCheckPage = () => {
   if (user?.role === 'admin') {
     return (
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">약품 체크 관리 (관리자)</h2>
+        <h2 className="text-2xl font-bold text-neutral-800 mb-6">약품 체크 관리 (관리자)</h2>
 
         {/* 필터 섹션 */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">필터</h3>
+          <h3 className="text-lg font-bold text-neutral-800 mb-4">필터</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* 카테고리 선택 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 카테고리
               </label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value as CategoryType)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
               >
                 <option value="안내견">안내견</option>
                 <option value="퍼피">퍼피</option>
@@ -428,13 +428,13 @@ export const MedicationCheckPage = () => {
 
             {/* 년도 선택 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 년도
               </label>
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
               >
                 {[2025, 2024, 2023, 2022].map(year => (
                   <option key={year} value={year}>{year}년</option>
@@ -444,13 +444,13 @@ export const MedicationCheckPage = () => {
 
             {/* 월 선택 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 월
               </label>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
                   <option key={month} value={month}>{month}월</option>
@@ -462,52 +462,52 @@ export const MedicationCheckPage = () => {
 
         {/* 월별 체크 현황 테이블 */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">
+          <h3 className="text-xl font-bold text-neutral-800 mb-4">
             {selectedCategory} - {selectedYear}년 {selectedMonth}월 약품 체크 현황
           </h3>
           {adminTableData.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-neutral-500">
               해당 카테고리에 안내견이 없습니다.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
+                  <tr className="bg-neutral-100">
+                    <th className="border border-neutral-300 px-4 py-3 text-left font-semibold text-neutral-800">
                       견명
                     </th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                    <th className="border border-neutral-300 px-4 py-3 text-center font-semibold text-neutral-800">
                       하트가드
                     </th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                    <th className="border border-neutral-300 px-4 py-3 text-center font-semibold text-neutral-800">
                       드론탈플러스
                     </th>
-                    <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                    <th className="border border-neutral-300 px-4 py-3 text-center font-semibold text-neutral-800">
                       프론트라인
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {adminTableData.map((row) => (
-                    <tr key={row.dogName} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">
+                    <tr key={row.dogName} className="hover:bg-neutral-50">
+                      <td className="border border-neutral-300 px-4 py-3 font-semibold text-neutral-800">
                         {row.dogName}
                       </td>
                       {row.checks.map((check, idx) => (
                         <td
                           key={idx}
-                          className={`border border-gray-300 px-4 py-3 text-center ${
-                            check.checked ? 'bg-green-50' : 'bg-red-50'
+                          className={`border border-neutral-300 px-4 py-3 text-center ${
+                            check.checked ? 'bg-success-50' : 'bg-error-50'
                           }`}
                         >
                           {check.checked ? (
                             <div>
-                              <div className="text-green-600 font-semibold">✓</div>
-                              <div className="text-xs text-gray-600 mt-1">{check.checkerName}</div>
+                              <div className="text-success-600 font-semibold">✓</div>
+                              <div className="text-xs text-neutral-600 mt-1">{check.checkerName}</div>
                             </div>
                           ) : (
-                            <div className="text-red-500 font-semibold">✗</div>
+                            <div className="text-error-500 font-semibold">✗</div>
                           )}
                         </td>
                       ))}
@@ -517,13 +517,13 @@ export const MedicationCheckPage = () => {
               </table>
             </div>
           )}
-          <div className="mt-4 flex items-center space-x-6 text-sm text-gray-600">
+          <div className="mt-4 flex items-center space-x-6 text-sm text-neutral-600">
             <div className="flex items-center space-x-2">
-              <span className="text-green-600 font-semibold">✓</span>
+              <span className="text-success-600 font-semibold">✓</span>
               <span>체크 완료 (체크한 사람 이름 표시)</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-red-500 font-semibold">✗</span>
+              <span className="text-error-500 font-semibold">✗</span>
               <span>체크 안 함</span>
             </div>
           </div>
@@ -531,17 +531,17 @@ export const MedicationCheckPage = () => {
 
         {/* 약품별 안내 */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">약품별 안내</h3>
+          <h3 className="text-xl font-bold text-neutral-800 mb-4">약품별 안내</h3>
           <div className="space-y-4">
             {(Object.keys(MEDICATION_INFO) as MedicationType[]).map((type) => {
               const info = MEDICATION_INFO[type];
               return (
-                <details key={type} className="border border-gray-200 rounded-lg">
-                  <summary className="cursor-pointer p-4 font-semibold text-gray-800 hover:bg-gray-50">
+                <details key={type} className="border border-neutral-200 rounded-lg">
+                  <summary className="cursor-pointer p-4 font-semibold text-neutral-800 hover:bg-neutral-50">
                     {info.name}
                   </summary>
-                  <div className="p-4 border-t border-gray-200 bg-gray-50">
-                    <div className="space-y-2 text-sm text-gray-700">
+                  <div className="p-4 border-t border-neutral-200 bg-neutral-50">
+                    <div className="space-y-2 text-sm text-neutral-700">
                       <div><strong>형태:</strong> {info.form}</div>
                       <div><strong>일정:</strong> {info.schedule}</div>
                       <div><strong>용량:</strong> {info.dosage}</div>
@@ -553,7 +553,7 @@ export const MedicationCheckPage = () => {
                           ))}
                         </ul>
                       </div>
-                      <div className="pt-2 text-red-600 font-semibold">
+                      <div className="pt-2 text-error-600 font-semibold">
                         ※ {info.warning}
                       </div>
                     </div>
@@ -571,10 +571,10 @@ export const MedicationCheckPage = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">약품 체크 관리</h2>
+        <h2 className="text-2xl font-bold text-neutral-800">약품 체크 관리</h2>
         <button
           onClick={() => setIsAdding(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+          className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
         >
           기록 작성
         </button>
@@ -582,18 +582,18 @@ export const MedicationCheckPage = () => {
 
       {/* 미완료 약품 알림 */}
       {monthlyStatus.filter(s => !s.checked).length > 0 && (
-        <div className="bg-red-50 border-2 border-red-400 rounded-lg p-6 mb-6">
+        <div className="bg-error-50 border-2 border-error-400 rounded-lg p-6 mb-6">
           <div className="flex items-start space-x-3">
-            <span className="text-red-500 text-2xl">⚠️</span>
+            <span className="text-error-500 text-2xl">⚠️</span>
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-red-800 mb-2">
+              <h3 className="text-lg font-bold text-error-800 mb-2">
                 이번 달 아직 체크하지 않은 약품
               </h3>
               <div className="flex flex-wrap gap-3">
                 {monthlyStatus.filter(s => !s.checked).map(({ type }) => (
                   <span
                     key={type}
-                    className="px-4 py-2 bg-red-100 text-red-800 rounded-lg font-semibold border border-red-300"
+                    className="px-4 py-2 bg-error-100 text-error-800 rounded-lg font-semibold border border-error-300"
                   >
                     {type}
                   </span>
@@ -607,23 +607,23 @@ export const MedicationCheckPage = () => {
       {/* 연간 체크 현황 표 */}
       {yearlyStatus && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">
+          <h3 className="text-xl font-bold text-neutral-800 mb-4">
             {new Date().getFullYear()}년 연간 체크 현황
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
+                <tr className="bg-neutral-100">
+                  <th className="border border-neutral-300 px-4 py-3 text-left font-semibold text-neutral-800">
                     약품명
                   </th>
                   {yearlyStatus.months.map(month => (
                     <th
                       key={month}
-                      className={`border border-gray-300 px-3 py-3 text-center font-semibold ${
+                      className={`border border-neutral-300 px-3 py-3 text-center font-semibold ${
                         month === new Date().getMonth() + 1
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'text-gray-800'
+                          ? 'bg-primary-100 text-primary-800'
+                          : 'text-neutral-800'
                       }`}
                     >
                       {month}월
@@ -633,28 +633,28 @@ export const MedicationCheckPage = () => {
               </thead>
               <tbody>
                 {yearlyStatus.medications.map(({ type, monthlyData }) => (
-                  <tr key={type} className="hover:bg-gray-50">
-                    <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">
+                  <tr key={type} className="hover:bg-neutral-50">
+                    <td className="border border-neutral-300 px-4 py-3 font-semibold text-neutral-800">
                       {type}
                     </td>
                     {monthlyData.map(({ month, checked, count }) => (
                       <td
                         key={month}
-                        className={`border border-gray-300 px-3 py-3 text-center ${
+                        className={`border border-neutral-300 px-3 py-3 text-center ${
                           month === new Date().getMonth() + 1
-                            ? 'bg-blue-50'
+                            ? 'bg-primary-50'
                             : ''
                         }`}
                       >
                         {checked ? (
                           <div className="flex flex-col items-center">
-                            <span className="text-green-600 text-sm font-semibold">완료</span>
+                            <span className="text-success-600 text-sm font-semibold">완료</span>
                             {count > 1 && (
-                              <span className="text-xs text-gray-500">({count}회)</span>
+                              <span className="text-xs text-neutral-500">({count}회)</span>
                             )}
                           </div>
                         ) : (
-                          <span className="text-red-500 text-sm font-semibold">미완료</span>
+                          <span className="text-error-500 text-sm font-semibold">미완료</span>
                         )}
                       </td>
                     ))}
@@ -663,17 +663,17 @@ export const MedicationCheckPage = () => {
               </tbody>
             </table>
           </div>
-          <div className="mt-4 flex items-center space-x-6 text-sm text-gray-600">
+          <div className="mt-4 flex items-center space-x-6 text-sm text-neutral-600">
             <div className="flex items-center space-x-2">
-              <span className="text-green-600 font-semibold">완료</span>
+              <span className="text-success-600 font-semibold">완료</span>
               <span>- 체크 완료</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-red-500 font-semibold">미완료</span>
+              <span className="text-error-500 font-semibold">미완료</span>
               <span>- 체크 안 함</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-blue-100 border border-blue-300 rounded"></div>
+              <div className="w-6 h-6 bg-primary-100 border border-primary-300 rounded"></div>
               <span>이번 달</span>
             </div>
           </div>
@@ -682,17 +682,17 @@ export const MedicationCheckPage = () => {
 
       {/* 약품별 안내 */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">약품별 안내</h3>
+        <h3 className="text-xl font-bold text-neutral-800 mb-4">약품별 안내</h3>
         <div className="space-y-4">
           {(Object.keys(MEDICATION_INFO) as MedicationType[]).map((type) => {
             const info = MEDICATION_INFO[type];
             return (
-              <details key={type} className="border border-gray-200 rounded-lg">
-                <summary className="cursor-pointer p-4 font-semibold text-gray-800 hover:bg-gray-50">
+              <details key={type} className="border border-neutral-200 rounded-lg">
+                <summary className="cursor-pointer p-4 font-semibold text-neutral-800 hover:bg-neutral-50">
                   {info.name}
                 </summary>
-                <div className="p-4 border-t border-gray-200 bg-gray-50">
-                  <div className="space-y-2 text-sm text-gray-700">
+                <div className="p-4 border-t border-neutral-200 bg-neutral-50">
+                  <div className="space-y-2 text-sm text-neutral-700">
                     <div><strong>형태:</strong> {info.form}</div>
                     <div><strong>일정:</strong> {info.schedule}</div>
                     <div><strong>용량:</strong> {info.dosage}</div>
@@ -704,7 +704,7 @@ export const MedicationCheckPage = () => {
                         ))}
                       </ul>
                     </div>
-                    <div className="pt-2 text-red-600 font-semibold">
+                    <div className="pt-2 text-error-600 font-semibold">
                       ※ {info.warning}
                     </div>
                   </div>
@@ -717,13 +717,13 @@ export const MedicationCheckPage = () => {
 
       {/* 체크 기록 내역 */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">체크 기록 내역</h3>
+        <h3 className="text-xl font-bold text-neutral-800 mb-4">체크 기록 내역</h3>
         {checks.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-neutral-500">
             <p>체크 기록이 없습니다.</p>
             <button
               onClick={() => setIsAdding(true)}
-              className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+              className="mt-4 text-primary-600 hover:text-primary-800 font-semibold"
             >
               첫 체크 기록하기
             </button>
@@ -732,17 +732,17 @@ export const MedicationCheckPage = () => {
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
+                <tr className="bg-neutral-100">
+                  <th className="border border-neutral-300 px-4 py-3 text-left font-semibold text-neutral-800">
                     약품명
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
+                  <th className="border border-neutral-300 px-4 py-3 text-left font-semibold text-neutral-800">
                     체크 날짜
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-800">
+                  <th className="border border-neutral-300 px-4 py-3 text-left font-semibold text-neutral-800">
                     메모
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-800">
+                  <th className="border border-neutral-300 px-4 py-3 text-center font-semibold text-neutral-800">
                     삭제
                   </th>
                 </tr>
@@ -752,21 +752,21 @@ export const MedicationCheckPage = () => {
                 {checks
                   .sort((a, b) => new Date(b.checkDate).getTime() - new Date(a.checkDate).getTime())
                   .map(check => (
-                    <tr key={check.id} className="hover:bg-gray-50">
-                      <td className="border border-gray-300 px-4 py-3 font-semibold text-gray-800">
+                    <tr key={check.id} className="hover:bg-neutral-50">
+                      <td className="border border-neutral-300 px-4 py-3 font-semibold text-neutral-800">
                         {check.medicationType}
                       </td>
-                      <td className="border border-gray-300 px-4 py-3 text-gray-700">
+                      <td className="border border-neutral-300 px-4 py-3 text-neutral-700">
                         {formatDate(check.checkDate)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-3 text-sm text-gray-600">
+                      <td className="border border-neutral-300 px-4 py-3 text-sm text-neutral-600">
                         {check.notes || '-'}
                       </td>
-                      <td className="border border-gray-300 px-4 py-3 text-center">
+                      <td className="border border-neutral-300 px-4 py-3 text-center">
                         {check.userId === user?.id && (
                           <button
                             onClick={() => handleDelete(check.id)}
-                            className="text-red-600 hover:text-red-800 text-sm font-semibold"
+                            className="text-error-600 hover:text-error-800 text-sm font-semibold"
                           >
                             삭제
                           </button>

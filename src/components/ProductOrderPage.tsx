@@ -485,23 +485,23 @@ export const ProductOrderPage = () => {
 
   const getCategoryBadge = (cat: ProductCategory) => {
     const colors = {
-      '사료': 'bg-green-100 text-green-800',
-      '장난감': 'bg-yellow-100 text-yellow-800',
-      '샴푸/린스': 'bg-blue-100 text-blue-800',
-      '매트': 'bg-purple-100 text-purple-800',
+      '사료': 'bg-success-100 text-success-800',
+      '장난감': 'bg-warning-100 text-warning-800',
+      '샴푸/린스': 'bg-primary-100 text-primary-800',
+      '매트': 'bg-primary-100 text-purple-800',
       '견옷': 'bg-pink-100 text-pink-800',
     };
-    return colors[cat] || 'bg-gray-100 text-gray-800';
+    return colors[cat] || 'bg-neutral-100 text-neutral-800';
   };
 
   const getStatusBadge = (status: string) => {
     const statusMap = {
-      'pending': { text: '대기중', color: 'bg-yellow-100 text-yellow-800' },
-      'approved': { text: '승인됨', color: 'bg-blue-100 text-blue-800' },
-      'shipped': { text: '배송중', color: 'bg-purple-100 text-purple-800' },
-      'delivered': { text: '배송완료', color: 'bg-green-100 text-green-800' },
+      'pending': { text: '대기중', color: 'bg-warning-100 text-warning-800' },
+      'approved': { text: '승인됨', color: 'bg-primary-100 text-primary-800' },
+      'shipped': { text: '배송중', color: 'bg-primary-100 text-purple-800' },
+      'delivered': { text: '배송완료', color: 'bg-success-100 text-success-800' },
     };
-    const info = statusMap[status as keyof typeof statusMap] || { text: status, color: 'bg-gray-100 text-gray-800' };
+    const info = statusMap[status as keyof typeof statusMap] || { text: status, color: 'bg-neutral-100 text-neutral-800' };
     return <span className={`px-3 py-1 rounded-full text-sm font-semibold ${info.color}`}>{info.text}</span>;
   };
 
@@ -514,10 +514,10 @@ export const ProductOrderPage = () => {
     return (
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">나의 신청 내역</h2>
+          <h2 className="text-2xl font-bold text-neutral-800">나의 신청 내역</h2>
           <button
             onClick={() => setShowMyOrders(false)}
-            className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors"
+            className="px-6 py-2 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold rounded-lg transition-colors"
           >
             물품 목록으로
           </button>
@@ -525,10 +525,10 @@ export const ProductOrderPage = () => {
 
         {myOrders.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-500 text-lg mb-4">신청한 물품이 없습니다.</p>
+            <p className="text-neutral-500 text-lg mb-4">신청한 물품이 없습니다.</p>
             <button
               onClick={() => setShowMyOrders(false)}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+              className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors"
             >
               물품 둘러보기
             </button>
@@ -550,7 +550,7 @@ export const ProductOrderPage = () => {
                             }
                           }}
                           disabled={!product}
-                          className="text-xl font-bold text-blue-600 hover:text-blue-800 underline focus:ring-2 focus:ring-blue-500 focus:outline-none rounded disabled:text-gray-400 disabled:no-underline disabled:cursor-not-allowed text-left"
+                          className="text-xl font-bold text-primary-600 hover:text-primary-800 underline focus:ring-2 focus:ring-primary-500 focus:outline-none rounded disabled:text-neutral-400 disabled:no-underline disabled:cursor-not-allowed text-left"
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' && product) {
                               setViewingProduct(product);
@@ -562,7 +562,7 @@ export const ProductOrderPage = () => {
                         </button>
                         {getStatusBadge(order.status)}
                       </div>
-                    <div className="text-sm text-gray-600 space-y-1">
+                    <div className="text-sm text-neutral-600 space-y-1">
                       <p>
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${getCategoryBadge(order.productCategory)}`}>
                           {order.productCategory}
@@ -581,8 +581,8 @@ export const ProductOrderPage = () => {
                 </div>
 
                 <div className="border-t pt-4 mt-4">
-                  <h4 className="font-semibold text-gray-800 mb-2">배송 정보</h4>
-                  <div className="text-sm text-gray-600 space-y-1">
+                  <h4 className="font-semibold text-neutral-800 mb-2">배송 정보</h4>
+                  <div className="text-sm text-neutral-600 space-y-1">
                     <p>받는 사람: {order.recipientName}</p>
                     <p>연락처: {order.recipientPhone}</p>
                     <p>배송 주소: {order.recipientAddress}</p>
@@ -590,18 +590,18 @@ export const ProductOrderPage = () => {
                 </div>
 
                 {order.status === 'delivered' && (
-                  <div className="mt-4 p-3 bg-green-50 rounded-lg">
-                    <p className="text-sm text-green-800 font-semibold">✓ 배송이 완료되었습니다</p>
+                  <div className="mt-4 p-3 bg-success-50 rounded-lg">
+                    <p className="text-sm text-success-800 font-semibold">✓ 배송이 완료되었습니다</p>
                   </div>
                 )}
                 {order.status === 'shipped' && (
-                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-blue-800 font-semibold">🚚 배송 중입니다</p>
+                  <div className="mt-4 p-3 bg-primary-50 rounded-lg">
+                    <p className="text-sm text-primary-800 font-semibold">🚚 배송 중입니다</p>
                   </div>
                 )}
                 {order.status === 'pending' && (
-                  <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
-                    <p className="text-sm text-yellow-800 font-semibold">⏳ 신청이 접수되었습니다</p>
+                  <div className="mt-4 p-3 bg-warning-50 rounded-lg">
+                    <p className="text-sm text-warning-800 font-semibold">⏳ 신청이 접수되었습니다</p>
                   </div>
                 )}
               </div>
@@ -618,7 +618,7 @@ export const ProductOrderPage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">{viewingProduct.name}</h2>
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">{viewingProduct.name}</h2>
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* 이미지 */}
@@ -627,11 +627,11 @@ export const ProductOrderPage = () => {
                 <img
                   src={viewingProduct.imageUrl}
                   alt={viewingProduct.name}
-                  className="w-full rounded-lg border border-gray-300"
+                  className="w-full rounded-lg border border-neutral-300"
                 />
               ) : (
-                <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                  <span className="text-gray-500">이미지 없음</span>
+                <div className="w-full h-64 bg-neutral-200 rounded-lg flex items-center justify-center">
+                  <span className="text-neutral-500">이미지 없음</span>
                 </div>
               )}
             </div>
@@ -645,24 +645,24 @@ export const ProductOrderPage = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">재고 현황</h3>
-                <p className={`text-2xl font-bold ${viewingProduct.stock < 10 ? 'text-orange-600' : 'text-green-600'}`}>
+                <h3 className="text-lg font-semibold text-neutral-800 mb-2">재고 현황</h3>
+                <p className={`text-2xl font-bold ${viewingProduct.stock < 10 ? 'text-warning-600' : 'text-success-600'}`}>
                   {viewingProduct.stock}개 남음
                 </p>
               </div>
 
               {viewingProduct.options && viewingProduct.options.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">옵션</h3>
+                  <h3 className="text-lg font-semibold text-neutral-800 mb-2">옵션</h3>
                   <div className="space-y-3">
                     {viewingProduct.options.map((option, index) => (
                       <div key={index}>
-                        <p className="font-semibold text-gray-700 mb-1">{option.name}</p>
+                        <p className="font-semibold text-neutral-700 mb-1">{option.name}</p>
                         <div className="grid grid-cols-2 gap-2">
                           {option.values.map((optValue, valueIndex) => (
-                            <div key={valueIndex} className="text-sm p-2 bg-gray-50 rounded border border-gray-200">
-                              <span className="text-gray-800">{optValue.value}</span>
-                              <span className={`ml-2 text-xs ${optValue.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            <div key={valueIndex} className="text-sm p-2 bg-neutral-50 rounded border border-neutral-200">
+                              <span className="text-neutral-800">{optValue.value}</span>
+                              <span className={`ml-2 text-xs ${optValue.stock > 0 ? 'text-success-600' : 'text-error-600'}`}>
                                 (재고: {optValue.stock})
                               </span>
                             </div>
@@ -676,8 +676,8 @@ export const ProductOrderPage = () => {
 
               {viewingProduct.description && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">제품 설명</h3>
-                  <p className="text-gray-700 whitespace-pre-wrap">{viewingProduct.description}</p>
+                  <h3 className="text-lg font-semibold text-neutral-800 mb-2">제품 설명</h3>
+                  <p className="text-neutral-700 whitespace-pre-wrap">{viewingProduct.description}</p>
                 </div>
               )}
 
@@ -687,14 +687,14 @@ export const ProductOrderPage = () => {
                     setOrderingProduct(viewingProduct);
                     setViewingProduct(null);
                   }}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                   disabled={viewingProduct.stock === 0}
                 >
                   {viewingProduct.stock === 0 ? '재고 없음' : '신청하기'}
                 </button>
                 <button
                   onClick={() => setViewingProduct(null)}
-                  className="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  className="w-full bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                 >
                   목록으로 돌아가기
                 </button>
@@ -711,18 +711,18 @@ export const ProductOrderPage = () => {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">물품 신청</h2>
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">물품 신청</h2>
 
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold text-gray-800 mb-2">신청 물품</h3>
-            <p className="text-lg font-bold text-blue-600">{orderingProduct.name}</p>
-            <p className="text-sm text-gray-600">카테고리: {orderingProduct.category}</p>
-            <p className="text-sm text-gray-600">현재 재고: {orderingProduct.stock}개</p>
+          <div className="mb-6 p-4 bg-neutral-50 rounded-lg">
+            <h3 className="font-semibold text-neutral-800 mb-2">신청 물품</h3>
+            <p className="text-lg font-bold text-primary-600">{orderingProduct.name}</p>
+            <p className="text-sm text-neutral-600">카테고리: {orderingProduct.category}</p>
+            <p className="text-sm text-neutral-600">현재 재고: {orderingProduct.stock}개</p>
           </div>
 
           <form onSubmit={handleSubmitOrder} className="space-y-6">
             <div>
-              <label htmlFor="quantity" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="quantity" className="block text-sm font-semibold text-neutral-700 mb-2">
                 신청 수량 *
               </label>
               <div className="flex items-center space-x-3">
@@ -734,7 +734,7 @@ export const ProductOrderPage = () => {
                       setQuantity(String(currentQty - 1));
                     }
                   }}
-                  className="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg transition-colors"
+                  className="px-4 py-3 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-bold rounded-lg transition-colors"
                 >
                   −
                 </button>
@@ -749,7 +749,7 @@ export const ProductOrderPage = () => {
                       setQuantity(value);
                     }
                   }}
-                  className="flex-1 text-center px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-lg font-semibold"
+                  className="flex-1 text-center px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-lg font-semibold"
                   min="1"
                   max={orderingProduct.stock}
                   required
@@ -762,12 +762,12 @@ export const ProductOrderPage = () => {
                       setQuantity(String(currentQty + 1));
                     }
                   }}
-                  className="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors"
+                  className="px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg transition-colors"
                 >
                   +
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-neutral-500 mt-2">
                 현재 재고: {orderingProduct.stock}개
               </p>
             </div>
@@ -775,18 +775,18 @@ export const ProductOrderPage = () => {
             {/* 옵션 선택 */}
             {orderingProduct.options && orderingProduct.options.length > 0 && (
               <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">옵션 선택 *</h3>
+                <h3 className="text-lg font-semibold text-neutral-800 mb-4">옵션 선택 *</h3>
                 <div className="space-y-4">
                   {orderingProduct.options.map((option, index) => (
                     <div key={index}>
-                      <label htmlFor={`option-${index}`} className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label htmlFor={`option-${index}`} className="block text-sm font-semibold text-neutral-700 mb-2">
                         {option.name} *
                       </label>
                       <select
                         id={`option-${index}`}
                         value={selectedOptions[option.name] || ''}
                         onChange={(e) => setSelectedOptions({ ...selectedOptions, [option.name]: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                         required
                       >
                         <option value="">선택하세요</option>
@@ -803,11 +803,11 @@ export const ProductOrderPage = () => {
             )}
 
             <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">배송 정보</h3>
+              <h3 className="text-lg font-semibold text-neutral-800 mb-4">배송 정보</h3>
 
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="recipientName" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="recipientName" className="block text-sm font-semibold text-neutral-700 mb-2">
                     받는 사람 *
                   </label>
                   <input
@@ -815,13 +815,13 @@ export const ProductOrderPage = () => {
                     id="recipientName"
                     value={recipientName}
                     onChange={(e) => setRecipientName(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="recipientPhone" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="recipientPhone" className="block text-sm font-semibold text-neutral-700 mb-2">
                     연락처 *
                   </label>
                   <input
@@ -829,20 +829,20 @@ export const ProductOrderPage = () => {
                     id="recipientPhone"
                     value={recipientPhone}
                     onChange={(e) => setRecipientPhone(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="recipientAddress" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="recipientAddress" className="block text-sm font-semibold text-neutral-700 mb-2">
                     배송 주소 *
                   </label>
                   <textarea
                     id="recipientAddress"
                     value={recipientAddress}
                     onChange={(e) => setRecipientAddress(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     rows={3}
                     required
                   />
@@ -853,14 +853,14 @@ export const ProductOrderPage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 신청 완료
               </button>
               <button
                 type="button"
                 onClick={() => setOrderingProduct(null)}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 취소
               </button>
@@ -876,20 +876,20 @@ export const ProductOrderPage = () => {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
             {editingProduct ? '물품 수정' : '물품 등록'}
           </h2>
 
           <form onSubmit={handleProductSubmit} className="space-y-6">
             <div>
-              <label htmlFor="registerCategory" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="registerCategory" className="block text-sm font-semibold text-neutral-700 mb-2">
                 카테고리 *
               </label>
               <select
                 id="registerCategory"
                 value={registerCategory}
                 onChange={(e) => setRegisterCategory(e.target.value as ProductCategory)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 required
               >
                 {categories.map(cat => (
@@ -899,7 +899,7 @@ export const ProductOrderPage = () => {
             </div>
 
             <div>
-              <label htmlFor="registerName" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="registerName" className="block text-sm font-semibold text-neutral-700 mb-2">
                 물품명 *
               </label>
               <input
@@ -907,14 +907,14 @@ export const ProductOrderPage = () => {
                 id="registerName"
                 value={registerName}
                 onChange={(e) => setRegisterName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="물품명을 입력하세요"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="registerStock" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="registerStock" className="block text-sm font-semibold text-neutral-700 mb-2">
                 재고 수량 *
               </label>
               <input
@@ -922,7 +922,7 @@ export const ProductOrderPage = () => {
                 id="registerStock"
                 value={registerStock}
                 onChange={(e) => setRegisterStock(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="재고 수량을 입력하세요"
                 min="0"
                 required
@@ -931,39 +931,39 @@ export const ProductOrderPage = () => {
 
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-semibold text-gray-700">
+                <label className="block text-sm font-semibold text-neutral-700">
                   옵션 (선택사항)
                 </label>
                 <button
                   type="button"
                   onClick={addRegisterOption}
-                  className="text-sm bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition-colors"
+                  className="text-sm bg-success-600 hover:bg-success-700 text-white px-3 py-1 rounded transition-colors"
                 >
                   + 옵션 추가
                 </button>
               </div>
 
               {registerOptions.length === 0 ? (
-                <p className="text-sm text-gray-500 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-neutral-500 p-4 bg-neutral-50 rounded-lg">
                   옵션이 없습니다. 사이즈나 색상 등의 옵션이 필요하면 '옵션 추가' 버튼을 클릭하세요.
                 </p>
               ) : (
                 <div className="space-y-3">
                   {registerOptions.map((option, index) => (
-                    <div key={index} className="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                    <div key={index} className="border border-neutral-300 rounded-lg p-4 bg-neutral-50">
                       <div className="flex justify-between items-start mb-3">
-                        <span className="text-sm font-semibold text-gray-700">옵션 {index + 1}</span>
+                        <span className="text-sm font-semibold text-neutral-700">옵션 {index + 1}</span>
                         <button
                           type="button"
                           onClick={() => removeRegisterOption(index)}
-                          className="text-sm text-red-600 hover:text-red-800 font-semibold"
+                          className="text-sm text-error-600 hover:text-error-800 font-semibold"
                         >
                           삭제
                         </button>
                       </div>
                       <div className="space-y-3">
                         <div>
-                          <label htmlFor={`register-option-name-${index}`} className="block text-xs font-semibold text-gray-600 mb-1">
+                          <label htmlFor={`register-option-name-${index}`} className="block text-xs font-semibold text-neutral-600 mb-1">
                             옵션명 (예: 사이즈, 색상)
                           </label>
                           <input
@@ -971,27 +971,27 @@ export const ProductOrderPage = () => {
                             id={`register-option-name-${index}`}
                             value={option.name}
                             onChange={(e) => updateRegisterOptionName(index, e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm"
+                            className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm"
                             placeholder="예: 사이즈"
                           />
                         </div>
 
                         <div>
                           <div className="flex justify-between items-center mb-2">
-                            <label className="block text-xs font-semibold text-gray-600">
+                            <label className="block text-xs font-semibold text-neutral-600">
                               옵션값 및 재고
                             </label>
                             <button
                               type="button"
                               onClick={() => addRegisterOptionValue(index)}
-                              className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors"
+                              className="text-xs bg-primary-600 hover:bg-primary-700 text-white px-2 py-1 rounded transition-colors"
                             >
                               + 값 추가
                             </button>
                           </div>
 
                           {option.values.length === 0 ? (
-                            <p className="text-xs text-gray-500 p-2 bg-white rounded border border-gray-200">
+                            <p className="text-xs text-neutral-500 p-2 bg-white rounded border border-neutral-200">
                               옵션값을 추가하세요
                             </p>
                           ) : (
@@ -1002,21 +1002,21 @@ export const ProductOrderPage = () => {
                                     type="text"
                                     value={optValue.value}
                                     onChange={(e) => updateRegisterOptionValue(index, valueIndex, e.target.value)}
-                                    className="flex-1 px-2 py-1 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                    className="flex-1 px-2 py-1 border border-neutral-300 rounded text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                                     placeholder="값 (예: S, 빨강)"
                                   />
                                   <input
                                     type="number"
                                     value={optValue.stock}
                                     onChange={(e) => updateRegisterOptionValueStock(index, valueIndex, parseInt(e.target.value) || 0)}
-                                    className="w-20 px-2 py-1 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                    className="w-20 px-2 py-1 border border-neutral-300 rounded text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                                     placeholder="재고"
                                     min="0"
                                   />
                                   <button
                                     type="button"
                                     onClick={() => removeRegisterOptionValue(index, valueIndex)}
-                                    className="text-xs text-red-600 hover:text-red-800 font-semibold px-2"
+                                    className="text-xs text-error-600 hover:text-error-800 font-semibold px-2"
                                   >
                                     ✕
                                   </button>
@@ -1033,21 +1033,21 @@ export const ProductOrderPage = () => {
             </div>
 
             <div>
-              <label htmlFor="registerDescription" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="registerDescription" className="block text-sm font-semibold text-neutral-700 mb-2">
                 물품 설명
               </label>
               <textarea
                 id="registerDescription"
                 value={registerDescription}
                 onChange={(e) => setRegisterDescription(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                 placeholder="물품에 대한 설명을 입력하세요"
                 rows={4}
               />
             </div>
 
             <div>
-              <label htmlFor="registerImageFile" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="registerImageFile" className="block text-sm font-semibold text-neutral-700 mb-2">
                 물품 이미지
               </label>
               <input
@@ -1055,18 +1055,18 @@ export const ProductOrderPage = () => {
                 id="registerImageFile"
                 accept="image/*"
                 onChange={handleImageUpload}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
               />
               {registerImage && (
                 <div className="mt-3">
                   <img
                     src={registerImage}
                     alt="미리보기"
-                    className="max-w-xs max-h-64 rounded-lg border border-gray-300"
+                    className="max-w-xs max-h-64 rounded-lg border border-neutral-300"
                   />
                 </div>
               )}
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-neutral-500 mt-2">
                 * 이미지 파일 크기는 5MB 이하만 가능합니다
               </p>
             </div>
@@ -1074,7 +1074,7 @@ export const ProductOrderPage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 {editingProduct ? '수정 완료' : '등록 완료'}
               </button>
@@ -1084,7 +1084,7 @@ export const ProductOrderPage = () => {
                   resetProductForm();
                   setAdminView('products');
                 }}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 취소
               </button>
@@ -1105,15 +1105,15 @@ export const ProductOrderPage = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">물품 신청 현황</h2>
+            <h2 className="text-2xl font-bold text-neutral-800">물품 신청 현황</h2>
             {filterUserName && (
               <div className="mt-2 flex items-center space-x-2">
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-neutral-600">
                   필터: <strong>{filterUserName}</strong>
                 </span>
                 <button
                   onClick={() => setFilterUserName('')}
-                  className="text-xs px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-full transition-colors"
+                  className="text-xs px-3 py-1 bg-neutral-200 hover:bg-neutral-300 rounded-full transition-colors"
                 >
                   필터 해제
                 </button>
@@ -1123,7 +1123,7 @@ export const ProductOrderPage = () => {
           <div className="space-x-2">
             <button
               onClick={() => setAdminView('products')}
-              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+              className="px-6 py-2 bg-success-600 hover:bg-success-700 text-white font-semibold rounded-lg transition-colors"
             >
               물품 관리
             </button>
@@ -1132,13 +1132,13 @@ export const ProductOrderPage = () => {
 
         {filteredOrders.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-500">
+            <p className="text-neutral-500">
               {filterUserName ? `${filterUserName}님의 신청 내역이 없습니다.` : '신청 내역이 없습니다.'}
             </p>
             {filterUserName && (
               <button
                 onClick={() => setFilterUserName('')}
-                className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+                className="mt-4 text-primary-600 hover:text-primary-800 font-semibold"
               >
                 전체 보기
               </button>
@@ -1148,34 +1148,34 @@ export const ProductOrderPage = () => {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b-2 border-gray-200">
+                <thead className="bg-neutral-50 border-b-2 border-neutral-200">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">신청일</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">신청자</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">물품명</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">카테고리</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">수량</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">배송정보</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">상태</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">관리</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">신청일</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">신청자</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">물품명</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">카테고리</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">수량</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">배송정보</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">상태</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-neutral-700">관리</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {filteredOrders.map(order => (
-                    <tr key={order.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 text-sm text-gray-600">{formatDate(order.createdAt)}</td>
+                    <tr key={order.id} className="hover:bg-neutral-50">
+                      <td className="px-6 py-4 text-sm text-neutral-600">{formatDate(order.createdAt)}</td>
                       <td className="px-6 py-4">
                         <button
                           onClick={() => handleUserNameClick(order.userName)}
-                          className="text-sm font-semibold text-blue-600 hover:text-blue-800 underline focus:ring-2 focus:ring-blue-500 focus:outline-none rounded"
+                          className="text-sm font-semibold text-primary-600 hover:text-primary-800 underline focus:ring-2 focus:ring-primary-500 focus:outline-none rounded"
                         >
                           {order.userName}
                         </button>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-800 font-semibold">{order.productName}</div>
+                        <div className="text-sm text-neutral-800 font-semibold">{order.productName}</div>
                         {order.selectedOptions && Object.keys(order.selectedOptions).length > 0 && (
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className="text-xs text-neutral-500 mt-1">
                             {Object.entries(order.selectedOptions).map(([key, value]) => (
                               <span key={key} className="mr-2">
                                 {key}: {value}
@@ -1189,8 +1189,8 @@ export const ProductOrderPage = () => {
                           {order.productCategory}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{order.quantity}개</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
+                      <td className="px-6 py-4 text-sm text-neutral-600">{order.quantity}개</td>
+                      <td className="px-6 py-4 text-sm text-neutral-600">
                         <div className="space-y-1">
                           <p className="font-semibold">{order.recipientName}</p>
                           <p>{order.recipientPhone}</p>
@@ -1203,7 +1203,7 @@ export const ProductOrderPage = () => {
                           <select
                             value={order.status}
                             onChange={(e) => handleStatusChange(order.id, e.target.value as any)}
-                            className="px-3 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="px-3 py-1 border border-neutral-300 rounded text-sm focus:ring-2 focus:ring-primary-500 outline-none"
                           >
                             <option value="pending">대기중</option>
                             <option value="approved">승인됨</option>
@@ -1212,7 +1212,7 @@ export const ProductOrderPage = () => {
                           </select>
                           <button
                             onClick={() => handleOrderDelete(order.id)}
-                            className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors"
+                            className="px-3 py-1 bg-error-600 hover:bg-error-700 text-white text-xs rounded transition-colors"
                           >
                             삭제
                           </button>
@@ -1243,7 +1243,7 @@ export const ProductOrderPage = () => {
         <div className="mt-6 text-center">
           <button
             onClick={() => setShowExcelImport(false)}
-            className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors"
+            className="px-6 py-2 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold rounded-lg transition-colors"
           >
             취소
           </button>
@@ -1257,32 +1257,32 @@ export const ProductOrderPage = () => {
     return (
       <div className="max-w-7xl mx-auto">
         <div className="mb-6 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-800">물품 관리</h2>
+          <h2 className="text-2xl font-bold text-neutral-800">물품 관리</h2>
           <div className="space-x-2">
             <button
               onClick={() => {
                 resetProductForm();
                 setAdminView('register');
               }}
-              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+              className="px-6 py-2 bg-success-600 hover:bg-success-700 text-white font-semibold rounded-lg transition-colors"
             >
               + 물품 등록
             </button>
             <button
               onClick={() => setShowExcelImport(true)}
-              className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors"
+              className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors"
             >
               📋 엑셀 일괄 등록
             </button>
             <button
               onClick={handleDownloadProductList}
-              className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-colors"
+              className="px-6 py-2 bg-warning-600 hover:bg-warning-700 text-white font-semibold rounded-lg transition-colors"
             >
               📥 물품 목록 다운로드
             </button>
             <button
               onClick={() => setAdminView('orders')}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+              className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors"
             >
               신청 현황 보기
             </button>
@@ -1291,14 +1291,14 @@ export const ProductOrderPage = () => {
 
         {/* 카테고리 필터 */}
         <div className="mb-6 bg-white rounded-lg shadow-md p-4">
-          <label htmlFor="categoryFilter" className="block text-sm font-semibold text-gray-700 mb-2">
+          <label htmlFor="categoryFilter" className="block text-sm font-semibold text-neutral-700 mb-2">
             카테고리별 보기
           </label>
           <select
             id="categoryFilter"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value as ProductCategory | 'all')}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
           >
             <option value="all">전체 ({products.length})</option>
             {categories.map(cat => {
@@ -1314,13 +1314,13 @@ export const ProductOrderPage = () => {
 
         {filteredProducts.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-500">등록된 물품이 없습니다.</p>
+            <p className="text-neutral-500">등록된 물품이 없습니다.</p>
             <button
               onClick={() => {
                 resetProductForm();
                 setAdminView('register');
               }}
-              className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+              className="mt-4 text-primary-600 hover:text-primary-800 font-semibold"
             >
               첫 물품 등록하기
             </button>
@@ -1329,34 +1329,34 @@ export const ProductOrderPage = () => {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b-2 border-gray-200">
+                <thead className="bg-neutral-50 border-b-2 border-neutral-200">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">카테고리</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">물품명</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">현재 재고</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">관리</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">카테고리</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-700">물품명</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-neutral-700">현재 재고</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-neutral-700">관리</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {filteredProducts.map(product => (
-                    <tr key={product.id} className="hover:bg-gray-50">
+                    <tr key={product.id} className="hover:bg-neutral-50">
                       <td className="px-6 py-4">
                         <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getCategoryBadge(product.category)}`}>
                           {product.category}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-gray-800">{product.name}</td>
+                      <td className="px-6 py-4 text-sm font-semibold text-neutral-800">{product.name}</td>
                       <td className="px-6 py-4 text-center">
                         {product.options && product.options.length > 0 ? (
                           <div className="text-left">
                             {product.options.map((option, optIdx) => (
                               <div key={optIdx} className="mb-2 last:mb-0">
-                                <span className="text-xs font-semibold text-gray-500">{option.name}:</span>
+                                <span className="text-xs font-semibold text-neutral-500">{option.name}:</span>
                                 <div className="flex flex-wrap gap-1 mt-1">
                                   {option.values.map((val, valIdx) => (
                                     <span
                                       key={valIdx}
-                                      className={`text-xs px-2 py-1 rounded ${val.stock === 0 ? 'bg-red-100 text-red-700' : val.stock < 10 ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}
+                                      className={`text-xs px-2 py-1 rounded ${val.stock === 0 ? 'bg-error-100 text-error-700' : val.stock < 10 ? 'bg-warning-100 text-warning-700' : 'bg-success-100 text-success-700'}`}
                                     >
                                       {val.value}: {val.stock}
                                     </span>
@@ -1366,7 +1366,7 @@ export const ProductOrderPage = () => {
                             ))}
                           </div>
                         ) : (
-                          <span className={`text-lg font-bold ${product.stock === 0 ? 'text-red-600' : product.stock < 10 ? 'text-orange-600' : 'text-green-600'}`}>
+                          <span className={`text-lg font-bold ${product.stock === 0 ? 'text-error-600' : product.stock < 10 ? 'text-warning-600' : 'text-success-600'}`}>
                             {product.stock}개
                           </span>
                         )}
@@ -1374,13 +1374,13 @@ export const ProductOrderPage = () => {
                       <td className="px-6 py-4 text-center space-x-2">
                         <button
                           onClick={() => handleProductEdit(product)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                          className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors"
                         >
                           수정
                         </button>
                         <button
                           onClick={() => handleProductDelete(product.id)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                          className="bg-error-600 hover:bg-error-700 text-white px-4 py-2 rounded-lg transition-colors"
                         >
                           삭제
                         </button>
@@ -1400,10 +1400,10 @@ export const ProductOrderPage = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">물품 신청</h2>
+        <h2 className="text-2xl font-bold text-neutral-800">물품 신청</h2>
         <button
           onClick={() => setShowMyOrders(true)}
-          className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors flex items-center space-x-2"
+          className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors flex items-center space-x-2"
         >
           <span>📦</span>
           <span>주문 내역</span>
@@ -1419,10 +1419,10 @@ export const ProductOrderPage = () => {
       {myOrders.length > 0 && (
         <div className="mb-8 bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold text-gray-800">최근 신청 내역</h3>
+            <h3 className="text-lg font-bold text-neutral-800">최근 신청 내역</h3>
             <button
               onClick={() => setShowMyOrders(true)}
-              className="text-sm text-blue-600 hover:text-blue-800 font-semibold"
+              className="text-sm text-primary-600 hover:text-primary-800 font-semibold"
             >
               전체 보기 →
             </button>
@@ -1431,7 +1431,7 @@ export const ProductOrderPage = () => {
             {myOrders.slice(0, 5).map(order => {
               const product = products.find(p => p.id === order.productId);
               return (
-                <div key={order.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <div key={order.id} className="flex justify-between items-center p-3 bg-neutral-50 rounded-lg">
                   <div>
                     <button
                       onClick={() => {
@@ -1440,7 +1440,7 @@ export const ProductOrderPage = () => {
                         }
                       }}
                       disabled={!product}
-                      className="font-semibold text-blue-600 hover:text-blue-800 underline focus:ring-2 focus:ring-blue-500 focus:outline-none rounded disabled:text-gray-800 disabled:no-underline disabled:cursor-not-allowed text-left"
+                      className="font-semibold text-primary-600 hover:text-primary-800 underline focus:ring-2 focus:ring-primary-500 focus:outline-none rounded disabled:text-neutral-800 disabled:no-underline disabled:cursor-not-allowed text-left"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' && product) {
                           setViewingProduct(product);
@@ -1450,11 +1450,11 @@ export const ProductOrderPage = () => {
                       {order.productName}
                     </button>
                     {order.selectedOptions && Object.keys(order.selectedOptions).length > 0 && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-neutral-500">
                         {Object.entries(order.selectedOptions).map(([key, value]) => `${key}: ${value}`).join(', ')}
                       </p>
                     )}
-                    <p className="text-sm text-gray-600">수량: {order.quantity}개 | {formatDate(order.createdAt)}</p>
+                    <p className="text-sm text-neutral-600">수량: {order.quantity}개 | {formatDate(order.createdAt)}</p>
                   </div>
                   {getStatusBadge(order.status)}
                 </div>
@@ -1466,14 +1466,14 @@ export const ProductOrderPage = () => {
 
       {/* 카테고리 필터 */}
       <div className="mb-6 bg-white rounded-lg shadow-md p-4">
-        <label htmlFor="categoryFilter" className="block text-sm font-semibold text-gray-700 mb-2">
+        <label htmlFor="categoryFilter" className="block text-sm font-semibold text-neutral-700 mb-2">
           카테고리별 보기
         </label>
         <select
           id="categoryFilter"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value as ProductCategory | 'all')}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
         >
           <option value="all">전체 ({products.length})</option>
           {categories.map(cat => {
@@ -1490,7 +1490,7 @@ export const ProductOrderPage = () => {
       {/* 물품 목록 */}
       {filteredProducts.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-500">신청 가능한 물품이 없습니다.</p>
+          <p className="text-neutral-500">신청 가능한 물품이 없습니다.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1508,18 +1508,18 @@ export const ProductOrderPage = () => {
                     setViewingProduct(product);
                   }
                 }}
-                className="text-left w-full mb-2 text-xl font-bold text-blue-600 hover:text-blue-800 underline focus:ring-2 focus:ring-blue-500 outline-none rounded"
+                className="text-left w-full mb-2 text-xl font-bold text-primary-600 hover:text-primary-800 underline focus:ring-2 focus:ring-primary-500 outline-none rounded"
               >
                 {product.name}
               </button>
-              <p className="text-gray-600 mb-4">
-                재고: <span className={`font-bold ${product.stock < 10 ? 'text-orange-600' : 'text-green-600'}`}>
+              <p className="text-neutral-600 mb-4">
+                재고: <span className={`font-bold ${product.stock < 10 ? 'text-warning-600' : 'text-success-600'}`}>
                   {product.stock}개
                 </span>
               </p>
               <button
                 onClick={() => handleOrder(product)}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
               >
                 신청하기
               </button>

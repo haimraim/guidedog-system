@@ -887,7 +887,7 @@ export const MonthlyReportPage = () => {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-neutral-800">
               월간 보고서 작성
             </h2>
             <button
@@ -895,7 +895,7 @@ export const MonthlyReportPage = () => {
                 setIsWriting(false);
                 setCurrentStep(1);
               }}
-              className="text-gray-600 hover:text-gray-800"
+              className="text-neutral-600 hover:text-neutral-800"
             >
               ← 목록으로
             </button>
@@ -904,19 +904,19 @@ export const MonthlyReportPage = () => {
         {/* 단계 표시 */}
         <div className="flex items-center justify-center mb-8">
           <div className="flex items-center">
-            <div className={`flex items-center justify-center w-10 h-10 rounded-full ${currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'} font-semibold`}>
+            <div className={`flex items-center justify-center w-10 h-10 rounded-full ${currentStep >= 1 ? 'bg-primary-600 text-white' : 'bg-neutral-300 text-neutral-600'} font-semibold`}>
               1
             </div>
-            <span className="ml-2 text-sm font-semibold text-gray-700">기본 정보</span>
+            <span className="ml-2 text-sm font-semibold text-neutral-700">기본 정보</span>
           </div>
-          <div className="w-20 h-1 mx-4 bg-gray-300">
-            <div className={`h-full ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
+          <div className="w-20 h-1 mx-4 bg-neutral-300">
+            <div className={`h-full ${currentStep >= 2 ? 'bg-primary-600' : 'bg-neutral-300'}`}></div>
           </div>
           <div className="flex items-center">
-            <div className={`flex items-center justify-center w-10 h-10 rounded-full ${currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'} font-semibold`}>
+            <div className={`flex items-center justify-center w-10 h-10 rounded-full ${currentStep >= 2 ? 'bg-primary-600 text-white' : 'bg-neutral-300 text-neutral-600'} font-semibold`}>
               2
             </div>
-            <span className="ml-2 text-sm font-semibold text-gray-700">집에서의 품행</span>
+            <span className="ml-2 text-sm font-semibold text-neutral-700">집에서의 품행</span>
           </div>
         </div>
 
@@ -925,15 +925,15 @@ export const MonthlyReportPage = () => {
           {currentStep === 1 && (
             <>
               {/* 보고 일자 선택 */}
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <div className="bg-primary-50 p-4 rounded-lg">
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
                   보고 일자 *
                 </label>
                 <input
                   type="date"
                   value={reportDate}
                   onChange={(e) => setReportDate(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   required
                   disabled={status === 'completed'}
                 />
@@ -941,45 +941,45 @@ export const MonthlyReportPage = () => {
 
           {/* 급식 */}
           <div className="border-t pt-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4 bg-gray-100 p-3 rounded">급식</h3>
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="feeding-title">
-              <h4 id="feeding-title" className="font-semibold text-gray-800 mb-3">월간 급식 현황</h4>
+            <h3 className="text-xl font-bold text-neutral-800 mb-4 bg-neutral-100 p-3 rounded">급식</h3>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="feeding-title">
+              <h4 id="feeding-title" className="font-semibold text-neutral-800 mb-3">월간 급식 현황</h4>
               <div className="space-y-4 ml-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     사료 종류
                   </label>
                   <input
                     type="text"
                     value={foodType}
                     onChange={(e) => setFoodType(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     placeholder="예: 로얄캐닌 퍼피"
                     disabled={status === 'completed'}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     1일 급식 횟수
                   </label>
                   <input
                     type="text"
                     value={dailyFeedingCount}
                     onChange={(e) => setDailyFeedingCount(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     placeholder="예: 3회"
                     disabled={status === 'completed'}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     1회 급식량 (그램)
                   </label>
                   <input
                     type="text"
                     value={feedingAmountPerMeal}
                     onChange={(e) => setFeedingAmountPerMeal(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     placeholder="예: 150g"
                     disabled={status === 'completed'}
                   />
@@ -990,31 +990,31 @@ export const MonthlyReportPage = () => {
 
           {/* 건강 */}
           <div className="border-t pt-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4 bg-gray-100 p-3 rounded">건강</h3>
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="health-title">
-              <h4 id="health-title" className="font-semibold text-gray-800 mb-3">월간 건강 현황</h4>
+            <h3 className="text-xl font-bold text-neutral-800 mb-4 bg-neutral-100 p-3 rounded">건강</h3>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="health-title">
+              <h4 id="health-title" className="font-semibold text-neutral-800 mb-3">월간 건강 현황</h4>
               <div className="space-y-4 ml-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     체중 (킬로그램)
                   </label>
                   <input
                     type="text"
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     placeholder="예: 15.5kg"
                     disabled={status === 'completed'}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     건강상 특이사항
                   </label>
                   <textarea
                     value={healthNotes}
                     onChange={(e) => setHealthNotes(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     rows={4}
                     placeholder="건강 관련 특이사항이나 변화를 자유롭게 작성해주세요. (예: 예방접종, 병원 방문, 피부/귀 상태, 식욕 변화 등)"
                     disabled={status === 'completed'}
@@ -1031,11 +1031,11 @@ export const MonthlyReportPage = () => {
             <>
           {/* 집에서의 품행 */}
           <div className="border-t pt-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4 bg-gray-100 p-3 rounded">집에서의 품행</h3>
+            <h3 className="text-xl font-bold text-neutral-800 mb-4 bg-neutral-100 p-3 rounded">집에서의 품행</h3>
 
             {/* 질문 1 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q1-title">
-              <h4 id="q1-title" className="font-semibold text-gray-800 mb-3">1. 크레이트(팬스)를 닫았을 때 안에서의 행동</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q1-title">
+              <h4 id="q1-title" className="font-semibold text-neutral-800 mb-3">1. 크레이트(팬스)를 닫았을 때 안에서의 행동</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
                   <input type="radio" name="q1" value="1" checked={q1==='1'} onChange={(e)=>setQ1(e.target.value)} className="mt-1 mr-2" />
@@ -1048,14 +1048,14 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q1==='2' && (
                     <div className="ml-6 mt-2">
-                      <label className="text-sm text-gray-700">
+                      <label className="text-sm text-neutral-700">
                         편안해 질때까지 걸리는 시간 (예: 5분, 1시간 등)
                       </label>
                       <input
                         type="text"
                         value={q1_time}
                         onChange={(e)=>setQ1_time(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-48"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-48"
                         placeholder="예: 5분"
                       />
                     </div>
@@ -1068,14 +1068,14 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q1==='3' && (
                     <div className="ml-6 mt-2">
-                      <label className="text-sm text-gray-700">
+                      <label className="text-sm text-neutral-700">
                         편안해 질때까지 걸리는 시간 (예: 5분, 1시간 등)
                       </label>
                       <input
                         type="text"
                         value={q1_time}
                         onChange={(e)=>setQ1_time(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-48"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-48"
                         placeholder="예: 10분"
                       />
                     </div>
@@ -1088,12 +1088,12 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q1==='4' && (
                     <div className="ml-6 mt-2">
-                      <label className="text-sm text-gray-700">씹는 종류</label>
+                      <label className="text-sm text-neutral-700">씹는 종류</label>
                       <input
                         type="text"
                         value={q1_type}
                         onChange={(e)=>setQ1_type(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-64"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-64"
                         placeholder="예: 담요, 장난감 등"
                       />
                     </div>
@@ -1105,15 +1105,15 @@ export const MonthlyReportPage = () => {
                 </label>
                 <div className="mt-2">
                   <span className="text-sm">(기타: </span>
-                  <input type="text" value={q1_other} onChange={(e)=>setQ1_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q1_other} onChange={(e)=>setQ1_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 2 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q2-title">
-              <h4 id="q2-title" className="font-semibold text-gray-800 mb-3">2. 사람 음식에 대한 반응</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q2-title">
+              <h4 id="q2-title" className="font-semibold text-neutral-800 mb-3">2. 사람 음식에 대한 반응</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
                   <input type="radio" name="q2" value="1" checked={q2==='1'} onChange={(e)=>setQ2(e.target.value)} className="mt-1 mr-2" />
@@ -1138,12 +1138,12 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q2==='5' && (
                     <div className="ml-6 mt-2">
-                      <label className="text-sm text-gray-700">먹은 음식</label>
+                      <label className="text-sm text-neutral-700">먹은 음식</label>
                       <input
                         type="text"
                         value={q2_food}
                         onChange={(e)=>setQ2_food(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-64"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-64"
                         placeholder="예: 빵, 고기 등"
                       />
                     </div>
@@ -1151,15 +1151,15 @@ export const MonthlyReportPage = () => {
                 </div>
                 <div className="mt-2">
                   <span className="text-sm">(기타: </span>
-                  <input type="text" value={q2_other} onChange={(e)=>setQ2_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q2_other} onChange={(e)=>setQ2_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 3 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q3-title">
-              <h4 id="q3-title" className="font-semibold text-gray-800 mb-3">3. 혼자 있을 때 상태</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q3-title">
+              <h4 id="q3-title" className="font-semibold text-neutral-800 mb-3">3. 혼자 있을 때 상태</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
                   <input type="radio" name="q3" value="1" checked={q3==='1'} onChange={(e)=>setQ3(e.target.value)} className="mt-1 mr-2" />
@@ -1177,8 +1177,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 4 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q4-title">
-              <h4 id="q4-title" className="font-semibold text-gray-800 mb-3">4. 혼자 있을 때 반응</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q4-title">
+              <h4 id="q4-title" className="font-semibold text-neutral-800 mb-3">4. 혼자 있을 때 반응</h4>
               <div className="space-y-2 ml-4">
                 <div>
                   <label className="flex items-start">
@@ -1216,86 +1216,86 @@ export const MonthlyReportPage = () => {
                 </label>
                 <div className="mt-2">
                   <span className="text-sm">(기타: 예)현관앞을 떠나지 않음, 쇼파 위에 올라감 </span>
-                  <input type="text" value={q4_other} onChange={(e)=>setQ4_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q4_other} onChange={(e)=>setQ4_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 5 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q5-title">
-              <h4 id="q5-title" className="font-semibold text-gray-800 mb-3">5. 아래 장소를 각각 선택하고, 혼자 있어 본 최장시간과 상태</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q5-title">
+              <h4 id="q5-title" className="font-semibold text-neutral-800 mb-3">5. 아래 장소를 각각 선택하고, 혼자 있어 본 최장시간과 상태</h4>
               <div className="ml-4 space-y-4">
-                <div className="border-l-4 border-blue-400 pl-4">
-                  <p className="font-medium text-gray-700 mb-2">크레이트</p>
+                <div className="border-l-4 border-primary-400 pl-4">
+                  <p className="font-medium text-neutral-700 mb-2">크레이트</p>
                   <div className="flex gap-4">
                     <div>
-                      <label className="text-sm text-gray-600">시간</label>
+                      <label className="text-sm text-neutral-600">시간</label>
                       <input
                         type="text"
                         value={q5_crate_time}
                         onChange={(e)=>setQ5_crate_time(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-32"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-32"
                         placeholder="예: 1시간"
                       />
                     </div>
                     <div>
-                      <label className="text-sm text-gray-600">상태</label>
+                      <label className="text-sm text-neutral-600">상태</label>
                       <input
                         type="text"
                         value={q5_crate_state}
                         onChange={(e)=>setQ5_crate_state(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-48"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-48"
                         placeholder="예: 점잖음, 난리가 남"
                       />
                     </div>
                   </div>
                 </div>
-                <div className="border-l-4 border-blue-400 pl-4">
-                  <p className="font-medium text-gray-700 mb-2">팬스</p>
+                <div className="border-l-4 border-primary-400 pl-4">
+                  <p className="font-medium text-neutral-700 mb-2">팬스</p>
                   <div className="flex gap-4">
                     <div>
-                      <label className="text-sm text-gray-600">시간</label>
+                      <label className="text-sm text-neutral-600">시간</label>
                       <input
                         type="text"
                         value={q5_fence_time}
                         onChange={(e)=>setQ5_fence_time(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-32"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-32"
                         placeholder="예: 30분"
                       />
                     </div>
                     <div>
-                      <label className="text-sm text-gray-600">상태</label>
+                      <label className="text-sm text-neutral-600">상태</label>
                       <input
                         type="text"
                         value={q5_fence_state}
                         onChange={(e)=>setQ5_fence_state(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-48"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-48"
                         placeholder="예: 조용함"
                       />
                     </div>
                   </div>
                 </div>
-                <div className="border-l-4 border-blue-400 pl-4">
-                  <p className="font-medium text-gray-700 mb-2">풀린 상태</p>
+                <div className="border-l-4 border-primary-400 pl-4">
+                  <p className="font-medium text-neutral-700 mb-2">풀린 상태</p>
                   <div className="flex gap-4">
                     <div>
-                      <label className="text-sm text-gray-600">시간</label>
+                      <label className="text-sm text-neutral-600">시간</label>
                       <input
                         type="text"
                         value={q5_free_time}
                         onChange={(e)=>setQ5_free_time(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-32"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-32"
                         placeholder="예: 2시간"
                       />
                     </div>
                     <div>
-                      <label className="text-sm text-gray-600">상태</label>
+                      <label className="text-sm text-neutral-600">상태</label>
                       <input
                         type="text"
                         value={q5_free_state}
                         onChange={(e)=>setQ5_free_state(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-48"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-48"
                         placeholder="예: 잘 쉼"
                       />
                     </div>
@@ -1305,8 +1305,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 6 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q6-title">
-              <h4 id="q6-title" className="font-semibold text-gray-800 mb-3">6. 손님이 왔을 때의 반응</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q6-title">
+              <h4 id="q6-title" className="font-semibold text-neutral-800 mb-3">6. 손님이 왔을 때의 반응</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
                   <input type="radio" name="q6" value="1" checked={q6==='1'} onChange={(e)=>setQ6(e.target.value)} className="mt-1 mr-2" />
@@ -1338,15 +1338,15 @@ export const MonthlyReportPage = () => {
                 </label>
                 <div className="mt-2">
                   <span className="text-sm">(기타: </span>
-                  <input type="text" value={q6_other} onChange={(e)=>setQ6_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q6_other} onChange={(e)=>setQ6_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 7 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q7-title">
-              <h4 id="q7-title" className="font-semibold text-gray-800 mb-3">7. 가족이 귀가했을 때의 반응</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q7-title">
+              <h4 id="q7-title" className="font-semibold text-neutral-800 mb-3">7. 가족이 귀가했을 때의 반응</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
                   <input type="radio" name="q7" value="1" checked={q7==='1'} onChange={(e)=>setQ7(e.target.value)} className="mt-1 mr-2" />
@@ -1396,15 +1396,15 @@ export const MonthlyReportPage = () => {
                 </div>
                 <div className="mt-2">
                   <span className="text-sm">(기타: </span>
-                  <input type="text" value={q7_other} onChange={(e)=>setQ7_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q7_other} onChange={(e)=>setQ7_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 8 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q8-title">
-              <h4 id="q8-title" className="font-semibold text-gray-800 mb-3">8. 집에 있는 상황에서 짖은 적이 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q8-title">
+              <h4 id="q8-title" className="font-semibold text-neutral-800 mb-3">8. 집에 있는 상황에서 짖은 적이 있나요?</h4>
               <div className="space-y-2 ml-4">
                 <div>
                   <label className="flex items-start">
@@ -1414,22 +1414,22 @@ export const MonthlyReportPage = () => {
                   {q8==='1' && (
                     <div className="ml-6 mt-2 space-y-2">
                       <div>
-                        <label className="text-sm text-gray-700">상황</label>
+                        <label className="text-sm text-neutral-700">상황</label>
                         <input
                           type="text"
                           value={q8_situation}
                           onChange={(e)=>setQ8_situation(e.target.value)}
-                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-full max-w-md"
+                          className="ml-2 px-3 py-1 border border-neutral-300 rounded w-full max-w-md"
                           placeholder="예: 초인종 소리, 다른 개 짖는 소리 등"
                         />
                       </div>
                       <div>
-                        <label className="text-sm text-gray-700">횟수</label>
+                        <label className="text-sm text-neutral-700">횟수</label>
                         <input
                           type="text"
                           value={q8_count}
                           onChange={(e)=>setQ8_count(e.target.value)}
-                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-32"
+                          className="ml-2 px-3 py-1 border border-neutral-300 rounded w-32"
                           placeholder="예: 5회"
                         />
                       </div>
@@ -1444,8 +1444,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 9 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q9-title">
-              <h4 id="q9-title" className="font-semibold text-gray-800 mb-3">9. 으르렁 거린 적이 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q9-title">
+              <h4 id="q9-title" className="font-semibold text-neutral-800 mb-3">9. 으르렁 거린 적이 있나요?</h4>
               <div className="space-y-2 ml-4">
                 <div>
                   <label className="flex items-start">
@@ -1455,22 +1455,22 @@ export const MonthlyReportPage = () => {
                   {q9==='1' && (
                     <div className="ml-6 mt-2 space-y-2">
                       <div>
-                        <label className="text-sm text-gray-700">상황</label>
+                        <label className="text-sm text-neutral-700">상황</label>
                         <input
                           type="text"
                           value={q9_situation}
                           onChange={(e)=>setQ9_situation(e.target.value)}
-                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-full max-w-md"
+                          className="ml-2 px-3 py-1 border border-neutral-300 rounded w-full max-w-md"
                           placeholder="예: 음식을 빼앗으려 할 때 등"
                         />
                       </div>
                       <div>
-                        <label className="text-sm text-gray-700">횟수</label>
+                        <label className="text-sm text-neutral-700">횟수</label>
                         <input
                           type="text"
                           value={q9_count}
                           onChange={(e)=>setQ9_count(e.target.value)}
-                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-32"
+                          className="ml-2 px-3 py-1 border border-neutral-300 rounded w-32"
                           placeholder="예: 2회"
                         />
                       </div>
@@ -1485,8 +1485,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 10 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q10-title">
-              <h4 id="q10-title" className="font-semibold text-gray-800 mb-3">10. 개의 잘못된 행동(입질,짖음,점프,이물섭취 등)을 사람이 컨트롤 했을 때의 반응</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q10-title">
+              <h4 id="q10-title" className="font-semibold text-neutral-800 mb-3">10. 개의 잘못된 행동(입질,짖음,점프,이물섭취 등)을 사람이 컨트롤 했을 때의 반응</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
                   <input type="radio" name="q10" value="1" checked={q10==='1'} onChange={(e)=>setQ10(e.target.value)} className="mt-1 mr-2" />
@@ -1514,15 +1514,15 @@ export const MonthlyReportPage = () => {
                 </label>
                 <div className="mt-2">
                   <span className="text-sm">(기타: </span>
-                  <input type="text" value={q10_other} onChange={(e)=>setQ10_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q10_other} onChange={(e)=>setQ10_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 11 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q11-title">
-              <h4 id="q11-title" className="font-semibold text-gray-800 mb-3">11. 장난감이나 콩, 껌을 물고 있는 강아지에게 "놔 or 그만"을 했을 때 반응은?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q11-title">
+              <h4 id="q11-title" className="font-semibold text-neutral-800 mb-3">11. 장난감이나 콩, 껌을 물고 있는 강아지에게 "놔 or 그만"을 했을 때 반응은?</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
                   <input type="radio" name="q11" value="1" checked={q11==='1'} onChange={(e)=>setQ11(e.target.value)} className="mt-1 mr-2" />
@@ -1546,15 +1546,15 @@ export const MonthlyReportPage = () => {
                 </label>
                 <div className="mt-2">
                   <span className="text-sm">(기타: </span>
-                  <input type="text" value={q11_other} onChange={(e)=>setQ11_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q11_other} onChange={(e)=>setQ11_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 12 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q12-title">
-              <h4 id="q12-title" className="font-semibold text-gray-800 mb-3">12. 집안에서 기본훈련(앉아 / 엎드려 / 서 )에 대한 강아지의 수준은?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q12-title">
+              <h4 id="q12-title" className="font-semibold text-neutral-800 mb-3">12. 집안에서 기본훈련(앉아 / 엎드려 / 서 )에 대한 강아지의 수준은?</h4>
               <div className="space-y-2 ml-4">
                 <div>
                   <label className="flex items-start">
@@ -1563,7 +1563,7 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q12_option==='1' && (
                     <div className="ml-6 mt-2 space-y-2">
-                      <p className="text-sm text-gray-700 mb-2">해당하는 것에 체크:</p>
+                      <p className="text-sm text-neutral-700 mb-2">해당하는 것에 체크:</p>
                       <label className="flex items-center">
                         <input type="checkbox" checked={q12_commands.includes('앉아')} onChange={()=>handleCheckboxChange(q12_commands,'앉아',setQ12_commands)} className="mr-2" />
                         <span>앉아</span>
@@ -1590,7 +1590,7 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q12_option==='2' && (
                     <div className="ml-6 mt-2 space-y-2">
-                      <p className="text-sm text-gray-700 mb-2">해당하는 것에 체크:</p>
+                      <p className="text-sm text-neutral-700 mb-2">해당하는 것에 체크:</p>
                       <label className="flex items-center">
                         <input type="checkbox" checked={q12_commands.includes('앉아')} onChange={()=>handleCheckboxChange(q12_commands,'앉아',setQ12_commands)} className="mr-2" />
                         <span>앉아</span>
@@ -1618,22 +1618,22 @@ export const MonthlyReportPage = () => {
                   {q12_option==='3' && (
                     <div className="ml-6 mt-2 space-y-2">
                       <div>
-                        <label className="text-sm text-gray-700">상태</label>
+                        <label className="text-sm text-neutral-700">상태</label>
                         <input
                           type="text"
                           value={q12_wait_state}
                           onChange={(e)=>setQ12_wait_state(e.target.value)}
-                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-full max-w-md"
+                          className="ml-2 px-3 py-1 border border-neutral-300 rounded w-full max-w-md"
                           placeholder="예: 편안하게 앉아있음"
                         />
                       </div>
                       <div>
-                        <label className="text-sm text-gray-700">시간</label>
+                        <label className="text-sm text-neutral-700">시간</label>
                         <input
                           type="text"
                           value={q12_wait_time}
                           onChange={(e)=>setQ12_wait_time(e.target.value)}
-                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-48"
+                          className="ml-2 px-3 py-1 border border-neutral-300 rounded w-48"
                           placeholder="예: 5분"
                         />
                       </div>
@@ -1647,7 +1647,7 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q12_option==='4' && (
                     <div className="ml-6 mt-2 space-y-2">
-                      <p className="text-sm text-gray-700 mb-2">해당하는 것에 체크:</p>
+                      <p className="text-sm text-neutral-700 mb-2">해당하는 것에 체크:</p>
                       <label className="flex items-center">
                         <input type="checkbox" checked={q12_wait_levels.includes('바로옆')} onChange={()=>handleCheckboxChange(q12_wait_levels,'바로옆',setQ12_wait_levels)} className="mr-2" />
                         <span>바로옆</span>
@@ -1675,8 +1675,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 13 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q13-title">
-              <h4 id="q13-title" className="font-semibold text-gray-800 mb-3">13. 바디핸들링이나 배를 보이며 눕히기를 했을때 강아지의 행동은?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q13-title">
+              <h4 id="q13-title" className="font-semibold text-neutral-800 mb-3">13. 바디핸들링이나 배를 보이며 눕히기를 했을때 강아지의 행동은?</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
                   <input type="radio" name="q13" value="1" checked={q13==='1'} onChange={(e)=>setQ13(e.target.value)} className="mt-1 mr-2" />
@@ -1700,19 +1700,19 @@ export const MonthlyReportPage = () => {
                 </label>
                 <div className="mt-2">
                   <span className="text-sm">(기타: </span>
-                  <input type="text" value={q13_other} onChange={(e)=>setQ13_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q13_other} onChange={(e)=>setQ13_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 14 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q14-title">
-              <h4 id="q14-title" className="font-semibold text-gray-800 mb-3">14. 이를 닦을 때 품행</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q14-title">
+              <h4 id="q14-title" className="font-semibold text-neutral-800 mb-3">14. 이를 닦을 때 품행</h4>
               <div className="ml-4 space-y-3">
                 <div className="flex gap-4 items-center">
                   <div>
-                    <span className="text-sm text-gray-700 mr-2">자세:</span>
+                    <span className="text-sm text-neutral-700 mr-2">자세:</span>
                     <label className="mr-4">
                       <input type="radio" name="q14_posture" value="누워서" checked={q14_posture==='누워서'} onChange={(e)=>setQ14_posture(e.target.value)} className="mr-1" />
                       누워서
@@ -1723,12 +1723,12 @@ export const MonthlyReportPage = () => {
                     </label>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-700">주별 횟수</label>
+                    <label className="text-sm text-neutral-700">주별 횟수</label>
                     <input
                       type="text"
                       value={q14_frequency}
                       onChange={(e)=>setQ14_frequency(e.target.value)}
-                      className="ml-2 px-3 py-1 border border-gray-300 rounded w-24"
+                      className="ml-2 px-3 py-1 border border-neutral-300 rounded w-24"
                       placeholder="주 __회"
                     />
                   </div>
@@ -1756,7 +1756,7 @@ export const MonthlyReportPage = () => {
                   </label>
                   <div className="mt-2">
                     <span className="text-sm">(기타: </span>
-                    <input type="text" value={q14_other} onChange={(e)=>setQ14_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                    <input type="text" value={q14_other} onChange={(e)=>setQ14_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                     <span className="text-sm">)</span>
                   </div>
                 </div>
@@ -1764,12 +1764,12 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 15 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q15-title">
-              <h4 id="q15-title" className="font-semibold text-gray-800 mb-3">15. 그루밍(빗질) 할 때의 품행</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q15-title">
+              <h4 id="q15-title" className="font-semibold text-neutral-800 mb-3">15. 그루밍(빗질) 할 때의 품행</h4>
               <div className="ml-4 space-y-3">
                 <div className="flex gap-4 items-center">
                   <div>
-                    <span className="text-sm text-gray-700 mr-2">자세:</span>
+                    <span className="text-sm text-neutral-700 mr-2">자세:</span>
                     <label className="mr-4">
                       <input type="radio" name="q15_posture" value="누워서" checked={q15_posture==='누워서'} onChange={(e)=>setQ15_posture(e.target.value)} className="mr-1" />
                       누워서
@@ -1780,12 +1780,12 @@ export const MonthlyReportPage = () => {
                     </label>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-700">주별 횟수</label>
+                    <label className="text-sm text-neutral-700">주별 횟수</label>
                     <input
                       type="text"
                       value={q15_frequency}
                       onChange={(e)=>setQ15_frequency(e.target.value)}
-                      className="ml-2 px-3 py-1 border border-gray-300 rounded w-24"
+                      className="ml-2 px-3 py-1 border border-neutral-300 rounded w-24"
                       placeholder="주 __회"
                     />
                   </div>
@@ -1817,7 +1817,7 @@ export const MonthlyReportPage = () => {
                   </label>
                   <div className="mt-2">
                     <span className="text-sm">(기타: </span>
-                    <input type="text" value={q15_other} onChange={(e)=>setQ15_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                    <input type="text" value={q15_other} onChange={(e)=>setQ15_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                     <span className="text-sm">)</span>
                   </div>
                 </div>
@@ -1825,12 +1825,12 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 16 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q16-title">
-              <h4 id="q16-title" className="font-semibold text-gray-800 mb-3">16. 발톱/발털손질 할 때의 품행</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q16-title">
+              <h4 id="q16-title" className="font-semibold text-neutral-800 mb-3">16. 발톱/발털손질 할 때의 품행</h4>
               <div className="ml-4 space-y-3">
                 <div className="flex gap-4 items-center">
                   <div>
-                    <span className="text-sm text-gray-700 mr-2">자세:</span>
+                    <span className="text-sm text-neutral-700 mr-2">자세:</span>
                     <label className="mr-4">
                       <input type="radio" name="q16_posture" value="옆으로 누워" checked={q16_posture==='옆으로 누워'} onChange={(e)=>setQ16_posture(e.target.value)} className="mr-1" />
                       옆으로 누워
@@ -1841,19 +1841,19 @@ export const MonthlyReportPage = () => {
                     </label>
                   </div>
                   <div>
-                    <label className="text-sm text-gray-700">주별 횟수</label>
+                    <label className="text-sm text-neutral-700">주별 횟수</label>
                     <input
                       type="text"
                       value={q16_frequency}
                       onChange={(e)=>setQ16_frequency(e.target.value)}
-                      className="ml-2 px-3 py-1 border border-gray-300 rounded w-24"
+                      className="ml-2 px-3 py-1 border border-neutral-300 rounded w-24"
                       placeholder="주 __회"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div>
-                    <p className="text-sm text-gray-700 mb-2">① 편안하게 잘 하는 것에 표시하세요:</p>
+                    <p className="text-sm text-neutral-700 mb-2">① 편안하게 잘 하는 것에 표시하세요:</p>
                     <div className="ml-4 space-y-1">
                       <label className="flex items-center">
                         <input type="checkbox" checked={q16_comfortable.includes('발톱손질')} onChange={()=>handleCheckboxChange(q16_comfortable,'발톱손질',setQ16_comfortable)} className="mr-2" />
@@ -1866,7 +1866,7 @@ export const MonthlyReportPage = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-700 mb-2">② 불편해하는 부위에 표시하세요:</p>
+                    <p className="text-sm text-neutral-700 mb-2">② 불편해하는 부위에 표시하세요:</p>
                     <div className="ml-4 space-y-1">
                       <label className="flex items-center">
                         <input type="checkbox" checked={q16_uncomfortable.includes('앞발')} onChange={()=>handleCheckboxChange(q16_uncomfortable,'앞발',setQ16_uncomfortable)} className="mr-2" />
@@ -1893,7 +1893,7 @@ export const MonthlyReportPage = () => {
                     </label>
                     {q16_options.includes('도망가려함') && (
                       <div className="ml-6 mt-2">
-                        <span className="text-sm text-gray-700 mr-2">과거에 피가 난 적이 있나요?</span>
+                        <span className="text-sm text-neutral-700 mr-2">과거에 피가 난 적이 있나요?</span>
                         <label className="mr-4">
                           <input type="radio" name="q16_bleeding" value="Y" checked={q16_bleeding==='Y'} onChange={(e)=>setQ16_bleeding(e.target.value)} className="mr-1" />
                           예
@@ -1907,7 +1907,7 @@ export const MonthlyReportPage = () => {
                   </div>
                   <div className="mt-2">
                     <span className="text-sm">(기타: </span>
-                    <input type="text" value={q16_other} onChange={(e)=>setQ16_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                    <input type="text" value={q16_other} onChange={(e)=>setQ16_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                     <span className="text-sm">)</span>
                   </div>
                 </div>
@@ -1915,11 +1915,11 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 17 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q17-title">
-              <h4 id="q17-title" className="font-semibold text-gray-800 mb-3">17. 귀청소 할 때의 품행</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q17-title">
+              <h4 id="q17-title" className="font-semibold text-neutral-800 mb-3">17. 귀청소 할 때의 품행</h4>
               <div className="ml-4 space-y-3">
                 <div>
-                  <span className="text-sm text-gray-700 mr-2">자세:</span>
+                  <span className="text-sm text-neutral-700 mr-2">자세:</span>
                   <label className="mr-4">
                     <input type="radio" name="q17_posture" value="누워서" checked={q17_posture==='누워서'} onChange={(e)=>setQ17_posture(e.target.value)} className="mr-1" />
                     누워서
@@ -1941,12 +1941,12 @@ export const MonthlyReportPage = () => {
                     </label>
                     {q17==='2' && (
                       <div className="ml-6 mt-2">
-                        <label className="text-sm text-gray-700">계기가 있나요?</label>
+                        <label className="text-sm text-neutral-700">계기가 있나요?</label>
                         <input
                           type="text"
                           value={q17_reason}
                           onChange={(e)=>setQ17_reason(e.target.value)}
-                          className="ml-2 px-3 py-1 border border-gray-300 rounded w-full max-w-md"
+                          className="ml-2 px-3 py-1 border border-neutral-300 rounded w-full max-w-md"
                           placeholder="계기를 입력하세요"
                         />
                       </div>
@@ -1954,7 +1954,7 @@ export const MonthlyReportPage = () => {
                   </div>
                   <div className="mt-2">
                     <span className="text-sm">(기타: </span>
-                    <input type="text" value={q17_other} onChange={(e)=>setQ17_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                    <input type="text" value={q17_other} onChange={(e)=>setQ17_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                     <span className="text-sm">)</span>
                   </div>
                 </div>
@@ -1962,8 +1962,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 18 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q18-title">
-              <h4 id="q18-title" className="font-semibold text-gray-800 mb-3">18. 외출 후 발을 닦을 때의 품행</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q18-title">
+              <h4 id="q18-title" className="font-semibold text-neutral-800 mb-3">18. 외출 후 발을 닦을 때의 품행</h4>
               <div className="space-y-2 ml-4">
                 <div>
                   <label className="flex items-start">
@@ -1972,7 +1972,7 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q18==='1' && (
                     <div className="ml-6 mt-2">
-                      <span className="text-sm text-gray-700 mr-2">트릿 사용 여부:</span>
+                      <span className="text-sm text-neutral-700 mr-2">트릿 사용 여부:</span>
                       <label className="mr-4">
                         <input type="radio" name="q18_treat" value="예" checked={q18_treat==='예'} onChange={(e)=>setQ18_treat(e.target.value)} className="mr-1" />
                         예
@@ -1991,7 +1991,7 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q18==='2' && (
                     <div className="ml-6 mt-2 space-y-1">
-                      <p className="text-sm text-gray-700 mb-2">입질 대상:</p>
+                      <p className="text-sm text-neutral-700 mb-2">입질 대상:</p>
                       <label className="flex items-center">
                         <input type="checkbox" checked={q18_bites.includes('손')} onChange={()=>handleCheckboxChange(q18_bites,'손',setQ18_bites)} className="mr-2" />
                         <span>손</span>
@@ -2013,15 +2013,15 @@ export const MonthlyReportPage = () => {
                 </label>
                 <div className="mt-2">
                   <span className="text-sm">(기타: </span>
-                  <input type="text" value={q18_other} onChange={(e)=>setQ18_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q18_other} onChange={(e)=>setQ18_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 19 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q19-title">
-              <h4 id="q19-title" className="font-semibold text-gray-800 mb-3">19. 집안의 물건을 망가뜨린 적이 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q19-title">
+              <h4 id="q19-title" className="font-semibold text-neutral-800 mb-3">19. 집안의 물건을 망가뜨린 적이 있나요?</h4>
               <div className="space-y-2 ml-4">
                 <div>
                   <label className="flex items-start">
@@ -2030,12 +2030,12 @@ export const MonthlyReportPage = () => {
                   </label>
                   {q19==='1' && (
                     <div className="ml-6 mt-2">
-                      <label className="text-sm text-gray-700">지난 한달간 횟수</label>
+                      <label className="text-sm text-neutral-700">지난 한달간 횟수</label>
                       <input
                         type="text"
                         value={q19_count}
                         onChange={(e)=>setQ19_count(e.target.value)}
-                        className="ml-2 px-3 py-1 border border-gray-300 rounded w-32"
+                        className="ml-2 px-3 py-1 border border-neutral-300 rounded w-32"
                         placeholder="예: 3회"
                       />
                     </div>
@@ -2049,8 +2049,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 질문 20 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q20-title">
-              <h4 id="q20-title" className="font-semibold text-gray-800 mb-3">20. 집에서 자녀들과 있을 때의 반응</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q20-title">
+              <h4 id="q20-title" className="font-semibold text-neutral-800 mb-3">20. 집에서 자녀들과 있을 때의 반응</h4>
               <div className="space-y-2 ml-4">
                 <label className="flex items-start">
                   <input type="radio" name="q20" value="1" checked={q20==='1'} onChange={(e)=>setQ20(e.target.value)} className="mt-1 mr-2" />
@@ -2074,20 +2074,20 @@ export const MonthlyReportPage = () => {
                 </label>
                 <div className="mt-2">
                   <span className="text-sm">(기타: </span>
-                  <input type="text" value={q20_other} onChange={(e)=>setQ20_other(e.target.value)} className="border-b border-gray-400 px-2 w-full max-w-md" />
+                  <input type="text" value={q20_other} onChange={(e)=>setQ20_other(e.target.value)} className="border-b border-neutral-400 px-2 w-full max-w-md" />
                   <span className="text-sm">)</span>
                 </div>
               </div>
             </div>
 
             {/* 질문 21 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="q21-title">
-              <h4 id="q21-title" className="font-semibold text-gray-800 mb-3">21. 현재 품행에 있어 가장 큰 문제는?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="q21-title">
+              <h4 id="q21-title" className="font-semibold text-neutral-800 mb-3">21. 현재 품행에 있어 가장 큰 문제는?</h4>
               <div className="ml-4">
                 <textarea
                   value={q21}
                   onChange={(e)=>setQ21(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   rows={4}
                   placeholder="현재 품행에서 가장 큰 문제점을 자유롭게 작성해주세요."
                 />
@@ -2101,42 +2101,42 @@ export const MonthlyReportPage = () => {
           {currentStep === 3 && (
             <>
           <div className="space-y-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-blue-500">DT 품행 기록</h3>
+            <h3 className="text-xl font-bold text-neutral-800 mb-6 pb-3 border-b-2 border-primary-500">DT 품행 기록</h3>
 
             {/* DT 질문 1 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q1-title">
-              <h4 id="dt-q1-title" className="font-semibold text-gray-800 mb-3">1. '하나둘,하나둘' 명령어에 몇분안에 반응하나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q1-title">
+              <h4 id="dt-q1-title" className="font-semibold text-neutral-800 mb-3">1. '하나둘,하나둘' 명령어에 몇분안에 반응하나요?</h4>
               <div className="ml-4 space-y-3">
                 <div className="flex items-center space-x-3">
-                  <label className="font-medium text-gray-700">DT1(소변)</label>
+                  <label className="font-medium text-neutral-700">DT1(소변)</label>
                   <input
                     type="number"
                     value={dt1_time}
                     onChange={(e)=>setDt1_time(e.target.value)}
-                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-24 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     placeholder="분"
                     min="0"
                   />
-                  <span className="text-gray-600">분</span>
+                  <span className="text-neutral-600">분</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <label className="font-medium text-gray-700">DT2(대변)</label>
+                  <label className="font-medium text-neutral-700">DT2(대변)</label>
                   <input
                     type="number"
                     value={dt2_time}
                     onChange={(e)=>setDt2_time(e.target.value)}
-                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-24 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                     placeholder="분"
                     min="0"
                   />
-                  <span className="text-gray-600">분</span>
+                  <span className="text-neutral-600">분</span>
                 </div>
               </div>
             </div>
 
             {/* DT 질문 2 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q2-title">
-              <h4 id="dt-q2-title" className="font-semibold text-gray-800 mb-3">2. 실내 배변 장소는 차단해 두었나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q2-title">
+              <h4 id="dt-q2-title" className="font-semibold text-neutral-800 mb-3">2. 실내 배변 장소는 차단해 두었나요?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2164,8 +2164,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* DT 질문 3 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q3-title">
-              <h4 id="dt-q3-title" className="font-semibold text-gray-800 mb-3">3. 실내배변은 어떤 형태로 하고 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q3-title">
+              <h4 id="dt-q3-title" className="font-semibold text-neutral-800 mb-3">3. 실내배변은 어떤 형태로 하고 있나요?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2204,8 +2204,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* DT 질문 4 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q4-title">
-              <h4 id="dt-q4-title" className="font-semibold text-gray-800 mb-3">4. 배변벨트 사용 여부</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q4-title">
+              <h4 id="dt-q4-title" className="font-semibold text-neutral-800 mb-3">4. 배변벨트 사용 여부</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2244,11 +2244,11 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* DT 질문 5 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q5-title">
-              <h4 id="dt-q5-title" className="font-semibold text-gray-800 mb-3">5. 배변 장소</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q5-title">
+              <h4 id="dt-q5-title" className="font-semibold text-neutral-800 mb-3">5. 배변 장소</h4>
               <div className="ml-4 space-y-4">
                 <div>
-                  <p className="font-medium text-gray-700 mb-2">DT1</p>
+                  <p className="font-medium text-neutral-700 mb-2">DT1</p>
                   <div className="ml-4 space-y-2">
                     <label className="flex items-center space-x-3">
                       <input
@@ -2275,7 +2275,7 @@ export const MonthlyReportPage = () => {
                   </div>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-700 mb-2">DT2</p>
+                  <p className="font-medium text-neutral-700 mb-2">DT2</p>
                   <div className="ml-4 space-y-2">
                     <label className="flex items-center space-x-3">
                       <input
@@ -2305,8 +2305,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* DT 질문 6 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q6-title">
-              <h4 id="dt-q6-title" className="font-semibold text-gray-800 mb-3">6. 보행 도중에 DT 실수를 할 때가 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q6-title">
+              <h4 id="dt-q6-title" className="font-semibold text-neutral-800 mb-3">6. 보행 도중에 DT 실수를 할 때가 있나요?</h4>
               <div className="ml-4 space-y-3">
                 <div className="flex items-start space-x-4">
                   <span className="whitespace-nowrap">① 안 한다.</span>
@@ -2404,8 +2404,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* DT 질문 7 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q7-title">
-              <h4 id="dt-q7-title" className="font-semibold text-gray-800 mb-3">7. 보행 전에 반드시 DT를 하고 걷나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q7-title">
+              <h4 id="dt-q7-title" className="font-semibold text-neutral-800 mb-3">7. 보행 전에 반드시 DT를 하고 걷나요?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2429,8 +2429,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* DT 질문 8 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q8-title">
-              <h4 id="dt-q8-title" className="font-semibold text-gray-800 mb-3">8. 보행 도중 DT를 하고 싶어할 때 특별히 보내는 신호가 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q8-title">
+              <h4 id="dt-q8-title" className="font-semibold text-neutral-800 mb-3">8. 보행 도중 DT를 하고 싶어할 때 특별히 보내는 신호가 있나요?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2492,7 +2492,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={dt_signal_other}
                         onChange={(e)=>setDt_signal_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 신호를 입력해주세요"
                       />
                     )}
@@ -2502,13 +2502,13 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* DT 질문 9 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q9-title">
-              <h4 id="dt-q9-title" className="font-semibold text-gray-800 mb-3">9. 현재 배변문제가 있다면 어떤 것이 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="dt-q9-title">
+              <h4 id="dt-q9-title" className="font-semibold text-neutral-800 mb-3">9. 현재 배변문제가 있다면 어떤 것이 있나요?</h4>
               <div className="ml-4">
                 <textarea
                   value={dt_problems}
                   onChange={(e)=>setDt_problems(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   rows={4}
                   placeholder="현재 배변과 관련된 문제점을 자유롭게 작성해주세요."
                 />
@@ -2522,11 +2522,11 @@ export const MonthlyReportPage = () => {
           {currentStep === 4 && (
             <>
           <div className="space-y-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-blue-500">보행 훈련</h3>
+            <h3 className="text-xl font-bold text-neutral-800 mb-6 pb-3 border-b-2 border-primary-500">보행 훈련</h3>
 
             {/* 보행 질문 1 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q1-title">
-              <h4 id="walk-q1-title" className="font-semibold text-gray-800 mb-3">1. 하루 평균 산책 시간은?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q1-title">
+              <h4 id="walk-q1-title" className="font-semibold text-neutral-800 mb-3">1. 하루 평균 산책 시간은?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2576,22 +2576,22 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 보행 질문 2 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q2-title">
-              <h4 id="walk-q2-title" className="font-semibold text-gray-800 mb-3">2. 주로 산책하는 시간을 적어주세요(예: 아침, 점심, 10시 등)</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q2-title">
+              <h4 id="walk-q2-title" className="font-semibold text-neutral-800 mb-3">2. 주로 산책하는 시간을 적어주세요(예: 아침, 점심, 10시 등)</h4>
               <div className="ml-4">
                 <input
                   type="text"
                   value={walk_q2}
                   onChange={(e)=>setWalk_q2(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   placeholder="예: 아침 7시, 저녁 6시"
                 />
               </div>
             </div>
 
             {/* 보행 질문 3 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q3-title">
-              <h4 id="walk-q3-title" className="font-semibold text-gray-800 mb-3">3. 코트/견줄 착용시 강아지의 반응은?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q3-title">
+              <h4 id="walk-q3-title" className="font-semibold text-neutral-800 mb-3">3. 코트/견줄 착용시 강아지의 반응은?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2653,7 +2653,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={walk_q3_other}
                         onChange={(e)=>setWalk_q3_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 반응을 입력해주세요"
                       />
                     )}
@@ -2663,8 +2663,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 보행 질문 4 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q4-title">
-              <h4 id="walk-q4-title" className="font-semibold text-gray-800 mb-3">4. 현재 헤드칼라를 사용하고 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q4-title">
+              <h4 id="walk-q4-title" className="font-semibold text-neutral-800 mb-3">4. 현재 헤드칼라를 사용하고 있나요?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2703,8 +2703,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 보행 질문 5 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q5-title">
-              <h4 id="walk-q5-title" className="font-semibold text-gray-800 mb-3">5. 보행 시 트릿 사용 여부</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q5-title">
+              <h4 id="walk-q5-title" className="font-semibold text-neutral-800 mb-3">5. 보행 시 트릿 사용 여부</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2743,8 +2743,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 보행 질문 6 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q6-title">
-              <h4 id="walk-q6-title" className="font-semibold text-gray-800 mb-3">6. 산책 시 강아지의 빠르기는?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q6-title">
+              <h4 id="walk-q6-title" className="font-semibold text-neutral-800 mb-3">6. 산책 시 강아지의 빠르기는?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2817,7 +2817,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={walk_q6_other}
                         onChange={(e)=>setWalk_q6_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 반응을 입력해주세요"
                       />
                     )}
@@ -2827,8 +2827,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 보행 질문 7 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q7-title">
-              <h4 id="walk-q7-title" className="font-semibold text-gray-800 mb-3">7. 산책 시 강아지의 행동은?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q7-title">
+              <h4 id="walk-q7-title" className="font-semibold text-neutral-800 mb-3">7. 산책 시 강아지의 행동은?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2912,7 +2912,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={walk_q7_other}
                         onChange={(e)=>setWalk_q7_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 행동을 입력해주세요"
                       />
                     )}
@@ -2922,8 +2922,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 보행 질문 8 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q8-title">
-              <h4 id="walk-q8-title" className="font-semibold text-gray-800 mb-3">8. 강아지나 고양이, 새 등을 만났을 때의 행동은? (유혹 순위별로 표시)</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q8-title">
+              <h4 id="walk-q8-title" className="font-semibold text-neutral-800 mb-3">8. 강아지나 고양이, 새 등을 만났을 때의 행동은? (유혹 순위별로 표시)</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -2993,7 +2993,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={walk_q8_other}
                         onChange={(e)=>setWalk_q8_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 행동을 입력해주세요"
                       />
                     )}
@@ -3003,8 +3003,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 보행 질문 9 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q9-title">
-              <h4 id="walk-q9-title" className="font-semibold text-gray-800 mb-3">9. 산책 시 사람을 만났을 때 행동은?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q9-title">
+              <h4 id="walk-q9-title" className="font-semibold text-neutral-800 mb-3">9. 산책 시 사람을 만났을 때 행동은?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -3056,7 +3056,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={walk_q9_target}
                         onChange={(e)=>setWalk_q9_target(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-48 inline-block"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-48 inline-block"
                         placeholder="예: 노인, 어린이 등"
                       />
                     )}
@@ -3077,7 +3077,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={walk_q9_other}
                         onChange={(e)=>setWalk_q9_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 행동을 입력해주세요"
                       />
                     )}
@@ -3087,13 +3087,13 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 보행 질문 10 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q10-title">
-              <h4 id="walk-q10-title" className="font-semibold text-gray-800 mb-3">10. 산책 시 짖거나 으르렁 거림, 꼬리 내림, 자세 낮춤, 갑자기 날뜀 등의 반응을 보인 물체 혹은 소리가 있다면 기록해 주세요.</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q10-title">
+              <h4 id="walk-q10-title" className="font-semibold text-neutral-800 mb-3">10. 산책 시 짖거나 으르렁 거림, 꼬리 내림, 자세 낮춤, 갑자기 날뜀 등의 반응을 보인 물체 혹은 소리가 있다면 기록해 주세요.</h4>
               <div className="ml-4">
                 <textarea
                   value={walk_q10}
                   onChange={(e)=>setWalk_q10(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   rows={4}
                   placeholder="반응을 보인 물체나 소리를 자유롭게 작성해주세요."
                 />
@@ -3101,13 +3101,13 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 보행 질문 11 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q11-title">
-              <h4 id="walk-q11-title" className="font-semibold text-gray-800 mb-3">11. 산책 시 강아지가 크게 관심을 보이는 대상을 모두 적어 주세요.</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="walk-q11-title">
+              <h4 id="walk-q11-title" className="font-semibold text-neutral-800 mb-3">11. 산책 시 강아지가 크게 관심을 보이는 대상을 모두 적어 주세요.</h4>
               <div className="ml-4">
                 <textarea
                   value={walk_q11}
                   onChange={(e)=>setWalk_q11(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   rows={4}
                   placeholder="강아지가 관심을 보이는 대상을 자유롭게 작성해주세요."
                 />
@@ -3121,16 +3121,16 @@ export const MonthlyReportPage = () => {
           {currentStep === 5 && (
             <>
           <div className="space-y-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-blue-500">사회화 훈련</h3>
+            <h3 className="text-xl font-bold text-neutral-800 mb-6 pb-3 border-b-2 border-primary-500">사회화 훈련</h3>
 
             {/* 사회화 질문 1 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q1-title">
-              <h4 id="social-q1-title" className="font-semibold text-gray-800 mb-3">1. 지난 한 달간 가본 곳을 모두 적어 주세요</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q1-title">
+              <h4 id="social-q1-title" className="font-semibold text-neutral-800 mb-3">1. 지난 한 달간 가본 곳을 모두 적어 주세요</h4>
               <div className="ml-4">
                 <textarea
                   value={social_q1}
                   onChange={(e)=>setSocial_q1(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   rows={4}
                   placeholder="지난 한 달간 방문한 장소를 자유롭게 작성해주세요."
                 />
@@ -3138,8 +3138,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 사회화 질문 2 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q2-title">
-              <h4 id="social-q2-title" className="font-semibold text-gray-800 mb-3">2. 매일 하는 산책 이외에 일주일에 몇 번 정도 사회화 훈련을 하나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q2-title">
+              <h4 id="social-q2-title" className="font-semibold text-neutral-800 mb-3">2. 매일 하는 산책 이외에 일주일에 몇 번 정도 사회화 훈련을 하나요?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -3189,8 +3189,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 사회화 질문 3 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q3-title">
-              <h4 id="social-q3-title" className="font-semibold text-gray-800 mb-3">3. 사람이 많고 복잡한 곳에 방문했을 때 강아지의 반응은?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q3-title">
+              <h4 id="social-q3-title" className="font-semibold text-neutral-800 mb-3">3. 사람이 많고 복잡한 곳에 방문했을 때 강아지의 반응은?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -3274,7 +3274,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={social_q3_other}
                         onChange={(e)=>setSocial_q3_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 반응을 입력해주세요"
                       />
                     )}
@@ -3284,8 +3284,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 사회화 질문 4 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q4-title">
-              <h4 id="social-q4-title" className="font-semibold text-gray-800 mb-3">4. 계단을 오르내릴 때 특징이 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q4-title">
+              <h4 id="social-q4-title" className="font-semibold text-neutral-800 mb-3">4. 계단을 오르내릴 때 특징이 있나요?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -3347,7 +3347,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={social_q4_other}
                         onChange={(e)=>setSocial_q4_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 특징을 입력해주세요"
                       />
                     )}
@@ -3357,8 +3357,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 사회화 질문 5 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q5-title">
-              <h4 id="social-q5-title" className="font-semibold text-gray-800 mb-3">5. 에스컬레이터를 이용할 때 특징이 있나요? (이용한 경험이 있을 때만 체크)</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q5-title">
+              <h4 id="social-q5-title" className="font-semibold text-neutral-800 mb-3">5. 에스컬레이터를 이용할 때 특징이 있나요? (이용한 경험이 있을 때만 체크)</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -3387,7 +3387,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={social_q5_direction}
                         onChange={(e)=>setSocial_q5_direction(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-48 inline-block"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-48 inline-block"
                         placeholder="상행선/하행선"
                       />
                     )}
@@ -3443,7 +3443,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={social_q5_other}
                         onChange={(e)=>setSocial_q5_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 특징을 입력해주세요"
                       />
                     )}
@@ -3453,8 +3453,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 사회화 질문 6 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q6-title">
-              <h4 id="social-q6-title" className="font-semibold text-gray-800 mb-3">6. 승용차를 이용할 때 특징이 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q6-title">
+              <h4 id="social-q6-title" className="font-semibold text-neutral-800 mb-3">6. 승용차를 이용할 때 특징이 있나요?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -3527,7 +3527,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={social_q6_other}
                         onChange={(e)=>setSocial_q6_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 특징을 입력해주세요"
                       />
                     )}
@@ -3537,8 +3537,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 사회화 질문 7 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q7-title">
-              <h4 id="social-q7-title" className="font-semibold text-gray-800 mb-3">7. 버스를 이용할 때 특징이 있나요? (이용한 경험이 있을 때만 체크)</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q7-title">
+              <h4 id="social-q7-title" className="font-semibold text-neutral-800 mb-3">7. 버스를 이용할 때 특징이 있나요? (이용한 경험이 있을 때만 체크)</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -3567,7 +3567,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={social_q7_when}
                         onChange={(e)=>setSocial_q7_when(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-48 inline-block"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-48 inline-block"
                         placeholder="탈 때/내릴 때"
                       />
                     )}
@@ -3623,7 +3623,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={social_q7_other}
                         onChange={(e)=>setSocial_q7_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 특징을 입력해주세요"
                       />
                     )}
@@ -3633,8 +3633,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 사회화 질문 8 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q8-title">
-              <h4 id="social-q8-title" className="font-semibold text-gray-800 mb-3">8. 지하철을 이용할 때 특징이 있나요? (이용한 경험이 있을 때만 체크)</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q8-title">
+              <h4 id="social-q8-title" className="font-semibold text-neutral-800 mb-3">8. 지하철을 이용할 때 특징이 있나요? (이용한 경험이 있을 때만 체크)</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -3704,7 +3704,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={social_q8_other}
                         onChange={(e)=>setSocial_q8_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 특징을 입력해주세요"
                       />
                     )}
@@ -3714,8 +3714,8 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 사회화 질문 9 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q9-title">
-              <h4 id="social-q9-title" className="font-semibold text-gray-800 mb-3">9. 카페나 식당에서 기다릴때 특징이 있나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q9-title">
+              <h4 id="social-q9-title" className="font-semibold text-neutral-800 mb-3">9. 카페나 식당에서 기다릴때 특징이 있나요?</h4>
               <div className="ml-4 space-y-2">
                 <label className="flex items-center space-x-3">
                   <input
@@ -3785,7 +3785,7 @@ export const MonthlyReportPage = () => {
                         type="text"
                         value={social_q9_other}
                         onChange={(e)=>setSocial_q9_other(e.target.value)}
-                        className="ml-2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full mt-2"
+                        className="ml-2 px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none w-full mt-2"
                         placeholder="기타 특징을 입력해주세요"
                       />
                     )}
@@ -3795,13 +3795,13 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 사회화 질문 10 */}
-            <div className="bg-gray-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q10-title">
-              <h4 id="social-q10-title" className="font-semibold text-gray-800 mb-3">10. 사회화 훈련을 하며 어려운 점이 있었나요?</h4>
+            <div className="bg-neutral-50 p-4 rounded mb-4" role="group" aria-labelledby="social-q10-title">
+              <h4 id="social-q10-title" className="font-semibold text-neutral-800 mb-3">10. 사회화 훈련을 하며 어려운 점이 있었나요?</h4>
               <div className="ml-4">
                 <textarea
                   value={social_q10}
                   onChange={(e)=>setSocial_q10(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   rows={4}
                   placeholder="사회화 훈련 중 어려운 점을 자유롭게 작성해주세요."
                 />
@@ -3819,7 +3819,7 @@ export const MonthlyReportPage = () => {
                   type="button"
                   onClick={handlePrevStep}
                   disabled={status === 'completed'}
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-neutral-300 hover:bg-neutral-400 text-neutral-800 font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   ← 이전
                 </button>
@@ -3833,7 +3833,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleSaveDraft}
                     disabled={status === 'completed'}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-warning-500 hover:bg-warning-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     중간 저장
                   </button>
@@ -3841,7 +3841,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleNextStep}
                     disabled={status === 'completed'}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     다음 →
                   </button>
@@ -3854,7 +3854,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleSaveDraft}
                     disabled={status === 'completed'}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-warning-500 hover:bg-warning-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     중간 저장
                   </button>
@@ -3862,7 +3862,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleNextStep}
                     disabled={status === 'completed'}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     다음 →
                   </button>
@@ -3875,7 +3875,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleSaveDraft}
                     disabled={status === 'completed'}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-warning-500 hover:bg-warning-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     중간 저장
                   </button>
@@ -3883,7 +3883,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleNextStep}
                     disabled={status === 'completed'}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     다음 →
                   </button>
@@ -3896,7 +3896,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleSaveDraft}
                     disabled={status === 'completed'}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-warning-500 hover:bg-warning-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     중간 저장
                   </button>
@@ -3904,7 +3904,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleNextStep}
                     disabled={status === 'completed'}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     다음 →
                   </button>
@@ -3917,7 +3917,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleSaveDraft}
                     disabled={status === 'completed'}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-warning-500 hover:bg-warning-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     중간 저장
                   </button>
@@ -3925,7 +3925,7 @@ export const MonthlyReportPage = () => {
                     type="button"
                     onClick={handleComplete}
                     disabled={status === 'completed'}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-success-600 hover:bg-success-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     완료
                   </button>
@@ -4017,15 +4017,15 @@ export const MonthlyReportPage = () => {
       <div className="max-w-7xl mx-auto">
         {/* 필터 */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">필터</h3>
+          <h3 className="text-lg font-bold text-neutral-800 mb-4">필터</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* 년도 필터 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">년도</label>
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">년도</label>
               <select
                 value={filterYear}
                 onChange={(e) => setFilterYear(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="all">전체</option>
                 <option value="2025">2025</option>
@@ -4036,11 +4036,11 @@ export const MonthlyReportPage = () => {
 
             {/* 월 필터 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">월</label>
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">월</label>
               <select
                 value={filterMonth}
                 onChange={(e) => setFilterMonth(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="all">전체</option>
                 {Array.from({ length: 12 }, (_, i) => {
@@ -4056,23 +4056,23 @@ export const MonthlyReportPage = () => {
 
             {/* 시작 날짜 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">시작 날짜</label>
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">시작 날짜</label>
               <input
                 type="date"
                 value={filterStartDate}
                 onChange={(e) => setFilterStartDate(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
 
             {/* 종료 날짜 */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">종료 날짜</label>
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">종료 날짜</label>
               <input
                 type="date"
                 value={filterEndDate}
                 onChange={(e) => setFilterEndDate(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
           </div>
@@ -4080,22 +4080,22 @@ export const MonthlyReportPage = () => {
 
         {/* 비교 버튼 */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">
+          <h2 className="text-2xl font-bold text-neutral-800">
             월간 보고서 목록 ({reports.length}건)
           </h2>
           <div className="space-x-4">
             <button
               onClick={toggleCompareMode}
               className={`${
-                isComparing ? 'bg-gray-600' : 'bg-blue-600'
-              } hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors`}
+                isComparing ? 'bg-neutral-600' : 'bg-primary-600'
+              } hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors`}
             >
               {isComparing ? '비교 취소' : '비교 모드'}
             </button>
             {isComparing && selectedReportIds.length >= 2 && (
               <button
                 onClick={() => setShowComparisonTable(true)}
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="bg-success-600 hover:bg-success-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 비교하기 ({selectedReportIds.length}개)
               </button>
@@ -4106,7 +4106,7 @@ export const MonthlyReportPage = () => {
         {/* 목록 */}
         {reports.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-500">작성된 월간 보고서가 없습니다.</p>
+            <p className="text-neutral-500">작성된 월간 보고서가 없습니다.</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -4130,19 +4130,19 @@ export const MonthlyReportPage = () => {
                   <div className="flex-1">
                     <button
                       onClick={() => openDetailView(report)}
-                      className="text-xl font-bold text-blue-600 hover:text-blue-800 underline text-left"
+                      className="text-xl font-bold text-primary-600 hover:text-primary-800 underline text-left"
                       aria-label={`${report.reportMonth} 월간 보고서, 견명 ${report.dogName}, 퍼피티처 ${report.userName}, 상태 ${report.status === 'completed' ? '완료' : '임시저장'}`}
                     >
                       {report.reportMonth} 월간 보고서
                     </button>
-                    <div className="flex items-center text-sm text-gray-600 space-x-4 mt-2">
+                    <div className="flex items-center text-sm text-neutral-600 space-x-4 mt-2">
                       <span>견명: {report.dogName}</span>
                       <span>퍼피티처: {report.userName}</span>
                       <span>작성일: {formatDate(report.createdAt)}</span>
                       <span className={`px-2 py-1 rounded text-xs font-semibold ${
                         report.status === 'completed'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
+                          ? 'bg-success-100 text-success-800'
+                          : 'bg-warning-100 text-warning-800'
                       }`}>
                         {report.status === 'completed' ? '완료' : '임시저장'}
                       </span>
@@ -4167,8 +4167,8 @@ export const MonthlyReportPage = () => {
             if (!hasValue) return null;
 
             return (
-              <tr className="hover:bg-gray-50">
-                <td className="border border-gray-300 p-3 font-semibold bg-gray-50 sticky left-0 min-w-[200px]">
+              <tr className="hover:bg-neutral-50">
+                <td className="border border-neutral-300 p-3 font-semibold bg-neutral-50 sticky left-0 min-w-[200px]">
                   {label}
                 </td>
                 {selectedReports.map(report => {
@@ -4185,7 +4185,7 @@ export const MonthlyReportPage = () => {
                     displayValue = '-';
                   }
                   return (
-                    <td key={report.id} className="border border-gray-300 p-3">
+                    <td key={report.id} className="border border-neutral-300 p-3">
                       {displayValue}
                     </td>
                   );
@@ -4197,32 +4197,32 @@ export const MonthlyReportPage = () => {
           return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
               <div className="bg-white rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] overflow-y-auto">
-                <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center z-10">
-                  <h3 className="text-2xl font-bold text-gray-800">
+                <div className="sticky top-0 bg-white border-b border-neutral-200 p-6 flex justify-between items-center z-10">
+                  <h3 className="text-2xl font-bold text-neutral-800">
                     보고서 비교 ({selectedReports.length}개)
                   </h3>
                   <button
                     onClick={() => setShowComparisonTable(false)}
-                    className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
+                    className="text-neutral-600 hover:text-neutral-800 text-2xl font-bold"
                   >
                     ×
                   </button>
                 </div>
 
                 {/* 기본 정보 */}
-                <div className="p-6 bg-gray-50 border-b border-gray-200">
-                  <h4 className="text-lg font-bold text-gray-800 mb-4">기본 정보</h4>
+                <div className="p-6 bg-neutral-50 border-b border-neutral-200">
+                  <h4 className="text-lg font-bold text-neutral-800 mb-4">기본 정보</h4>
                   <div className="overflow-x-auto">
                     <table className="w-full border-collapse text-sm">
                       <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-300 p-3 text-left font-semibold sticky left-0 bg-gray-100 min-w-[200px]">
+                        <tr className="bg-neutral-100">
+                          <th className="border border-neutral-300 p-3 text-left font-semibold sticky left-0 bg-neutral-100 min-w-[200px]">
                             항목
                           </th>
                           {selectedReports.map(report => (
-                            <th key={report.id} className="border border-gray-300 p-3 text-left font-semibold min-w-[200px]">
+                            <th key={report.id} className="border border-neutral-300 p-3 text-left font-semibold min-w-[200px]">
                               {report.dogName}_{report.userName}
-                              <div className="text-xs font-normal text-gray-600 mt-1">
+                              <div className="text-xs font-normal text-neutral-600 mt-1">
                                 {report.reportMonth}
                               </div>
                             </th>
@@ -4241,7 +4241,7 @@ export const MonthlyReportPage = () => {
                 </div>
 
                 {/* 탭 버튼 */}
-                <div className="border-b border-gray-200 sticky top-[88px] bg-white z-10">
+                <div className="border-b border-neutral-200 sticky top-[88px] bg-white z-10">
                   <div className="flex space-x-1 p-2" role="tablist">
                     <button
                       role="tab"
@@ -4249,8 +4249,8 @@ export const MonthlyReportPage = () => {
                       onClick={() => setComparisonTab('home')}
                       className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                         comparisonTab === 'home'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'bg-primary-600 text-white'
+                          : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                       }`}
                     >
                       집에서의 품행
@@ -4261,8 +4261,8 @@ export const MonthlyReportPage = () => {
                       onClick={() => setComparisonTab('dt')}
                       className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                         comparisonTab === 'dt'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'bg-primary-600 text-white'
+                          : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                       }`}
                     >
                       DT 품행 기록
@@ -4273,8 +4273,8 @@ export const MonthlyReportPage = () => {
                       onClick={() => setComparisonTab('walk')}
                       className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                         comparisonTab === 'walk'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'bg-primary-600 text-white'
+                          : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                       }`}
                     >
                       보행 훈련
@@ -4285,8 +4285,8 @@ export const MonthlyReportPage = () => {
                       onClick={() => setComparisonTab('social')}
                       className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                         comparisonTab === 'social'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'bg-primary-600 text-white'
+                          : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                       }`}
                     >
                       사회화 훈련
@@ -4299,12 +4299,12 @@ export const MonthlyReportPage = () => {
                   <div className="overflow-x-auto">
                     <table className="w-full border-collapse text-sm">
                       <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-300 p-3 text-left font-semibold sticky left-0 bg-gray-100 min-w-[250px]">
+                        <tr className="bg-neutral-100">
+                          <th className="border border-neutral-300 p-3 text-left font-semibold sticky left-0 bg-neutral-100 min-w-[250px]">
                             질문
                           </th>
                           {selectedReports.map(report => (
-                            <th key={report.id} className="border border-gray-300 p-3 text-left font-semibold min-w-[200px]">
+                            <th key={report.id} className="border border-neutral-300 p-3 text-left font-semibold min-w-[200px]">
                               {report.dogName}_{report.userName}
                             </th>
                           ))}
@@ -4470,24 +4470,24 @@ export const MonthlyReportPage = () => {
         {viewingReport && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
-                <h3 className="text-2xl font-bold text-gray-800">
+              <div className="sticky top-0 bg-white border-b border-neutral-200 p-6 flex justify-between items-center">
+                <h3 className="text-2xl font-bold text-neutral-800">
                   {viewingReport.dogName}_{viewingReport.userName} - {viewingReport.reportMonth}
                 </h3>
                 <button
                   onClick={closeDetailView}
-                  className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
+                  className="text-neutral-600 hover:text-neutral-800 text-2xl font-bold"
                 >
                   ×
                 </button>
               </div>
 
               {/* 기본 정보 */}
-              <div className="p-6 bg-gray-50 border-b border-gray-200">
-                <h4 className="text-lg font-bold text-gray-800 mb-4">기본 정보</h4>
+              <div className="p-6 bg-neutral-50 border-b border-neutral-200">
+                <h4 className="text-lg font-bold text-neutral-800 mb-4">기본 정보</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white p-4 rounded-lg">
-                    <h5 className="text-sm font-semibold text-gray-600 mb-2">급식</h5>
+                    <h5 className="text-sm font-semibold text-neutral-600 mb-2">급식</h5>
                     <div className="space-y-2 text-sm">
                       {(viewingReport as any).foodType && (
                         <div className="flex">
@@ -4510,7 +4510,7 @@ export const MonthlyReportPage = () => {
                     </div>
                   </div>
                   <div className="bg-white p-4 rounded-lg">
-                    <h5 className="text-sm font-semibold text-gray-600 mb-2">건강</h5>
+                    <h5 className="text-sm font-semibold text-neutral-600 mb-2">건강</h5>
                     <div className="space-y-2 text-sm">
                       {(viewingReport as any).weight && (
                         <div className="flex">
@@ -4521,7 +4521,7 @@ export const MonthlyReportPage = () => {
                       {(viewingReport as any).healthNotes && (
                         <div>
                           <span className="font-semibold">건강상 특이사항:</span>
-                          <p className="mt-1 text-gray-700 whitespace-pre-wrap">{(viewingReport as any).healthNotes}</p>
+                          <p className="mt-1 text-neutral-700 whitespace-pre-wrap">{(viewingReport as any).healthNotes}</p>
                         </div>
                       )}
                     </div>
@@ -4530,7 +4530,7 @@ export const MonthlyReportPage = () => {
               </div>
 
               {/* 탭 버튼 */}
-              <div className="border-b border-gray-200">
+              <div className="border-b border-neutral-200">
                 <div className="flex space-x-1 p-2" role="tablist">
                   <button
                     role="tab"
@@ -4538,8 +4538,8 @@ export const MonthlyReportPage = () => {
                     onClick={() => setDetailViewTab('home')}
                     className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                       detailViewTab === 'home'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                     }`}
                   >
                     집에서의 품행
@@ -4550,8 +4550,8 @@ export const MonthlyReportPage = () => {
                     onClick={() => setDetailViewTab('dt')}
                     className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                       detailViewTab === 'dt'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                     }`}
                   >
                     DT 품행 기록
@@ -4562,8 +4562,8 @@ export const MonthlyReportPage = () => {
                     onClick={() => setDetailViewTab('walk')}
                     className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                       detailViewTab === 'walk'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                     }`}
                   >
                     보행 훈련
@@ -4574,8 +4574,8 @@ export const MonthlyReportPage = () => {
                     onClick={() => setDetailViewTab('social')}
                     className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                       detailViewTab === 'social'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                     }`}
                   >
                     사회화 훈련
@@ -4588,253 +4588,253 @@ export const MonthlyReportPage = () => {
                 {/* 집에서의 품행 탭 */}
                 {detailViewTab === 'home' && (
                   <div className="space-y-4">
-                    <h4 className="text-xl font-bold text-gray-800 mb-4">집에서의 품행 (21개 질문)</h4>
+                    <h4 className="text-xl font-bold text-neutral-800 mb-4">집에서의 품행 (21개 질문)</h4>
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
-                          <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                        <tr className="bg-neutral-100">
+                          <th className="border border-neutral-300 px-4 py-2 text-left w-1/3">질문</th>
+                          <th className="border border-neutral-300 px-4 py-2 text-left">답변</th>
                         </tr>
                       </thead>
                       <tbody>
                         {(viewingReport as any).q1 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q1. 크레이트(팬스)를 닫았을 때 안에서의 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q1', (viewingReport as any).q1)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q1. 크레이트(팬스)를 닫았을 때 안에서의 행동</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q1', (viewingReport as any).q1)}</td></tr>
                         )}
                         {(viewingReport as any).q1_time && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">편안해질 때까지 걸리는 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_time}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">편안해질 때까지 걸리는 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q1_time}</td></tr>
                         )}
                         {(viewingReport as any).q1_type && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">씹는 종류</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_type}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">씹는 종류</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q1_type}</td></tr>
                         )}
                         {(viewingReport as any).q1_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q1_other}</td></tr>
                         )}
 
                         {(viewingReport as any).q2 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q2. 사람 음식에 대한 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q2', (viewingReport as any).q2)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q2. 사람 음식에 대한 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q2', (viewingReport as any).q2)}</td></tr>
                         )}
                         {(viewingReport as any).q2_food && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">먹은 음식</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q2_food}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">먹은 음식</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q2_food}</td></tr>
                         )}
                         {(viewingReport as any).q2_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q2_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q2_other}</td></tr>
                         )}
 
                         {(viewingReport as any).q3 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q3. 혼자 있을 때 상태</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q3', (viewingReport as any).q3)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q3. 혼자 있을 때 상태</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q3', (viewingReport as any).q3)}</td></tr>
                         )}
 
                         {(viewingReport as any).q4 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q4. 혼자 있을 때 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q4', (viewingReport as any).q4)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q4. 혼자 있을 때 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q4', (viewingReport as any).q4)}</td></tr>
                         )}
                         {(viewingReport as any).q4_bark_freq && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">짖음 빈도</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q4_bark_freq}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">짖음 빈도</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q4_bark_freq}</td></tr>
                         )}
                         {(viewingReport as any).q4_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q4_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q4_other}</td></tr>
                         )}
 
                         {((viewingReport as any).q5_crate_time || (viewingReport as any).q5_fence_time || (viewingReport as any).q5_free_time) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q5. 혼자 있어 본 최장시간과 상태</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q5. 혼자 있어 본 최장시간과 상태</td></tr>
                         )}
                         {(viewingReport as any).q5_crate_time && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">크레이트 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_crate_time}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">크레이트 - 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_crate_time}</td></tr>
                         )}
                         {(viewingReport as any).q5_crate_state && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">크레이트 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_crate_state}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">크레이트 - 상태</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_crate_state}</td></tr>
                         )}
                         {(viewingReport as any).q5_fence_time && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">팬스 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_fence_time}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">팬스 - 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_fence_time}</td></tr>
                         )}
                         {(viewingReport as any).q5_fence_state && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">팬스 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_fence_state}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">팬스 - 상태</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_fence_state}</td></tr>
                         )}
                         {(viewingReport as any).q5_free_time && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_free_time}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_free_time}</td></tr>
                         )}
                         {(viewingReport as any).q5_free_state && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_free_state}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 상태</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_free_state}</td></tr>
                         )}
 
                         {(viewingReport as any).q6 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q6. 손님이 왔을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q6', (viewingReport as any).q6)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q6. 손님이 왔을 때의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q6', (viewingReport as any).q6)}</td></tr>
                         )}
                         {(viewingReport as any).q6_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q6_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q6_other}</td></tr>
                         )}
 
                         {(viewingReport as any).q7 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q7. 가족이 귀가했을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q7', (viewingReport as any).q7)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q7. 가족이 귀가했을 때의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q7', (viewingReport as any).q7)}</td></tr>
                         )}
                         {(viewingReport as any).q7_dislike && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">별로 좋아하지 않는 행동</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q7_dislike}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">별로 좋아하지 않는 행동</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q7_dislike}</td></tr>
                         )}
                         {(viewingReport as any).q7_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q7_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q7_other}</td></tr>
                         )}
 
                         {(viewingReport as any).q8 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q8. 집에 있는 상황에서 짖은 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q8', (viewingReport as any).q8)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q8. 집에 있는 상황에서 짖은 적이 있나요?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q8', (viewingReport as any).q8)}</td></tr>
                         )}
                         {(viewingReport as any).q8_situation && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q8_situation}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q8_situation}</td></tr>
                         )}
                         {(viewingReport as any).q8_count && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q8_count}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q8_count}</td></tr>
                         )}
 
                         {(viewingReport as any).q9 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q9. 으르렁 거린 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q9', (viewingReport as any).q9)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q9. 으르렁 거린 적이 있나요?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q9', (viewingReport as any).q9)}</td></tr>
                         )}
                         {(viewingReport as any).q9_situation && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q9_situation}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q9_situation}</td></tr>
                         )}
                         {(viewingReport as any).q9_count && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q9_count}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q9_count}</td></tr>
                         )}
 
                         {(viewingReport as any).q10 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q10. 개의 잘못된 행동을 사람이 컨트롤 했을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q10', (viewingReport as any).q10)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q10. 개의 잘못된 행동을 사람이 컨트롤 했을 때의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q10', (viewingReport as any).q10)}</td></tr>
                         )}
                         {(viewingReport as any).q10_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q10_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q10_other}</td></tr>
                         )}
 
                         {(viewingReport as any).q11 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q11. 장난감이나 콩, 껌을 물고 있는 강아지에게 "놔 or 그만"을 했을 때 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q11', (viewingReport as any).q11)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q11. 장난감이나 콩, 껌을 물고 있는 강아지에게 "놔 or 그만"을 했을 때 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q11', (viewingReport as any).q11)}</td></tr>
                         )}
                         {(viewingReport as any).q11_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q11_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q11_other}</td></tr>
                         )}
 
                         {((viewingReport as any).q12_option || (viewingReport as any).q12_commands || (viewingReport as any).q12_wait_state) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q12. 집안에서 기본훈련(앉아/엎드려/서)에 대한 강아지의 수준</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q12. 집안에서 기본훈련(앉아/엎드려/서)에 대한 강아지의 수준</td></tr>
                         )}
                         {(viewingReport as any).q12_option && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">선택</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q12_option', (viewingReport as any).q12_option)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">선택</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q12_option', (viewingReport as any).q12_option)}</td></tr>
                         )}
                         {(viewingReport as any).q12_commands && Array.isArray((viewingReport as any).q12_commands) && (viewingReport as any).q12_commands.length > 0 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">명령어</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_commands.join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">명령어</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q12_commands.join(', ')}</td></tr>
                         )}
                         {(viewingReport as any).q12_wait_state && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_state}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기다려 - 상태</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q12_wait_state}</td></tr>
                         )}
                         {(viewingReport as any).q12_wait_time && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_time}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기다려 - 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q12_wait_time}</td></tr>
                         )}
                         {(viewingReport as any).q12_wait_levels && Array.isArray((viewingReport as any).q12_wait_levels) && (viewingReport as any).q12_wait_levels.length > 0 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 수준</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_levels.join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기다려 - 수준</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q12_wait_levels.join(', ')}</td></tr>
                         )}
 
                         {(viewingReport as any).q13 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q13. 바디핸들링이나 배를 보이며 눕히기를 했을때 강아지의 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q13', (viewingReport as any).q13)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q13. 바디핸들링이나 배를 보이며 눕히기를 했을때 강아지의 행동</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q13', (viewingReport as any).q13)}</td></tr>
                         )}
                         {(viewingReport as any).q13_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q13_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q13_other}</td></tr>
                         )}
 
                         {((viewingReport as any).q14_posture || (viewingReport as any).q14_frequency || (viewingReport as any).q14) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q14. 이를 닦을 때 품행</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q14. 이를 닦을 때 품행</td></tr>
                         )}
                         {(viewingReport as any).q14_posture && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_posture}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q14_posture}</td></tr>
                         )}
                         {(viewingReport as any).q14_frequency && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_frequency}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q14_frequency}</td></tr>
                         )}
                         {(viewingReport as any).q14 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q14', (viewingReport as any).q14)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q14', (viewingReport as any).q14)}</td></tr>
                         )}
                         {(viewingReport as any).q14_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q14_other}</td></tr>
                         )}
 
                         {((viewingReport as any).q15_posture || (viewingReport as any).q15_frequency || (viewingReport as any).q15) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q15. 그루밍(빗질) 할 때의 품행</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q15. 그루밍(빗질) 할 때의 품행</td></tr>
                         )}
                         {(viewingReport as any).q15_posture && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_posture}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q15_posture}</td></tr>
                         )}
                         {(viewingReport as any).q15_frequency && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_frequency}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q15_frequency}</td></tr>
                         )}
                         {(viewingReport as any).q15 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q15', (viewingReport as any).q15)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q15', (viewingReport as any).q15)}</td></tr>
                         )}
                         {(viewingReport as any).q15_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q15_other}</td></tr>
                         )}
 
                         {((viewingReport as any).q16_posture || (viewingReport as any).q16_frequency || (viewingReport as any).q16_comfortable || (viewingReport as any).q16_uncomfortable) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q16. 발톱/발털손질 할 때의 품행</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q16. 발톱/발털손질 할 때의 품행</td></tr>
                         )}
                         {(viewingReport as any).q16_posture && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_posture}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_posture}</td></tr>
                         )}
                         {(viewingReport as any).q16_frequency && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_frequency}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_frequency}</td></tr>
                         )}
                         {(viewingReport as any).q16_comfortable && Array.isArray((viewingReport as any).q16_comfortable) && (viewingReport as any).q16_comfortable.length > 0 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">편안하게 잘 하는 것</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_comfortable.join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">편안하게 잘 하는 것</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_comfortable.join(', ')}</td></tr>
                         )}
                         {(viewingReport as any).q16_uncomfortable && Array.isArray((viewingReport as any).q16_uncomfortable) && (viewingReport as any).q16_uncomfortable.length > 0 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">불편해하는 부위</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_uncomfortable.join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">불편해하는 부위</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_uncomfortable.join(', ')}</td></tr>
                         )}
                         {(viewingReport as any).q16_options && Array.isArray((viewingReport as any).q16_options) && (viewingReport as any).q16_options.length > 0 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_options.join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타 반응</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_options.join(', ')}</td></tr>
                         )}
                         {(viewingReport as any).q16_bleeding && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">과거 피가 난 적</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_bleeding === 'Y' ? '예' : '아니오'}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">과거 피가 난 적</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_bleeding === 'Y' ? '예' : '아니오'}</td></tr>
                         )}
                         {(viewingReport as any).q16_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_other}</td></tr>
                         )}
 
                         {((viewingReport as any).q17_posture || (viewingReport as any).q17) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q17. 귀청소 할 때의 품행</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q17. 귀청소 할 때의 품행</td></tr>
                         )}
                         {(viewingReport as any).q17_posture && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_posture}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q17_posture}</td></tr>
                         )}
                         {(viewingReport as any).q17 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q17', (viewingReport as any).q17)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q17', (viewingReport as any).q17)}</td></tr>
                         )}
                         {(viewingReport as any).q17_reason && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">계기</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_reason}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">계기</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q17_reason}</td></tr>
                         )}
                         {(viewingReport as any).q17_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q17_other}</td></tr>
                         )}
 
                         {(viewingReport as any).q18 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q18. 외출 후 발을 닦을 때의 품행</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q18', (viewingReport as any).q18)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q18. 외출 후 발을 닦을 때의 품행</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q18', (viewingReport as any).q18)}</td></tr>
                         )}
                         {(viewingReport as any).q18_treat && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">트릿 사용 여부</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_treat}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">트릿 사용 여부</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q18_treat}</td></tr>
                         )}
                         {(viewingReport as any).q18_bites && Array.isArray((viewingReport as any).q18_bites) && (viewingReport as any).q18_bites.length > 0 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">입질 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_bites.join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">입질 대상</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q18_bites.join(', ')}</td></tr>
                         )}
                         {(viewingReport as any).q18_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q18_other}</td></tr>
                         )}
 
                         {(viewingReport as any).q19 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q19. 집안의 물건을 망가뜨린 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q19', (viewingReport as any).q19)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q19. 집안의 물건을 망가뜨린 적이 있나요?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q19', (viewingReport as any).q19)}</td></tr>
                         )}
                         {(viewingReport as any).q19_count && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">지난 한달간 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q19_count}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">지난 한달간 횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q19_count}</td></tr>
                         )}
 
                         {(viewingReport as any).q20 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q20. 집에서 자녀들과 있을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q20', (viewingReport as any).q20)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q20. 집에서 자녀들과 있을 때의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q20', (viewingReport as any).q20)}</td></tr>
                         )}
                         {(viewingReport as any).q20_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q20_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q20_other}</td></tr>
                         )}
 
                         {(viewingReport as any).q21 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q21. 현재 품행에 있어 가장 큰 문제는?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q21}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q21. 현재 품행에 있어 가장 큰 문제는?</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q21}</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -4844,76 +4844,76 @@ export const MonthlyReportPage = () => {
                 {/* DT 품행 기록 탭 */}
                 {detailViewTab === 'dt' && (
                   <div className="space-y-4">
-                    <h4 className="text-xl font-bold text-gray-800 mb-4">DT 품행 기록</h4>
+                    <h4 className="text-xl font-bold text-neutral-800 mb-4">DT 품행 기록</h4>
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
-                          <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                        <tr className="bg-neutral-100">
+                          <th className="border border-neutral-300 px-4 py-2 text-left w-1/3">질문</th>
+                          <th className="border border-neutral-300 px-4 py-2 text-left">답변</th>
                         </tr>
                       </thead>
                       <tbody>
                         {((viewingReport as any).dt1_time || (viewingReport as any).dt2_time) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>1. '하나둘,하나둘' 명령어에 몇분안에 반응하나요?</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>1. '하나둘,하나둘' 명령어에 몇분안에 반응하나요?</td></tr>
                         )}
                         {(viewingReport as any).dt1_time && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT1(소변)</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt1_time}분</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">DT1(소변)</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt1_time}분</td></tr>
                         )}
                         {(viewingReport as any).dt2_time && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT2(대변)</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt2_time}분</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">DT2(대변)</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt2_time}분</td></tr>
                         )}
 
                         {(viewingReport as any).dt_indoor_blocked && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 실내 배변 장소는 차단해 두었나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_indoor_blocked}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">2. 실내 배변 장소는 차단해 두었나요?</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_indoor_blocked}</td></tr>
                         )}
 
                         {(viewingReport as any).dt_indoor_type && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 실내배변은 어떤 형태로 하고 있나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_indoor_type}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">3. 실내배변은 어떤 형태로 하고 있나요?</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_indoor_type}</td></tr>
                         )}
 
                         {(viewingReport as any).dt_belt_type && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 배변벨트 사용 여부</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_belt_type}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">4. 배변벨트 사용 여부</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_belt_type}</td></tr>
                         )}
 
                         {((viewingReport as any).dt1_location || (viewingReport as any).dt2_location) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>5. 배변 장소</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>5. 배변 장소</td></tr>
                         )}
                         {(viewingReport as any).dt1_location && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT1</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt1_location}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">DT1</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt1_location}</td></tr>
                         )}
                         {(viewingReport as any).dt2_location && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT2</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt2_location}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">DT2</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt2_location}</td></tr>
                         )}
 
                         {((viewingReport as any).dt_mistake_1_dt1 || (viewingReport as any).dt_mistake_1_dt2 || (viewingReport as any).dt_mistake_2_dt1 || (viewingReport as any).dt_mistake_2_dt2 || (viewingReport as any).dt_mistake_3_dt1 || (viewingReport as any).dt_mistake_3_dt2 || (viewingReport as any).dt_mistake_4_dt1 || (viewingReport as any).dt_mistake_4_dt2) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>6. 보행 도중에 DT 실수를 할 때가 있나요?</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>6. 보행 도중에 DT 실수를 할 때가 있나요?</td></tr>
                         )}
                         {((viewingReport as any).dt_mistake_1_dt1 || (viewingReport as any).dt_mistake_1_dt2) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">① 안 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_1_dt1 && 'DT1', (viewingReport as any).dt_mistake_1_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">① 안 한다</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_mistake_1_dt1 && 'DT1', (viewingReport as any).dt_mistake_1_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                         )}
                         {((viewingReport as any).dt_mistake_2_dt1 || (viewingReport as any).dt_mistake_2_dt2) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">② 주 1회 정도 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_2_dt1 && 'DT1', (viewingReport as any).dt_mistake_2_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">② 주 1회 정도 한다</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_mistake_2_dt1 && 'DT1', (viewingReport as any).dt_mistake_2_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                         )}
                         {((viewingReport as any).dt_mistake_3_dt1 || (viewingReport as any).dt_mistake_3_dt2) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">③ 주 2~3회 정도 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_3_dt1 && 'DT1', (viewingReport as any).dt_mistake_3_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">③ 주 2~3회 정도 한다</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_mistake_3_dt1 && 'DT1', (viewingReport as any).dt_mistake_3_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                         )}
                         {((viewingReport as any).dt_mistake_4_dt1 || (viewingReport as any).dt_mistake_4_dt2) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">④ 주 4~5회 이상 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_4_dt1 && 'DT1', (viewingReport as any).dt_mistake_4_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">④ 주 4~5회 이상 한다</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_mistake_4_dt1 && 'DT1', (viewingReport as any).dt_mistake_4_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                         )}
 
                         {((viewingReport as any).dt_before_walk_dt1 || (viewingReport as any).dt_before_walk_dt2) && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 보행 전에 반드시 DT를 하고 걷나요?</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_before_walk_dt1 && 'DT1', (viewingReport as any).dt_before_walk_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">7. 보행 전에 반드시 DT를 하고 걷나요?</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_before_walk_dt1 && 'DT1', (viewingReport as any).dt_before_walk_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                         )}
 
                         {(viewingReport as any).dt_signal && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 보행 도중 DT를 하고 싶어할 때 특별히 보내는 신호가 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('dt_signal', (viewingReport as any).dt_signal)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">8. 보행 도중 DT를 하고 싶어할 때 특별히 보내는 신호가 있나요?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('dt_signal', (viewingReport as any).dt_signal)}</td></tr>
                         )}
                         {(viewingReport as any).dt_signal_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_signal_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_signal_other}</td></tr>
                         )}
 
                         {(viewingReport as any).dt_problems && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 현재 배변문제가 있다면 어떤 것이 있나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_problems}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">9. 현재 배변문제가 있다면 어떤 것이 있나요?</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_problems}</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -4923,75 +4923,75 @@ export const MonthlyReportPage = () => {
                 {/* 보행 훈련 탭 */}
                 {detailViewTab === 'walk' && (
                   <div className="space-y-4">
-                    <h4 className="text-xl font-bold text-gray-800 mb-4">보행 훈련</h4>
+                    <h4 className="text-xl font-bold text-neutral-800 mb-4">보행 훈련</h4>
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
-                          <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                        <tr className="bg-neutral-100">
+                          <th className="border border-neutral-300 px-4 py-2 text-left w-1/3">질문</th>
+                          <th className="border border-neutral-300 px-4 py-2 text-left">답변</th>
                         </tr>
                       </thead>
                       <tbody>
                         {(viewingReport as any).walk_q1 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">1. 하루 평균 산책 시간은?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q1', (viewingReport as any).walk_q1)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">1. 하루 평균 산책 시간은?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q1', (viewingReport as any).walk_q1)}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q2 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 산책 나가는 시간대</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q2}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">2. 산책 나가는 시간대</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q2}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q3 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 코트와 견줄 착용에 대한 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q3', (viewingReport as any).walk_q3)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">3. 코트와 견줄 착용에 대한 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q3', (viewingReport as any).walk_q3)}</td></tr>
                         )}
                         {(viewingReport as any).walk_q3_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q3_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q3_other}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q4 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 헤드칼라 사용 여부</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q4', (viewingReport as any).walk_q4)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">4. 헤드칼라 사용 여부</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q4', (viewingReport as any).walk_q4)}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q5 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">5. 산책 중 트릿 사용 여부</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q5', (viewingReport as any).walk_q5)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">5. 산책 중 트릿 사용 여부</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q5', (viewingReport as any).walk_q5)}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q6 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">6. 보행 속도</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q6', (viewingReport as any).walk_q6)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">6. 보행 속도</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q6', (viewingReport as any).walk_q6)}</td></tr>
                         )}
                         {(viewingReport as any).walk_q6_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q6_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q6_other}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q7 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 보행중 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q7', (viewingReport as any).walk_q7)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">7. 보행중 행동</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q7', (viewingReport as any).walk_q7)}</td></tr>
                         )}
                         {(viewingReport as any).walk_q7_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q7_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q7_other}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q8 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 보행중 다른 동물을 만났을 때 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q8}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">8. 보행중 다른 동물을 만났을 때 반응</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q8}</td></tr>
                         )}
                         {(viewingReport as any).walk_q8_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q8_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q8_other}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q9 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 보행중 사람을 만났을 때 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">9. 보행중 사람을 만났을 때 반응</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q9}</td></tr>
                         )}
                         {(viewingReport as any).walk_q9_target && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9_target}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">대상</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q9_target}</td></tr>
                         )}
                         {(viewingReport as any).walk_q9_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q9_other}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q10 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">10. 두려워하는 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q10}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">10. 두려워하는 대상</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q10}</td></tr>
                         )}
 
                         {(viewingReport as any).walk_q11 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">11. 관심을 보이는 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q11}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">11. 관심을 보이는 대상</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q11}</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -5001,80 +5001,80 @@ export const MonthlyReportPage = () => {
                 {/* 사회화 훈련 탭 */}
                 {detailViewTab === 'social' && (
                   <div className="space-y-4">
-                    <h4 className="text-xl font-bold text-gray-800 mb-4">사회화 훈련</h4>
+                    <h4 className="text-xl font-bold text-neutral-800 mb-4">사회화 훈련</h4>
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
-                          <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                        <tr className="bg-neutral-100">
+                          <th className="border border-neutral-300 px-4 py-2 text-left w-1/3">질문</th>
+                          <th className="border border-neutral-300 px-4 py-2 text-left">답변</th>
                         </tr>
                       </thead>
                       <tbody>
                         {(viewingReport as any).social_q1 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">1. 지난 한달간 다녀온 장소</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q1}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">1. 지난 한달간 다녀온 장소</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q1}</td></tr>
                         )}
 
                         {(viewingReport as any).social_q2 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 사회화 훈련 빈도</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q2', (viewingReport as any).social_q2)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">2. 사회화 훈련 빈도</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q2', (viewingReport as any).social_q2)}</td></tr>
                         )}
 
                         {(viewingReport as any).social_q3 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 복잡하고 사람이 많은 곳에서의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q3', (viewingReport as any).social_q3)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">3. 복잡하고 사람이 많은 곳에서의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q3', (viewingReport as any).social_q3)}</td></tr>
                         )}
                         {(viewingReport as any).social_q3_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q3_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q3_other}</td></tr>
                         )}
 
                         {(viewingReport as any).social_q4 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 계단 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q4', (viewingReport as any).social_q4)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">4. 계단 이용</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q4', (viewingReport as any).social_q4)}</td></tr>
                         )}
                         {(viewingReport as any).social_q4_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q4_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q4_other}</td></tr>
                         )}
 
                         {(viewingReport as any).social_q5 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">5. 에스컬레이터 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q5', (viewingReport as any).social_q5)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">5. 에스컬레이터 이용</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q5', (viewingReport as any).social_q5)}</td></tr>
                         )}
                         {(viewingReport as any).social_q5_direction && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">방향</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q5_direction}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">방향</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q5_direction}</td></tr>
                         )}
                         {(viewingReport as any).social_q5_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q5_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q5_other}</td></tr>
                         )}
 
                         {(viewingReport as any).social_q6 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">6. 승용차 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q6', (viewingReport as any).social_q6)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">6. 승용차 이용</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q6', (viewingReport as any).social_q6)}</td></tr>
                         )}
                         {(viewingReport as any).social_q6_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q6_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q6_other}</td></tr>
                         )}
 
                         {(viewingReport as any).social_q7 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 버스 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q7', (viewingReport as any).social_q7)}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">7. 버스 이용</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q7', (viewingReport as any).social_q7)}</td></tr>
                         )}
                         {(viewingReport as any).social_q7_when && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q7_when}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q7_when}</td></tr>
                         )}
                         {(viewingReport as any).social_q7_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q7_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q7_other}</td></tr>
                         )}
 
                         {(viewingReport as any).social_q8 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 지하철 이용</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q8}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">8. 지하철 이용</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q8}</td></tr>
                         )}
                         {(viewingReport as any).social_q8_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q8_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q8_other}</td></tr>
                         )}
 
                         {(viewingReport as any).social_q9 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 기차 이용</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q9}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">9. 기차 이용</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q9}</td></tr>
                         )}
                         {(viewingReport as any).social_q9_other && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q9_other}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q9_other}</td></tr>
                         )}
 
                         {(viewingReport as any).social_q10 && (
-                          <tr><td className="border border-gray-300 px-4 py-2 font-semibold">10. 사회화 훈련 중 가장 어려운 점</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q10}</td></tr>
+                          <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">10. 사회화 훈련 중 가장 어려운 점</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q10}</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -5083,23 +5083,23 @@ export const MonthlyReportPage = () => {
               </div>
 
               {/* 피드백 섹션 */}
-              <div className="p-6 bg-gray-50 border-t border-gray-200">
-                <h4 className="text-lg font-bold text-gray-800 mb-4">관리자 피드백</h4>
+              <div className="p-6 bg-neutral-50 border-t border-neutral-200">
+                <h4 className="text-lg font-bold text-neutral-800 mb-4">관리자 피드백</h4>
 
                 {/* 기존 피드백 표시 */}
                 {(viewingReport as any).feedback && (
-                  <div className="mb-4 bg-white p-4 rounded-lg border border-gray-300">
+                  <div className="mb-4 bg-white p-4 rounded-lg border border-neutral-300">
                     <div className="flex justify-between items-start mb-2">
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-neutral-600">
                         작성자: {(viewingReport as any).feedbackAuthor || '관리자'}
                       </span>
                       {(viewingReport as any).feedbackDate && (
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-neutral-500">
                           {new Date((viewingReport as any).feedbackDate).toLocaleString('ko-KR')}
                         </span>
                       )}
                     </div>
-                    <p className="text-gray-800 whitespace-pre-wrap">{(viewingReport as any).feedback}</p>
+                    <p className="text-neutral-800 whitespace-pre-wrap">{(viewingReport as any).feedback}</p>
                   </div>
                 )}
 
@@ -5110,12 +5110,12 @@ export const MonthlyReportPage = () => {
                       value={feedbackText}
                       onChange={(e) => setFeedbackText(e.target.value)}
                       placeholder="피드백을 작성하세요..."
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
+                      className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 mb-3"
                       rows={4}
                     />
                     <button
                       onClick={() => saveFeedback(viewingReport.id)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                      className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
                     >
                       피드백 저장
                     </button>
@@ -5124,7 +5124,7 @@ export const MonthlyReportPage = () => {
 
                 {/* 작성자는 피드백을 읽기만 가능 */}
                 {user?.role !== 'admin' && !(viewingReport as any).feedback && (
-                  <p className="text-gray-500 text-center py-4">아직 피드백이 없습니다.</p>
+                  <p className="text-neutral-500 text-center py-4">아직 피드백이 없습니다.</p>
                 )}
               </div>
             </div>
@@ -5138,10 +5138,10 @@ export const MonthlyReportPage = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">월간 보고서</h2>
+        <h2 className="text-2xl font-bold text-neutral-800">월간 보고서</h2>
         <button
           onClick={() => setIsWriting(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+          className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
         >
           글쓰기
         </button>
@@ -5149,10 +5149,10 @@ export const MonthlyReportPage = () => {
 
       {reports.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-500">작성된 월간 보고서가 없습니다.</p>
+          <p className="text-neutral-500">작성된 월간 보고서가 없습니다.</p>
           <button
             onClick={() => setIsWriting(true)}
-            className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+            className="mt-4 text-primary-600 hover:text-primary-800 font-semibold"
           >
             첫 보고서 작성하기
           </button>
@@ -5168,19 +5168,19 @@ export const MonthlyReportPage = () => {
                 <div className="flex-1">
                   <button
                     onClick={() => openDetailView(report)}
-                    className="text-xl font-bold text-blue-600 hover:text-blue-800 underline text-left"
+                    className="text-xl font-bold text-primary-600 hover:text-primary-800 underline text-left"
                     aria-label={`${report.reportMonth} 월간 보고서, 견명 ${report.dogName}, 퍼피티처 ${report.userName}, 상태 ${report.status === 'completed' ? '완료' : '임시저장'}`}
                   >
                     {report.reportMonth} 월간 보고서
                   </button>
-                  <div className="flex items-center text-sm text-gray-600 space-x-4 mt-2">
+                  <div className="flex items-center text-sm text-neutral-600 space-x-4 mt-2">
                     <span>견명: {report.dogName}</span>
                     <span>퍼피티처: {report.userName}</span>
                     <span>작성일: {formatDate(report.createdAt)}</span>
                     <span className={`px-2 py-1 rounded text-xs font-semibold ${
                       report.status === 'completed'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
+                        ? 'bg-success-100 text-success-800'
+                        : 'bg-warning-100 text-warning-800'
                     }`}>
                       {report.status === 'completed' ? '완료' : '임시저장'}
                     </span>
@@ -5192,7 +5192,7 @@ export const MonthlyReportPage = () => {
                     <>
                       <button
                         onClick={() => loadReportForEdit(report)}
-                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+                        className="bg-neutral-600 hover:bg-neutral-700 text-white px-4 py-2 rounded-lg transition-colors"
                       >
                         수정
                       </button>
@@ -5209,7 +5209,7 @@ export const MonthlyReportPage = () => {
                             }
                           }
                         }}
-                        className="text-red-600 hover:text-red-800 px-4 py-2"
+                        className="text-error-600 hover:text-error-800 px-4 py-2"
                       >
                         삭제
                       </button>
@@ -5226,24 +5226,24 @@ export const MonthlyReportPage = () => {
       {viewingReport && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
-              <h3 className="text-2xl font-bold text-gray-800">
+            <div className="sticky top-0 bg-white border-b border-neutral-200 p-6 flex justify-between items-center">
+              <h3 className="text-2xl font-bold text-neutral-800">
                 {viewingReport.dogName}_{viewingReport.userName} - {viewingReport.reportMonth}
               </h3>
               <button
                 onClick={closeDetailView}
-                className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
+                className="text-neutral-600 hover:text-neutral-800 text-2xl font-bold"
               >
                 ×
               </button>
             </div>
 
             {/* 기본 정보 */}
-            <div className="p-6 bg-gray-50 border-b border-gray-200">
-              <h4 className="text-lg font-bold text-gray-800 mb-4">기본 정보</h4>
+            <div className="p-6 bg-neutral-50 border-b border-neutral-200">
+              <h4 className="text-lg font-bold text-neutral-800 mb-4">기본 정보</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white p-4 rounded-lg">
-                  <h5 className="text-sm font-semibold text-gray-600 mb-2">급식</h5>
+                  <h5 className="text-sm font-semibold text-neutral-600 mb-2">급식</h5>
                   <div className="space-y-2 text-sm">
                     {(viewingReport as any).foodType && (
                       <div className="flex">
@@ -5266,7 +5266,7 @@ export const MonthlyReportPage = () => {
                   </div>
                 </div>
                 <div className="bg-white p-4 rounded-lg">
-                  <h5 className="text-sm font-semibold text-gray-600 mb-2">건강</h5>
+                  <h5 className="text-sm font-semibold text-neutral-600 mb-2">건강</h5>
                   <div className="space-y-2 text-sm">
                     {(viewingReport as any).weight && (
                       <div className="flex">
@@ -5277,7 +5277,7 @@ export const MonthlyReportPage = () => {
                     {(viewingReport as any).healthNotes && (
                       <div>
                         <span className="font-semibold">건강상 특이사항:</span>
-                        <p className="mt-1 text-gray-700 whitespace-pre-wrap">{(viewingReport as any).healthNotes}</p>
+                        <p className="mt-1 text-neutral-700 whitespace-pre-wrap">{(viewingReport as any).healthNotes}</p>
                       </div>
                     )}
                   </div>
@@ -5286,7 +5286,7 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 탭 버튼 */}
-            <div className="border-b border-gray-200">
+            <div className="border-b border-neutral-200">
               <div className="flex space-x-1 p-2" role="tablist">
                 <button
                   role="tab"
@@ -5294,8 +5294,8 @@ export const MonthlyReportPage = () => {
                   onClick={() => setDetailViewTab('home')}
                   className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                     detailViewTab === 'home'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                   }`}
                 >
                   집에서의 품행
@@ -5306,8 +5306,8 @@ export const MonthlyReportPage = () => {
                   onClick={() => setDetailViewTab('dt')}
                   className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                     detailViewTab === 'dt'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                   }`}
                 >
                   DT 품행 기록
@@ -5318,8 +5318,8 @@ export const MonthlyReportPage = () => {
                   onClick={() => setDetailViewTab('walk')}
                   className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                     detailViewTab === 'walk'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                   }`}
                 >
                   보행 훈련
@@ -5330,8 +5330,8 @@ export const MonthlyReportPage = () => {
                   onClick={() => setDetailViewTab('social')}
                   className={`px-6 py-3 font-semibold rounded-t-lg transition-colors ${
                     detailViewTab === 'social'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                   }`}
                 >
                   사회화 훈련
@@ -5344,253 +5344,253 @@ export const MonthlyReportPage = () => {
               {/* 집에서의 품행 탭 */}
               {detailViewTab === 'home' && (
                 <div className="space-y-4">
-                  <h4 className="text-xl font-bold text-gray-800 mb-4">집에서의 품행 (21개 질문)</h4>
+                  <h4 className="text-xl font-bold text-neutral-800 mb-4">집에서의 품행 (21개 질문)</h4>
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                      <tr className="bg-neutral-100">
+                        <th className="border border-neutral-300 px-4 py-2 text-left w-1/3">질문</th>
+                        <th className="border border-neutral-300 px-4 py-2 text-left">답변</th>
                       </tr>
                     </thead>
                     <tbody>
                       {(viewingReport as any).q1 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q1. 크레이트(팬스)를 닫았을 때 안에서의 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q1', (viewingReport as any).q1)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q1. 크레이트(팬스)를 닫았을 때 안에서의 행동</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q1', (viewingReport as any).q1)}</td></tr>
                       )}
                       {(viewingReport as any).q1_time && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">편안해질 때까지 걸리는 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_time}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">편안해질 때까지 걸리는 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q1_time}</td></tr>
                       )}
                       {(viewingReport as any).q1_type && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">씹는 종류</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_type}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">씹는 종류</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q1_type}</td></tr>
                       )}
                       {(viewingReport as any).q1_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q1_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q1_other}</td></tr>
                       )}
 
                       {(viewingReport as any).q2 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q2. 사람 음식에 대한 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q2', (viewingReport as any).q2)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q2. 사람 음식에 대한 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q2', (viewingReport as any).q2)}</td></tr>
                       )}
                       {(viewingReport as any).q2_food && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">먹은 음식</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q2_food}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">먹은 음식</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q2_food}</td></tr>
                       )}
                       {(viewingReport as any).q2_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q2_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q2_other}</td></tr>
                       )}
 
                       {(viewingReport as any).q3 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q3. 혼자 있을 때 상태</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q3', (viewingReport as any).q3)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q3. 혼자 있을 때 상태</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q3', (viewingReport as any).q3)}</td></tr>
                       )}
 
                       {(viewingReport as any).q4 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q4. 혼자 있을 때 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q4', (viewingReport as any).q4)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q4. 혼자 있을 때 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q4', (viewingReport as any).q4)}</td></tr>
                       )}
                       {(viewingReport as any).q4_bark_freq && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">짖음 빈도</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q4_bark_freq}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">짖음 빈도</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q4_bark_freq}</td></tr>
                       )}
                       {(viewingReport as any).q4_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q4_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q4_other}</td></tr>
                       )}
 
                       {((viewingReport as any).q5_crate_time || (viewingReport as any).q5_fence_time || (viewingReport as any).q5_free_time) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q5. 혼자 있어 본 최장시간과 상태</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q5. 혼자 있어 본 최장시간과 상태</td></tr>
                       )}
                       {(viewingReport as any).q5_crate_time && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">크레이트 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_crate_time}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">크레이트 - 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_crate_time}</td></tr>
                       )}
                       {(viewingReport as any).q5_crate_state && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">크레이트 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_crate_state}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">크레이트 - 상태</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_crate_state}</td></tr>
                       )}
                       {(viewingReport as any).q5_fence_time && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">팬스 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_fence_time}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">팬스 - 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_fence_time}</td></tr>
                       )}
                       {(viewingReport as any).q5_fence_state && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">팬스 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_fence_state}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">팬스 - 상태</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_fence_state}</td></tr>
                       )}
                       {(viewingReport as any).q5_free_time && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_free_time}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_free_time}</td></tr>
                       )}
                       {(viewingReport as any).q5_free_state && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q5_free_state}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">풀린 상태 - 상태</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q5_free_state}</td></tr>
                       )}
 
                       {(viewingReport as any).q6 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q6. 손님이 왔을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q6', (viewingReport as any).q6)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q6. 손님이 왔을 때의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q6', (viewingReport as any).q6)}</td></tr>
                       )}
                       {(viewingReport as any).q6_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q6_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q6_other}</td></tr>
                       )}
 
                       {(viewingReport as any).q7 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q7. 가족이 귀가했을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q7', (viewingReport as any).q7)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q7. 가족이 귀가했을 때의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q7', (viewingReport as any).q7)}</td></tr>
                       )}
                       {(viewingReport as any).q7_dislike && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">별로 좋아하지 않는 행동</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q7_dislike}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">별로 좋아하지 않는 행동</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q7_dislike}</td></tr>
                       )}
                       {(viewingReport as any).q7_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q7_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q7_other}</td></tr>
                       )}
 
                       {(viewingReport as any).q8 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q8. 집에 있는 상황에서 짖은 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q8', (viewingReport as any).q8)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q8. 집에 있는 상황에서 짖은 적이 있나요?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q8', (viewingReport as any).q8)}</td></tr>
                       )}
                       {(viewingReport as any).q8_situation && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q8_situation}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q8_situation}</td></tr>
                       )}
                       {(viewingReport as any).q8_count && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q8_count}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q8_count}</td></tr>
                       )}
 
                       {(viewingReport as any).q9 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q9. 으르렁 거린 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q9', (viewingReport as any).q9)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q9. 으르렁 거린 적이 있나요?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q9', (viewingReport as any).q9)}</td></tr>
                       )}
                       {(viewingReport as any).q9_situation && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q9_situation}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">상황</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q9_situation}</td></tr>
                       )}
                       {(viewingReport as any).q9_count && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q9_count}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q9_count}</td></tr>
                       )}
 
                       {(viewingReport as any).q10 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q10. 개의 잘못된 행동을 사람이 컨트롤 했을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q10', (viewingReport as any).q10)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q10. 개의 잘못된 행동을 사람이 컨트롤 했을 때의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q10', (viewingReport as any).q10)}</td></tr>
                       )}
                       {(viewingReport as any).q10_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q10_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q10_other}</td></tr>
                       )}
 
                       {(viewingReport as any).q11 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q11. 장난감이나 콩, 껌을 물고 있는 강아지에게 "놔 or 그만"을 했을 때 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q11', (viewingReport as any).q11)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q11. 장난감이나 콩, 껌을 물고 있는 강아지에게 "놔 or 그만"을 했을 때 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q11', (viewingReport as any).q11)}</td></tr>
                       )}
                       {(viewingReport as any).q11_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q11_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q11_other}</td></tr>
                       )}
 
                       {((viewingReport as any).q12_option || (viewingReport as any).q12_commands || (viewingReport as any).q12_wait_state) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q12. 집안에서 기본훈련(앉아/엎드려/서)에 대한 강아지의 수준</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q12. 집안에서 기본훈련(앉아/엎드려/서)에 대한 강아지의 수준</td></tr>
                       )}
                       {(viewingReport as any).q12_option && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">선택</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q12_option', (viewingReport as any).q12_option)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">선택</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q12_option', (viewingReport as any).q12_option)}</td></tr>
                       )}
                       {(viewingReport as any).q12_commands && Array.isArray((viewingReport as any).q12_commands) && (viewingReport as any).q12_commands.length > 0 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">명령어</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_commands.join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">명령어</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q12_commands.join(', ')}</td></tr>
                       )}
                       {(viewingReport as any).q12_wait_state && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 상태</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_state}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기다려 - 상태</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q12_wait_state}</td></tr>
                       )}
                       {(viewingReport as any).q12_wait_time && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_time}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기다려 - 시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q12_wait_time}</td></tr>
                       )}
                       {(viewingReport as any).q12_wait_levels && Array.isArray((viewingReport as any).q12_wait_levels) && (viewingReport as any).q12_wait_levels.length > 0 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기다려 - 수준</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q12_wait_levels.join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기다려 - 수준</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q12_wait_levels.join(', ')}</td></tr>
                       )}
 
                       {(viewingReport as any).q13 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q13. 바디핸들링이나 배를 보이며 눕히기를 했을때 강아지의 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q13', (viewingReport as any).q13)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q13. 바디핸들링이나 배를 보이며 눕히기를 했을때 강아지의 행동</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q13', (viewingReport as any).q13)}</td></tr>
                       )}
                       {(viewingReport as any).q13_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q13_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q13_other}</td></tr>
                       )}
 
                       {((viewingReport as any).q14_posture || (viewingReport as any).q14_frequency || (viewingReport as any).q14) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q14. 이를 닦을 때 품행</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q14. 이를 닦을 때 품행</td></tr>
                       )}
                       {(viewingReport as any).q14_posture && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_posture}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q14_posture}</td></tr>
                       )}
                       {(viewingReport as any).q14_frequency && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_frequency}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q14_frequency}</td></tr>
                       )}
                       {(viewingReport as any).q14 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q14', (viewingReport as any).q14)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q14', (viewingReport as any).q14)}</td></tr>
                       )}
                       {(viewingReport as any).q14_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q14_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q14_other}</td></tr>
                       )}
 
                       {((viewingReport as any).q15_posture || (viewingReport as any).q15_frequency || (viewingReport as any).q15) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q15. 그루밍(빗질) 할 때의 품행</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q15. 그루밍(빗질) 할 때의 품행</td></tr>
                       )}
                       {(viewingReport as any).q15_posture && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_posture}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q15_posture}</td></tr>
                       )}
                       {(viewingReport as any).q15_frequency && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_frequency}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q15_frequency}</td></tr>
                       )}
                       {(viewingReport as any).q15 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q15', (viewingReport as any).q15)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q15', (viewingReport as any).q15)}</td></tr>
                       )}
                       {(viewingReport as any).q15_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q15_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q15_other}</td></tr>
                       )}
 
                       {((viewingReport as any).q16_posture || (viewingReport as any).q16_frequency || (viewingReport as any).q16_comfortable || (viewingReport as any).q16_uncomfortable) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q16. 발톱/발털손질 할 때의 품행</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q16. 발톱/발털손질 할 때의 품행</td></tr>
                       )}
                       {(viewingReport as any).q16_posture && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_posture}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_posture}</td></tr>
                       )}
                       {(viewingReport as any).q16_frequency && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_frequency}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">주별 횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_frequency}</td></tr>
                       )}
                       {(viewingReport as any).q16_comfortable && Array.isArray((viewingReport as any).q16_comfortable) && (viewingReport as any).q16_comfortable.length > 0 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">편안하게 잘 하는 것</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_comfortable.join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">편안하게 잘 하는 것</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_comfortable.join(', ')}</td></tr>
                       )}
                       {(viewingReport as any).q16_uncomfortable && Array.isArray((viewingReport as any).q16_uncomfortable) && (viewingReport as any).q16_uncomfortable.length > 0 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">불편해하는 부위</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_uncomfortable.join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">불편해하는 부위</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_uncomfortable.join(', ')}</td></tr>
                       )}
                       {(viewingReport as any).q16_options && Array.isArray((viewingReport as any).q16_options) && (viewingReport as any).q16_options.length > 0 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_options.join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타 반응</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_options.join(', ')}</td></tr>
                       )}
                       {(viewingReport as any).q16_bleeding && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">과거 피가 난 적</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_bleeding === 'Y' ? '예' : '아니오'}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">과거 피가 난 적</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_bleeding === 'Y' ? '예' : '아니오'}</td></tr>
                       )}
                       {(viewingReport as any).q16_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q16_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q16_other}</td></tr>
                       )}
 
                       {((viewingReport as any).q17_posture || (viewingReport as any).q17) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>Q17. 귀청소 할 때의 품행</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>Q17. 귀청소 할 때의 품행</td></tr>
                       )}
                       {(viewingReport as any).q17_posture && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_posture}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">자세</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q17_posture}</td></tr>
                       )}
                       {(viewingReport as any).q17 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q17', (viewingReport as any).q17)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q17', (viewingReport as any).q17)}</td></tr>
                       )}
                       {(viewingReport as any).q17_reason && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">계기</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_reason}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">계기</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q17_reason}</td></tr>
                       )}
                       {(viewingReport as any).q17_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q17_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q17_other}</td></tr>
                       )}
 
                       {(viewingReport as any).q18 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q18. 외출 후 발을 닦을 때의 품행</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q18', (viewingReport as any).q18)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q18. 외출 후 발을 닦을 때의 품행</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q18', (viewingReport as any).q18)}</td></tr>
                       )}
                       {(viewingReport as any).q18_treat && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">트릿 사용 여부</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_treat}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">트릿 사용 여부</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q18_treat}</td></tr>
                       )}
                       {(viewingReport as any).q18_bites && Array.isArray((viewingReport as any).q18_bites) && (viewingReport as any).q18_bites.length > 0 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">입질 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_bites.join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">입질 대상</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q18_bites.join(', ')}</td></tr>
                       )}
                       {(viewingReport as any).q18_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q18_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q18_other}</td></tr>
                       )}
 
                       {(viewingReport as any).q19 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q19. 집안의 물건을 망가뜨린 적이 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q19', (viewingReport as any).q19)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q19. 집안의 물건을 망가뜨린 적이 있나요?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q19', (viewingReport as any).q19)}</td></tr>
                       )}
                       {(viewingReport as any).q19_count && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">지난 한달간 횟수</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q19_count}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">지난 한달간 횟수</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q19_count}</td></tr>
                       )}
 
                       {(viewingReport as any).q20 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q20. 집에서 자녀들과 있을 때의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('q20', (viewingReport as any).q20)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q20. 집에서 자녀들과 있을 때의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('q20', (viewingReport as any).q20)}</td></tr>
                       )}
                       {(viewingReport as any).q20_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q20_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q20_other}</td></tr>
                       )}
 
                       {(viewingReport as any).q21 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">Q21. 현재 품행에 있어 가장 큰 문제는?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).q21}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">Q21. 현재 품행에 있어 가장 큰 문제는?</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).q21}</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -5600,76 +5600,76 @@ export const MonthlyReportPage = () => {
               {/* DT 품행 기록 탭 */}
               {detailViewTab === 'dt' && (
                 <div className="space-y-4">
-                  <h4 className="text-xl font-bold text-gray-800 mb-4">DT 품행 기록</h4>
+                  <h4 className="text-xl font-bold text-neutral-800 mb-4">DT 품행 기록</h4>
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                      <tr className="bg-neutral-100">
+                        <th className="border border-neutral-300 px-4 py-2 text-left w-1/3">질문</th>
+                        <th className="border border-neutral-300 px-4 py-2 text-left">답변</th>
                       </tr>
                     </thead>
                     <tbody>
                       {((viewingReport as any).dt1_time || (viewingReport as any).dt2_time) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>1. '하나둘,하나둘' 명령어에 몇분안에 반응하나요?</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>1. '하나둘,하나둘' 명령어에 몇분안에 반응하나요?</td></tr>
                       )}
                       {(viewingReport as any).dt1_time && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT1(소변)</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt1_time}분</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">DT1(소변)</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt1_time}분</td></tr>
                       )}
                       {(viewingReport as any).dt2_time && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT2(대변)</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt2_time}분</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">DT2(대변)</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt2_time}분</td></tr>
                       )}
 
                       {(viewingReport as any).dt_indoor_blocked && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 실내 배변 장소는 차단해 두었나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_indoor_blocked}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">2. 실내 배변 장소는 차단해 두었나요?</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_indoor_blocked}</td></tr>
                       )}
 
                       {(viewingReport as any).dt_indoor_type && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 실내배변은 어떤 형태로 하고 있나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_indoor_type}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">3. 실내배변은 어떤 형태로 하고 있나요?</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_indoor_type}</td></tr>
                       )}
 
                       {(viewingReport as any).dt_belt_type && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 배변벨트 사용 여부</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_belt_type}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">4. 배변벨트 사용 여부</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_belt_type}</td></tr>
                       )}
 
                       {((viewingReport as any).dt1_location || (viewingReport as any).dt2_location) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>5. 배변 장소</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>5. 배변 장소</td></tr>
                       )}
                       {(viewingReport as any).dt1_location && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT1</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt1_location}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">DT1</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt1_location}</td></tr>
                       )}
                       {(viewingReport as any).dt2_location && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">DT2</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt2_location}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">DT2</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt2_location}</td></tr>
                       )}
 
                       {((viewingReport as any).dt_mistake_1_dt1 || (viewingReport as any).dt_mistake_1_dt2 || (viewingReport as any).dt_mistake_2_dt1 || (viewingReport as any).dt_mistake_2_dt2 || (viewingReport as any).dt_mistake_3_dt1 || (viewingReport as any).dt_mistake_3_dt2 || (viewingReport as any).dt_mistake_4_dt1 || (viewingReport as any).dt_mistake_4_dt2) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold" colSpan={2}>6. 보행 도중에 DT 실수를 할 때가 있나요?</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold" colSpan={2}>6. 보행 도중에 DT 실수를 할 때가 있나요?</td></tr>
                       )}
                       {((viewingReport as any).dt_mistake_1_dt1 || (viewingReport as any).dt_mistake_1_dt2) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">① 안 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_1_dt1 && 'DT1', (viewingReport as any).dt_mistake_1_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">① 안 한다</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_mistake_1_dt1 && 'DT1', (viewingReport as any).dt_mistake_1_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                       )}
                       {((viewingReport as any).dt_mistake_2_dt1 || (viewingReport as any).dt_mistake_2_dt2) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">② 주 1회 정도 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_2_dt1 && 'DT1', (viewingReport as any).dt_mistake_2_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">② 주 1회 정도 한다</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_mistake_2_dt1 && 'DT1', (viewingReport as any).dt_mistake_2_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                       )}
                       {((viewingReport as any).dt_mistake_3_dt1 || (viewingReport as any).dt_mistake_3_dt2) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">③ 주 2~3회 정도 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_3_dt1 && 'DT1', (viewingReport as any).dt_mistake_3_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">③ 주 2~3회 정도 한다</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_mistake_3_dt1 && 'DT1', (viewingReport as any).dt_mistake_3_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                       )}
                       {((viewingReport as any).dt_mistake_4_dt1 || (viewingReport as any).dt_mistake_4_dt2) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">④ 주 4~5회 이상 한다</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_mistake_4_dt1 && 'DT1', (viewingReport as any).dt_mistake_4_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">④ 주 4~5회 이상 한다</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_mistake_4_dt1 && 'DT1', (viewingReport as any).dt_mistake_4_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                       )}
 
                       {((viewingReport as any).dt_before_walk_dt1 || (viewingReport as any).dt_before_walk_dt2) && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 보행 전에 반드시 DT를 하고 걷나요?</td><td className="border border-gray-300 px-4 py-2">{[(viewingReport as any).dt_before_walk_dt1 && 'DT1', (viewingReport as any).dt_before_walk_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">7. 보행 전에 반드시 DT를 하고 걷나요?</td><td className="border border-neutral-300 px-4 py-2">{[(viewingReport as any).dt_before_walk_dt1 && 'DT1', (viewingReport as any).dt_before_walk_dt2 && 'DT2'].filter(Boolean).join(', ')}</td></tr>
                       )}
 
                       {(viewingReport as any).dt_signal && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 보행 도중 DT를 하고 싶어할 때 특별히 보내는 신호가 있나요?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('dt_signal', (viewingReport as any).dt_signal)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">8. 보행 도중 DT를 하고 싶어할 때 특별히 보내는 신호가 있나요?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('dt_signal', (viewingReport as any).dt_signal)}</td></tr>
                       )}
                       {(viewingReport as any).dt_signal_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_signal_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_signal_other}</td></tr>
                       )}
 
                       {(viewingReport as any).dt_problems && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 현재 배변문제가 있다면 어떤 것이 있나요?</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).dt_problems}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">9. 현재 배변문제가 있다면 어떤 것이 있나요?</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).dt_problems}</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -5679,75 +5679,75 @@ export const MonthlyReportPage = () => {
               {/* 보행 훈련 탭 */}
               {detailViewTab === 'walk' && (
                 <div className="space-y-4">
-                  <h4 className="text-xl font-bold text-gray-800 mb-4">보행 훈련</h4>
+                  <h4 className="text-xl font-bold text-neutral-800 mb-4">보행 훈련</h4>
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                      <tr className="bg-neutral-100">
+                        <th className="border border-neutral-300 px-4 py-2 text-left w-1/3">질문</th>
+                        <th className="border border-neutral-300 px-4 py-2 text-left">답변</th>
                       </tr>
                     </thead>
                     <tbody>
                       {(viewingReport as any).walk_q1 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">1. 하루 평균 산책 시간은?</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q1', (viewingReport as any).walk_q1)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">1. 하루 평균 산책 시간은?</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q1', (viewingReport as any).walk_q1)}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q2 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 산책 나가는 시간대</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q2}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">2. 산책 나가는 시간대</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q2}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q3 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 코트와 견줄 착용에 대한 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q3', (viewingReport as any).walk_q3)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">3. 코트와 견줄 착용에 대한 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q3', (viewingReport as any).walk_q3)}</td></tr>
                       )}
                       {(viewingReport as any).walk_q3_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q3_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q3_other}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q4 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 헤드칼라 사용 여부</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q4', (viewingReport as any).walk_q4)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">4. 헤드칼라 사용 여부</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q4', (viewingReport as any).walk_q4)}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q5 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">5. 산책 중 트릿 사용 여부</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q5', (viewingReport as any).walk_q5)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">5. 산책 중 트릿 사용 여부</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q5', (viewingReport as any).walk_q5)}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q6 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">6. 보행 속도</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q6', (viewingReport as any).walk_q6)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">6. 보행 속도</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q6', (viewingReport as any).walk_q6)}</td></tr>
                       )}
                       {(viewingReport as any).walk_q6_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q6_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q6_other}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q7 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 보행중 행동</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('walk_q7', (viewingReport as any).walk_q7)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">7. 보행중 행동</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('walk_q7', (viewingReport as any).walk_q7)}</td></tr>
                       )}
                       {(viewingReport as any).walk_q7_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q7_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q7_other}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q8 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 보행중 다른 동물을 만났을 때 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q8}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">8. 보행중 다른 동물을 만났을 때 반응</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q8}</td></tr>
                       )}
                       {(viewingReport as any).walk_q8_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q8_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q8_other}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q9 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 보행중 사람을 만났을 때 반응</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">9. 보행중 사람을 만났을 때 반응</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q9}</td></tr>
                       )}
                       {(viewingReport as any).walk_q9_target && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9_target}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">대상</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q9_target}</td></tr>
                       )}
                       {(viewingReport as any).walk_q9_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q9_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q9_other}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q10 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">10. 두려워하는 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q10}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">10. 두려워하는 대상</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q10}</td></tr>
                       )}
 
                       {(viewingReport as any).walk_q11 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">11. 관심을 보이는 대상</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).walk_q11}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">11. 관심을 보이는 대상</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).walk_q11}</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -5757,80 +5757,80 @@ export const MonthlyReportPage = () => {
               {/* 사회화 훈련 탭 */}
               {detailViewTab === 'social' && (
                 <div className="space-y-4">
-                  <h4 className="text-xl font-bold text-gray-800 mb-4">사회화 훈련</h4>
+                  <h4 className="text-xl font-bold text-neutral-800 mb-4">사회화 훈련</h4>
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-4 py-2 text-left w-1/3">질문</th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">답변</th>
+                      <tr className="bg-neutral-100">
+                        <th className="border border-neutral-300 px-4 py-2 text-left w-1/3">질문</th>
+                        <th className="border border-neutral-300 px-4 py-2 text-left">답변</th>
                       </tr>
                     </thead>
                     <tbody>
                       {(viewingReport as any).social_q1 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">1. 지난 한달간 다녀온 장소</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q1}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">1. 지난 한달간 다녀온 장소</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q1}</td></tr>
                       )}
 
                       {(viewingReport as any).social_q2 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">2. 사회화 훈련 빈도</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q2', (viewingReport as any).social_q2)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">2. 사회화 훈련 빈도</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q2', (viewingReport as any).social_q2)}</td></tr>
                       )}
 
                       {(viewingReport as any).social_q3 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">3. 복잡하고 사람이 많은 곳에서의 반응</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q3', (viewingReport as any).social_q3)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">3. 복잡하고 사람이 많은 곳에서의 반응</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q3', (viewingReport as any).social_q3)}</td></tr>
                       )}
                       {(viewingReport as any).social_q3_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q3_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q3_other}</td></tr>
                       )}
 
                       {(viewingReport as any).social_q4 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">4. 계단 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q4', (viewingReport as any).social_q4)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">4. 계단 이용</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q4', (viewingReport as any).social_q4)}</td></tr>
                       )}
                       {(viewingReport as any).social_q4_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q4_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q4_other}</td></tr>
                       )}
 
                       {(viewingReport as any).social_q5 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">5. 에스컬레이터 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q5', (viewingReport as any).social_q5)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">5. 에스컬레이터 이용</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q5', (viewingReport as any).social_q5)}</td></tr>
                       )}
                       {(viewingReport as any).social_q5_direction && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">방향</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q5_direction}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">방향</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q5_direction}</td></tr>
                       )}
                       {(viewingReport as any).social_q5_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q5_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q5_other}</td></tr>
                       )}
 
                       {(viewingReport as any).social_q6 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">6. 승용차 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q6', (viewingReport as any).social_q6)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">6. 승용차 이용</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q6', (viewingReport as any).social_q6)}</td></tr>
                       )}
                       {(viewingReport as any).social_q6_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q6_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q6_other}</td></tr>
                       )}
 
                       {(viewingReport as any).social_q7 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">7. 버스 이용</td><td className="border border-gray-300 px-4 py-2">{getAnswerText('social_q7', (viewingReport as any).social_q7)}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">7. 버스 이용</td><td className="border border-neutral-300 px-4 py-2">{getAnswerText('social_q7', (viewingReport as any).social_q7)}</td></tr>
                       )}
                       {(viewingReport as any).social_q7_when && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">시간</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q7_when}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">시간</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q7_when}</td></tr>
                       )}
                       {(viewingReport as any).social_q7_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q7_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q7_other}</td></tr>
                       )}
 
                       {(viewingReport as any).social_q8 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">8. 지하철 이용</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q8}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">8. 지하철 이용</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q8}</td></tr>
                       )}
                       {(viewingReport as any).social_q8_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q8_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q8_other}</td></tr>
                       )}
 
                       {(viewingReport as any).social_q9 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">9. 기차 이용</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q9}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">9. 기차 이용</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q9}</td></tr>
                       )}
                       {(viewingReport as any).social_q9_other && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q9_other}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold pl-8">기타</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q9_other}</td></tr>
                       )}
 
                       {(viewingReport as any).social_q10 && (
-                        <tr><td className="border border-gray-300 px-4 py-2 font-semibold">10. 사회화 훈련 중 가장 어려운 점</td><td className="border border-gray-300 px-4 py-2">{(viewingReport as any).social_q10}</td></tr>
+                        <tr><td className="border border-neutral-300 px-4 py-2 font-semibold">10. 사회화 훈련 중 가장 어려운 점</td><td className="border border-neutral-300 px-4 py-2">{(viewingReport as any).social_q10}</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -5839,23 +5839,23 @@ export const MonthlyReportPage = () => {
             </div>
 
             {/* 피드백 섹션 */}
-            <div className="p-6 bg-gray-50 border-t border-gray-200">
-              <h4 className="text-lg font-bold text-gray-800 mb-4">관리자 피드백</h4>
+            <div className="p-6 bg-neutral-50 border-t border-neutral-200">
+              <h4 className="text-lg font-bold text-neutral-800 mb-4">관리자 피드백</h4>
 
               {/* 기존 피드백 표시 */}
               {(viewingReport as any).feedback && (
-                <div className="mb-4 bg-white p-4 rounded-lg border border-gray-300">
+                <div className="mb-4 bg-white p-4 rounded-lg border border-neutral-300">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-neutral-600">
                       작성자: {(viewingReport as any).feedbackAuthor || '관리자'}
                     </span>
                     {(viewingReport as any).feedbackDate && (
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-neutral-500">
                         {new Date((viewingReport as any).feedbackDate).toLocaleString('ko-KR')}
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-800 whitespace-pre-wrap">{(viewingReport as any).feedback}</p>
+                  <p className="text-neutral-800 whitespace-pre-wrap">{(viewingReport as any).feedback}</p>
                 </div>
               )}
 
@@ -5866,12 +5866,12 @@ export const MonthlyReportPage = () => {
                     value={feedbackText}
                     onChange={(e) => setFeedbackText(e.target.value)}
                     placeholder="피드백을 작성하세요..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 mb-3"
                     rows={4}
                   />
                   <button
                     onClick={() => saveFeedback(viewingReport.id)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                    className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
                   >
                     피드백 저장
                   </button>
@@ -5880,7 +5880,7 @@ export const MonthlyReportPage = () => {
 
               {/* 작성자는 피드백을 읽기만 가능 */}
               {user?.role !== 'admin' && !(viewingReport as any).feedback && (
-                <p className="text-gray-500 text-center py-4">아직 피드백이 없습니다.</p>
+                <p className="text-neutral-500 text-center py-4">아직 피드백이 없습니다.</p>
               )}
             </div>
           </div>

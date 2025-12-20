@@ -264,7 +264,7 @@ export const GuideDogSchoolVideosPage = () => {
           <div className="flex justify-between items-start mb-6">
             <button
               onClick={() => setViewingVideo(null)}
-              className="text-blue-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+              className="text-primary-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
               aria-label="영상 목록으로 돌아가기"
             >
               ← 목록으로
@@ -273,14 +273,14 @@ export const GuideDogSchoolVideosPage = () => {
               <div className="space-x-2">
                 <button
                   onClick={() => handleEdit(viewingVideo)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                   aria-label="영상 수정"
                 >
                   수정
                 </button>
                 <button
                   onClick={() => handleDelete(viewingVideo.id)}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="bg-error-600 hover:bg-error-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2"
                   aria-label="영상 삭제"
                 >
                   삭제
@@ -293,7 +293,7 @@ export const GuideDogSchoolVideosPage = () => {
             {viewingVideo.title}
           </h1>
 
-          <div className="text-sm text-gray-600 mb-6">
+          <div className="text-sm text-neutral-600 mb-6">
             작성일: {formatDate(viewingVideo.createdAt)}
             {viewingVideo.createdAt !== viewingVideo.updatedAt && (
               <span className="ml-2">(수정됨)</span>
@@ -316,7 +316,7 @@ export const GuideDogSchoolVideosPage = () => {
                       aria-label={`${viewingVideo.title} 유튜브 영상 플레이어`}
                     />
                   </div>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-neutral-600 mt-2">
                     키보드 단축키: 스페이스바(재생/일시정지), ↑↓(볼륨), ←→(10초 이동)
                   </p>
                 </div>
@@ -337,7 +337,7 @@ export const GuideDogSchoolVideosPage = () => {
                       JavaScript를 활성화하거나 HTML5 비디오를 지원하는 브라우저를 사용해주세요.
                     </p>
                   </video>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-neutral-600 mt-2">
                     키보드 단축키: 스페이스바(재생/일시정지), M(음소거), F(전체화면), ←→(10초 이동)
                   </p>
                 </div>
@@ -358,7 +358,7 @@ export const GuideDogSchoolVideosPage = () => {
                       JavaScript를 활성화하거나 HTML5 비디오를 지원하는 브라우저를 사용해주세요.
                     </p>
                   </video>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-neutral-600 mt-2">
                     키보드 단축키: 스페이스바(재생/일시정지), M(음소거), F(전체화면), ←→(10초 이동)
                   </p>
                 </div>
@@ -369,7 +369,7 @@ export const GuideDogSchoolVideosPage = () => {
           <div className="prose max-w-none">
             <h3 className="text-lg font-semibold text-gray-800 mb-3">영상 설명</h3>
             <div
-              className="text-gray-700 whitespace-pre-wrap leading-relaxed select-none"
+              className="text-neutral-700 whitespace-pre-wrap leading-relaxed select-none"
               onContextMenu={(e) => e.preventDefault()}
               style={{ userSelect: 'none' }}
             >
@@ -394,7 +394,7 @@ export const GuideDogSchoolVideosPage = () => {
             <div>
               <label
                 htmlFor="title"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 제목 *
               </label>
@@ -403,7 +403,7 @@ export const GuideDogSchoolVideosPage = () => {
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                 placeholder="영상 제목을 입력하세요"
                 required
                 aria-label="영상 제목"
@@ -413,7 +413,7 @@ export const GuideDogSchoolVideosPage = () => {
             <div>
               <label
                 htmlFor="content"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 설명 *
               </label>
@@ -421,7 +421,7 @@ export const GuideDogSchoolVideosPage = () => {
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                 rows={10}
                 placeholder="영상 설명을 입력하세요"
                 required
@@ -432,7 +432,7 @@ export const GuideDogSchoolVideosPage = () => {
             <div>
               <label
                 htmlFor="youtubeUrl"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 영상 링크 (유튜브 또는 NAS)
               </label>
@@ -441,7 +441,7 @@ export const GuideDogSchoolVideosPage = () => {
                 id="youtubeUrl"
                 value={youtubeUrl}
                 onChange={(e) => setYoutubeUrl(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                 placeholder="https://www.youtube.com/watch?v=... 또는 https://dogjong.synology.me/..."
                 aria-label="영상 링크"
               />
@@ -453,7 +453,7 @@ export const GuideDogSchoolVideosPage = () => {
             <div>
               <label
                 htmlFor="video"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-neutral-700 mb-2"
               >
                 영상 파일 첨부
               </label>
@@ -462,7 +462,7 @@ export const GuideDogSchoolVideosPage = () => {
                 id="video"
                 accept="video/*"
                 onChange={handleVideoChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-blue-500 outline-none"
                 aria-label="영상 파일 첨부"
               />
               {videoUrl && (
@@ -486,7 +486,7 @@ export const GuideDogSchoolVideosPage = () => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                 aria-label={editingVideo ? '영상 수정 완료' : '영상 등록 완료'}
               >
                 {editingVideo ? '수정 완료' : '등록 완료'}
@@ -514,7 +514,7 @@ export const GuideDogSchoolVideosPage = () => {
         {user?.role === 'admin' && (
           <button
             onClick={() => setIsWriting(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
             aria-label="새 영상 등록"
           >
             영상 등록
@@ -528,7 +528,7 @@ export const GuideDogSchoolVideosPage = () => {
           {user?.role === 'admin' && (
             <button
               onClick={() => setIsWriting(true)}
-              className="mt-4 text-blue-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+              className="mt-4 text-primary-600 hover:text-blue-800 font-semibold focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
               aria-label="첫 영상 등록하기"
             >
               첫 영상 등록하기
@@ -541,13 +541,13 @@ export const GuideDogSchoolVideosPage = () => {
             <button
               key={video.id}
               onClick={() => setViewingVideo(video)}
-              className="w-full text-left bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full text-left bg-gray-50 hover:bg-blue-50 border border-neutral-200 hover:border-blue-300 rounded-lg p-4 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
               aria-label={`${video.title} 영상 재생`}
             >
-              <h3 className="text-lg font-bold text-blue-600 hover:text-blue-800 mb-2">
+              <h3 className="text-lg font-bold text-primary-600 hover:text-blue-800 mb-2">
                 {video.title}
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-neutral-600">
                 {formatDate(video.createdAt)}
               </p>
             </button>

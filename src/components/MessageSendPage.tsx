@@ -262,7 +262,7 @@ export const MessageSendPage = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-500">관리자만 접근할 수 있습니다.</p>
+          <p className="text-neutral-500">관리자만 접근할 수 있습니다.</p>
         </div>
       </div>
     );
@@ -272,7 +272,7 @@ export const MessageSendPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">메시지 발송</h2>
+      <h2 className="text-2xl font-bold text-neutral-800 mb-6">메시지 발송</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 왼쪽: 메시지 작성 */}
@@ -295,14 +295,14 @@ export const MessageSendPage = () => {
 
           {/* 메시지 타입 선택 */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">메시지 타입</h3>
+            <h3 className="text-lg font-bold text-neutral-800 mb-4">메시지 타입</h3>
             <div className="flex gap-4">
               <button
                 onClick={() => setMessageType('sms')}
                 className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors ${
                   messageType === 'sms'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                 }`}
               >
                 SMS (단문)
@@ -311,60 +311,60 @@ export const MessageSendPage = () => {
                 onClick={() => setMessageType('lms')}
                 className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors ${
                   messageType === 'lms'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
                 }`}
               >
                 LMS (장문)
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-3">
+            <p className="text-xs text-neutral-500 mt-3">
               SMS: 90자 이내 (8.4원) / LMS: 2000자 이내 (25원)
             </p>
           </div>
 
           {/* 템플릿 선택 */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">템플릿</h3>
+            <h3 className="text-lg font-bold text-neutral-800 mb-4">템플릿</h3>
             <div className="space-y-2">
               <button
                 onClick={() => insertTemplate('{name}님, {dogName}의 보딩이 {date}에 시작됩니다. 준비물을 확인해주세요.')}
-                className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm"
+                className="w-full text-left px-4 py-2 bg-neutral-50 hover:bg-neutral-100 rounded-lg text-sm"
               >
                 보딩 시작 알림
               </button>
               <button
                 onClick={() => insertTemplate('{name}님, {dogName}의 보딩이 곧 종료됩니다. {date}에 픽업 가능합니다.')}
-                className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm"
+                className="w-full text-left px-4 py-2 bg-neutral-50 hover:bg-neutral-100 rounded-lg text-sm"
               >
                 보딩 종료 알림
               </button>
               <button
                 onClick={() => insertTemplate('안녕하세요. {date} 일정 안내드립니다. 자세한 내용은 홈페이지를 확인해주세요.')}
-                className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm"
+                className="w-full text-left px-4 py-2 bg-neutral-50 hover:bg-neutral-100 rounded-lg text-sm"
               >
                 일정 공지
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-3">
+            <p className="text-xs text-neutral-500 mt-3">
               사용 가능한 변수: {'{name}'} (이름), {'{dogName}'} (안내견 이름), {'{date}'} (오늘 날짜)
             </p>
           </div>
 
           {/* 메시지 작성 */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">메시지 내용</h3>
+            <h3 className="text-lg font-bold text-neutral-800 mb-4">메시지 내용</h3>
 
             {messageType === 'lms' && (
               <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
                   제목
                 </label>
                 <input
                   type="text"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   placeholder="메시지 제목"
                   maxLength={40}
                 />
@@ -374,33 +374,33 @@ export const MessageSendPage = () => {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
               rows={8}
               placeholder="메시지 내용을 입력하세요..."
               maxLength={messageType === 'sms' ? 90 : 2000}
             />
             <div className="flex justify-between items-center mt-2">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-neutral-500">
                 {message.length} / {messageType === 'sms' ? '90' : '2000'}자
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-neutral-500">
                 예상 비용: {messageType === 'lms' ? '25원' : '8.4원'} x {filteredRecipients.length}명 = {((messageType === 'lms' ? 25 : 8.4) * filteredRecipients.length).toLocaleString()}원
               </p>
             </div>
           </div>
 
           {/* 테스트 모드 */}
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="bg-warning-50 border border-warning-200 rounded-lg p-4">
             <label className="flex items-center space-x-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={testMode}
                 onChange={(e) => setTestMode(e.target.checked)}
-                className="w-5 h-5 rounded border-yellow-400 text-yellow-600 focus:ring-yellow-500"
+                className="w-5 h-5 rounded border-warning-400 text-warning-600 focus:ring-yellow-500"
               />
               <div>
-                <span className="font-semibold text-yellow-800">테스트 모드</span>
-                <p className="text-xs text-yellow-700">
+                <span className="font-semibold text-warning-800">테스트 모드</span>
+                <p className="text-xs text-warning-700">
                   체크하면 실제로 문자가 발송되지 않고 API 테스트만 수행합니다. (무료)
                 </p>
               </div>
@@ -409,9 +409,9 @@ export const MessageSendPage = () => {
 
           {/* 미리보기 */}
           {previewMessage && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="text-sm font-bold text-blue-800 mb-2">미리보기 (첫 번째 수신자 기준)</h4>
-              <p className="text-sm text-blue-900 whitespace-pre-wrap">{previewMessage}</p>
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+              <h4 className="text-sm font-bold text-primary-800 mb-2">미리보기 (첫 번째 수신자 기준)</h4>
+              <p className="text-sm text-primary-900 whitespace-pre-wrap">{previewMessage}</p>
             </div>
           )}
 
@@ -421,8 +421,8 @@ export const MessageSendPage = () => {
             disabled={isSending || filteredRecipients.length === 0}
             className={`w-full py-4 rounded-lg font-bold text-white text-lg transition-colors ${
               isSending || filteredRecipients.length === 0
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-green-600 hover:bg-green-700'
+                ? 'bg-neutral-400 cursor-not-allowed'
+                : 'bg-success-600 hover:bg-success-700'
             }`}
           >
             {isSending ? '발송 중...' : `${filteredRecipients.length}명에게 발송하기`}
@@ -431,10 +431,10 @@ export const MessageSendPage = () => {
           {/* 발송 결과 */}
           {sendResult && (
             <div className={`rounded-lg p-4 ${
-              sendResult.includes('✅') ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+              sendResult.includes('✅') ? 'bg-success-50 border border-success-200' : 'bg-error-50 border border-error-200'
             }`}>
               <p className={`text-sm font-semibold whitespace-pre-wrap ${
-                sendResult.includes('✅') ? 'text-green-800' : 'text-red-800'
+                sendResult.includes('✅') ? 'text-success-800' : 'text-error-800'
               }`}>
                 {sendResult}
               </p>
@@ -446,7 +446,7 @@ export const MessageSendPage = () => {
         <div className="space-y-6">
           {/* 수신자 선택 모드 */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">수신자 선택</h3>
+            <h3 className="text-lg font-bold text-neutral-800 mb-4">수신자 선택</h3>
             <div className="space-y-3">
               <label className="flex items-center space-x-3">
                 <input
@@ -473,7 +473,7 @@ export const MessageSendPage = () => {
                   <select
                     value={selectedRole}
                     onChange={(e) => setSelectedRole(e.target.value as UserRole)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
                   >
                     <option value="">역할 선택</option>
                     <option value="partner">파트너</option>
@@ -498,7 +498,7 @@ export const MessageSendPage = () => {
 
           {/* 수신자 목록 */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">
+            <h3 className="text-lg font-bold text-neutral-800 mb-4">
               수신자 목록 ({filteredRecipients.length}명)
             </h3>
             <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -506,7 +506,7 @@ export const MessageSendPage = () => {
                 allRecipients.map(recipient => (
                   <label
                     key={recipient.userId}
-                    className="flex items-center space-x-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg cursor-pointer"
+                    className="flex items-center space-x-3 p-3 bg-neutral-50 hover:bg-neutral-100 rounded-lg cursor-pointer"
                   >
                     <input
                       type="checkbox"
@@ -516,7 +516,7 @@ export const MessageSendPage = () => {
                     />
                     <div className="flex-1">
                       <p className="font-semibold text-sm">{recipient.userName}</p>
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-neutral-600">
                         {recipient.dogName && `${recipient.dogName} · `}
                         {getRoleName(recipient.role!)} · {recipient.phone}
                       </p>
@@ -527,10 +527,10 @@ export const MessageSendPage = () => {
                 filteredRecipients.map(recipient => (
                   <div
                     key={recipient.userId}
-                    className="p-3 bg-gray-50 rounded-lg"
+                    className="p-3 bg-neutral-50 rounded-lg"
                   >
                     <p className="font-semibold text-sm">{recipient.userName}</p>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-neutral-600">
                       {recipient.dogName && `${recipient.dogName} · `}
                       {getRoleName(recipient.role!)} · {recipient.phone}
                     </p>
@@ -538,7 +538,7 @@ export const MessageSendPage = () => {
                 ))
               )}
               {filteredRecipients.length === 0 && (
-                <p className="text-center text-gray-500 py-8">수신자를 선택해주세요</p>
+                <p className="text-center text-neutral-500 py-8">수신자를 선택해주세요</p>
               )}
             </div>
           </div>

@@ -37,9 +37,9 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col">
+    <div className="min-h-screen bg-neutral-50 flex flex-col">
       {/* 헤더 */}
-      <header className="bg-blue-600 text-white py-8 shadow-lg">
+      <header className="bg-primary-600 text-white py-8 shadow-lg">
         <div className="container mx-auto px-4 text-center">
           <img src="/logo.svg" alt="GIMS Logo" className="w-32 h-32 mx-auto mb-4" />
         </div>
@@ -68,7 +68,7 @@ export const LoginPage = () => {
                   id="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
                   placeholder="아이디를 입력하세요"
                   aria-required="true"
                   aria-describedby={error ? 'login-error' : undefined}
@@ -88,7 +88,7 @@ export const LoginPage = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
                   placeholder="비밀번호를 입력하세요"
                   aria-required="true"
                   aria-describedby={error ? 'login-error' : undefined}
@@ -100,7 +100,7 @@ export const LoginPage = () => {
                 <div
                   id="login-error"
                   role="alert"
-                  className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg"
+                  className="bg-error-50 border border-error-200 text-error-700 px-4 py-3 rounded-lg"
                   aria-live="polite"
                 >
                   {error}
@@ -111,7 +111,7 @@ export const LoginPage = () => {
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:ring-4 focus:ring-blue-300 outline-none flex items-center justify-center"
+                className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-neutral-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:ring-4 focus:ring-primary-300 outline-none flex items-center justify-center"
               >
                 {isLoggingIn ? (
                   <>
@@ -150,7 +150,7 @@ export const LoginPage = () => {
       </main>
 
       {/* 푸터 */}
-      <footer className="bg-gray-800 text-white py-6">
+      <footer className="bg-neutral-800 text-white py-6">
         <div className="container mx-auto px-4 text-center">
           <p className="text-sm">
             안내견학교 &copy; 2025. All rights reserved.

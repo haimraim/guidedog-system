@@ -151,11 +151,11 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case '퍼피티칭': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case '안내견': return 'bg-green-100 text-green-800 border-green-300';
-      case '은퇴견': return 'bg-gray-100 text-gray-800 border-gray-300';
+      case '퍼피티칭': return 'bg-warning-100 text-warning-800 border-warning-300';
+      case '안내견': return 'bg-success-100 text-success-800 border-success-300';
+      case '은퇴견': return 'bg-neutral-100 text-neutral-800 border-neutral-300';
       case '부모견': return 'bg-cyan-100 text-cyan-800 border-cyan-300';
-      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+      default: return 'bg-neutral-100 text-neutral-800 border-neutral-300';
     }
   };
 
@@ -235,7 +235,7 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
     <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* 헤더 */}
-        <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-gray-200">
+        <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-neutral-200">
           <div className="flex items-center gap-3">
             <h2 className="text-2xl font-bold">{item.guideDog.name}</h2>
             <span className={`px-3 py-1 rounded-full text-sm font-semibold border-2 ${getCategoryColor(item.guideDog.category)}`}>
@@ -245,7 +245,7 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-semibold"
+            className="px-4 py-2 bg-neutral-600 text-white rounded-lg hover:bg-neutral-700 focus:ring-4 focus:ring-neutral-300 font-semibold"
             aria-label="상세보기 닫기"
           >
             ✕ 닫기
@@ -257,13 +257,13 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
           <div className="mb-6 flex gap-4">
             <button
               onClick={() => setActiveTab('diary')}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
+              className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
             >
               다이어리 ({allDiaryPosts.length})
             </button>
             <button
               onClick={() => setActiveTab('medical')}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
+              className="flex-1 bg-success-600 hover:bg-success-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
             >
               진료 기록 ({allMedicalRecords.length})
             </button>
@@ -275,41 +275,41 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
           <>
         {/* 견 기본 정보 */}
         <section className="mb-8 bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="bg-blue-600 text-white px-6 py-3">
+          <div className="bg-primary-600 text-white px-6 py-3">
             <h3 className="text-xl font-bold">🐕 견 기본 정보</h3>
           </div>
           <table className="w-full">
             <tbody>
-              <tr className="border-b border-gray-200">
-                <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700 w-1/4">분류</th>
+              <tr className="border-b border-neutral-200">
+                <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700 w-1/4">분류</th>
                 <td className="px-6 py-4">{item.guideDog.category || '-'}</td>
               </tr>
-              <tr className="border-b border-gray-200">
-                <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">견명</th>
+              <tr className="border-b border-neutral-200">
+                <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">견명</th>
                 <td className="px-6 py-4 font-semibold text-lg">{item.guideDog.name || '-'}</td>
               </tr>
-              <tr className="border-b border-gray-200">
-                <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">생년월일</th>
+              <tr className="border-b border-neutral-200">
+                <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">생년월일</th>
                 <td className="px-6 py-4">{formatDate(item.guideDog.birthDate)}</td>
               </tr>
-              <tr className="border-b border-gray-200">
-                <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">나이</th>
-                <td className="px-6 py-4 font-semibold text-blue-600">
+              <tr className="border-b border-neutral-200">
+                <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">나이</th>
+                <td className="px-6 py-4 font-semibold text-primary-600">
                   {calculateAgeWithMonths(item.guideDog.birthDate) || '-'}
                 </td>
               </tr>
-              <tr className="border-b border-gray-200">
-                <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">성별</th>
+              <tr className="border-b border-neutral-200">
+                <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">성별</th>
                 <td className="px-6 py-4">{item.guideDog.gender || '-'}</td>
               </tr>
               {item.guideDog.photo && (
                 <tr>
-                  <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">사진</th>
+                  <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">사진</th>
                   <td className="px-6 py-4">
                     <img
                       src={item.guideDog.photo}
                       alt={`${item.guideDog.name} 사진`}
-                      className="max-w-xs rounded-lg border border-gray-300"
+                      className="max-w-xs rounded-lg border border-neutral-300"
                     />
                   </td>
                 </tr>
@@ -320,26 +320,26 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
           {/* 퍼피티처 정보가 있으면 표시 (권한 체크) */}
           {canViewPuppyTeacher() && (item.guideDog.puppyTeacherName || item.guideDog.puppyTeacherPhone || item.guideDog.puppyTeacherAddress) && (
             <>
-              <div className="bg-purple-100 px-6 py-2 border-t border-gray-200">
+              <div className="bg-purple-100 px-6 py-2 border-t border-neutral-200">
                 <h4 className="font-semibold text-purple-900">👨‍🏫 퍼피티처 정보</h4>
               </div>
               <table className="w-full">
                 <tbody>
                   {item.guideDog.puppyTeacherName && (
-                    <tr className="border-b border-gray-200">
-                      <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700 w-1/4">이름</th>
+                    <tr className="border-b border-neutral-200">
+                      <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700 w-1/4">이름</th>
                       <td className="px-6 py-4">{item.guideDog.puppyTeacherName}</td>
                     </tr>
                   )}
                   {item.guideDog.puppyTeacherPhone && (
-                    <tr className="border-b border-gray-200">
-                      <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">연락처</th>
+                    <tr className="border-b border-neutral-200">
+                      <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">연락처</th>
                       <td className="px-6 py-4">{item.guideDog.puppyTeacherPhone}</td>
                     </tr>
                   )}
                   {item.guideDog.puppyTeacherAddress && (
                     <tr>
-                      <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">주소</th>
+                      <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">주소</th>
                       <td className="px-6 py-4">{item.guideDog.puppyTeacherAddress}</td>
                     </tr>
                   )}
@@ -351,26 +351,26 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
           {/* 은퇴견 홈케어 정보가 있으면 표시 (권한 체크) */}
           {canViewRetiredHomeCare() && (item.guideDog.retiredHomeCareName || item.guideDog.retiredHomeCarePhone || item.guideDog.retiredHomeCareAddress) && (
             <>
-              <div className="bg-orange-100 px-6 py-2 border-t border-gray-200">
-                <h4 className="font-semibold text-orange-900">👴 은퇴견 홈케어 정보</h4>
+              <div className="bg-warning-100 px-6 py-2 border-t border-neutral-200">
+                <h4 className="font-semibold text-warning-900">👴 은퇴견 홈케어 정보</h4>
               </div>
               <table className="w-full">
                 <tbody>
                   {item.guideDog.retiredHomeCareName && (
-                    <tr className="border-b border-gray-200">
-                      <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700 w-1/4">이름</th>
+                    <tr className="border-b border-neutral-200">
+                      <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700 w-1/4">이름</th>
                       <td className="px-6 py-4">{item.guideDog.retiredHomeCareName}</td>
                     </tr>
                   )}
                   {item.guideDog.retiredHomeCarePhone && (
-                    <tr className="border-b border-gray-200">
-                      <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">연락처</th>
+                    <tr className="border-b border-neutral-200">
+                      <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">연락처</th>
                       <td className="px-6 py-4">{item.guideDog.retiredHomeCarePhone}</td>
                     </tr>
                   )}
                   {item.guideDog.retiredHomeCareAddress && (
                     <tr>
-                      <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">주소</th>
+                      <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">주소</th>
                       <td className="px-6 py-4">{item.guideDog.retiredHomeCareAddress}</td>
                     </tr>
                   )}
@@ -382,26 +382,26 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
           {/* 부모견 홈케어 정보가 있으면 표시 (권한 체크) */}
           {canViewParentCaregiver() && (item.guideDog.parentCaregiverName || item.guideDog.parentCaregiverPhone || item.guideDog.parentCaregiverAddress) && (
             <>
-              <div className="bg-green-100 px-6 py-2 border-t border-gray-200">
-                <h4 className="font-semibold text-green-900">👨‍👩‍👧 부모견 홈케어 정보</h4>
+              <div className="bg-success-100 px-6 py-2 border-t border-neutral-200">
+                <h4 className="font-semibold text-success-900">👨‍👩‍👧 부모견 홈케어 정보</h4>
               </div>
               <table className="w-full">
                 <tbody>
                   {item.guideDog.parentCaregiverName && (
-                    <tr className="border-b border-gray-200">
-                      <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700 w-1/4">이름</th>
+                    <tr className="border-b border-neutral-200">
+                      <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700 w-1/4">이름</th>
                       <td className="px-6 py-4">{item.guideDog.parentCaregiverName}</td>
                     </tr>
                   )}
                   {item.guideDog.parentCaregiverPhone && (
-                    <tr className="border-b border-gray-200">
-                      <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">연락처</th>
+                    <tr className="border-b border-neutral-200">
+                      <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">연락처</th>
                       <td className="px-6 py-4">{item.guideDog.parentCaregiverPhone}</td>
                     </tr>
                   )}
                   {item.guideDog.parentCaregiverAddress && (
                     <tr>
-                      <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">주소</th>
+                      <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">주소</th>
                       <td className="px-6 py-4">{item.guideDog.parentCaregiverAddress}</td>
                     </tr>
                   )}
@@ -414,21 +414,21 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
         {/* 파트너 정보 (권한 체크) */}
         {canViewPartner() && item.partner.name && (
           <section className="mb-8 bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-green-600 text-white px-6 py-3">
+            <div className="bg-success-600 text-white px-6 py-3">
               <h3 className="text-xl font-bold">👤 파트너 정보</h3>
             </div>
             <table className="w-full">
               <tbody>
-                <tr className="border-b border-gray-200">
-                  <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700 w-1/4">성명</th>
+                <tr className="border-b border-neutral-200">
+                  <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700 w-1/4">성명</th>
                   <td className="px-6 py-4 font-semibold text-lg">{item.partner.name || '-'}</td>
                 </tr>
-                <tr className="border-b border-gray-200">
-                  <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">연락처</th>
+                <tr className="border-b border-neutral-200">
+                  <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">연락처</th>
                   <td className="px-6 py-4">{item.partner.phone || '-'}</td>
                 </tr>
                 <tr>
-                  <th className="bg-gray-50 px-6 py-4 text-left font-semibold text-gray-700">주소</th>
+                  <th className="bg-neutral-50 px-6 py-4 text-left font-semibold text-neutral-700">주소</th>
                   <td className="px-6 py-4">{item.partner.address || '-'}</td>
                 </tr>
               </tbody>
@@ -437,17 +437,17 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
         )}
 
         {/* 액션 버튼 */}
-        <div className="flex gap-3 justify-end pt-6 border-t-2 border-gray-200">
+        <div className="flex gap-3 justify-end pt-6 border-t-2 border-neutral-200">
           <button
             onClick={onEdit}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold"
+            className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-semibold"
             aria-label={`${item.guideDog.name} 데이터 수정`}
           >
             ✏️ 수정
           </button>
           <button
             onClick={onDelete}
-            className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-semibold"
+            className="px-6 py-3 bg-error-600 text-white rounded-lg hover:bg-error-700 focus:ring-4 focus:ring-error-300 font-semibold"
             aria-label={`${item.guideDog.name} 데이터 삭제`}
           >
             🗑️ 삭제
@@ -463,7 +463,7 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
               <h3 className="text-2xl font-bold">다이어리 목록</h3>
               <button
                 onClick={() => setActiveTab(null)}
-                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-semibold transition-colors"
+                className="px-4 py-2 bg-neutral-600 hover:bg-neutral-700 text-white rounded-lg font-semibold transition-colors"
               >
                 ← 뒤로
               </button>
@@ -471,7 +471,7 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
 
             {/* 작성자 필터 */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 작성자 필터
               </label>
               <div className="flex flex-wrap gap-2">
@@ -479,8 +479,8 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
                   onClick={() => setSelectedDiaryAuthor('all')}
                   className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                     selectedDiaryAuthor === 'all'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-neutral-200 text-neutral-700 hover:bg-neutral-300'
                   }`}
                 >
                   전체 ({allDiaryPosts.length})
@@ -491,8 +491,8 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
                     onClick={() => setSelectedDiaryAuthor(author.name)}
                     className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                       selectedDiaryAuthor === author.name
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-neutral-200 text-neutral-700 hover:bg-neutral-300'
                     }`}
                   >
                     {author.fullLabel} ({allDiaryPosts.filter(p => p.userName === author.name).length})
@@ -502,25 +502,25 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
             </div>
 
             {filteredDiaryPosts.length === 0 ? (
-              <div className="bg-gray-50 rounded-lg p-12 text-center">
-                <p className="text-gray-500">작성된 다이어리가 없습니다.</p>
+              <div className="bg-neutral-50 rounded-lg p-12 text-center">
+                <p className="text-neutral-500">작성된 다이어리가 없습니다.</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {filteredDiaryPosts.map((post) => (
                   <div
                     key={post.id}
-                    className="bg-white rounded-lg shadow-md p-6 border border-gray-200"
+                    className="bg-white rounded-lg shadow-md p-6 border border-neutral-200"
                   >
-                    <h4 className="text-xl font-bold text-gray-800 mb-2">
+                    <h4 className="text-xl font-bold text-neutral-800 mb-2">
                       {post.title}
                     </h4>
-                    <div className="flex items-center text-sm text-gray-600 mb-4 space-x-4">
+                    <div className="flex items-center text-sm text-neutral-600 mb-4 space-x-4">
                       <span className="font-semibold">{post.userName}</span>
                       {post.dogName && <span>{post.dogName}</span>}
                       <span>{formatDateTime(post.createdAt)}</span>
                     </div>
-                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                    <p className="text-neutral-700 whitespace-pre-wrap leading-relaxed">
                       {post.content}
                     </p>
                   </div>
@@ -537,7 +537,7 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
               <h3 className="text-2xl font-bold">진료 기록 목록</h3>
               <button
                 onClick={() => setActiveTab(null)}
-                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-semibold transition-colors"
+                className="px-4 py-2 bg-neutral-600 hover:bg-neutral-700 text-white rounded-lg font-semibold transition-colors"
               >
                 ← 뒤로
               </button>
@@ -545,7 +545,7 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
 
             {/* 작성자 필터 */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 작성자 필터
               </label>
               <div className="flex flex-wrap gap-2">
@@ -553,8 +553,8 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
                   onClick={() => setSelectedMedicalAuthor('all')}
                   className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                     selectedMedicalAuthor === 'all'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-success-600 text-white'
+                      : 'bg-neutral-200 text-neutral-700 hover:bg-neutral-300'
                   }`}
                 >
                   전체 ({allMedicalRecords.length})
@@ -565,8 +565,8 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
                     onClick={() => setSelectedMedicalAuthor(author.name)}
                     className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                       selectedMedicalAuthor === author.name
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        ? 'bg-success-600 text-white'
+                        : 'bg-neutral-200 text-neutral-700 hover:bg-neutral-300'
                     }`}
                   >
                     {author.fullLabel} ({allMedicalRecords.filter(r => r.userName === author.name).length})
@@ -576,52 +576,52 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
             </div>
 
             {filteredMedicalRecords.length === 0 ? (
-              <div className="bg-gray-50 rounded-lg p-12 text-center">
-                <p className="text-gray-500">작성된 진료 기록이 없습니다.</p>
+              <div className="bg-neutral-50 rounded-lg p-12 text-center">
+                <p className="text-neutral-500">작성된 진료 기록이 없습니다.</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {filteredMedicalRecords.map((record) => (
                   <div
                     key={record.id}
-                    className="bg-white rounded-lg shadow-md p-6 border border-gray-200"
+                    className="bg-white rounded-lg shadow-md p-6 border border-neutral-200"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h4 className="text-xl font-bold text-gray-800">
+                        <h4 className="text-xl font-bold text-neutral-800">
                           {record.hospital}
                         </h4>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="text-sm text-neutral-600 mt-1">
                           {formatDate(record.visitDate)} | {record.dogName} | <span className="font-semibold">{record.userName}</span>
                         </p>
                       </div>
-                      <p className="text-lg font-semibold text-blue-600">
+                      <p className="text-lg font-semibold text-primary-600">
                         {formatCurrency(record.cost)}
                       </p>
                     </div>
 
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-neutral-700 mb-1">
                           진단 내용
                         </label>
-                        <p className="text-gray-800 whitespace-pre-wrap bg-gray-50 p-3 rounded">
+                        <p className="text-neutral-800 whitespace-pre-wrap bg-neutral-50 p-3 rounded">
                           {record.diagnosis}
                         </p>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-neutral-700 mb-1">
                           치료 내용
                         </label>
-                        <p className="text-gray-800 whitespace-pre-wrap bg-gray-50 p-3 rounded">
+                        <p className="text-neutral-800 whitespace-pre-wrap bg-neutral-50 p-3 rounded">
                           {record.treatment}
                         </p>
                       </div>
 
                       {record.receiptPhotos.length > 0 && (
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label className="block text-sm font-semibold text-neutral-700 mb-2">
                             영수증 사진 ({record.receiptPhotos.length}장)
                           </label>
                           <div className="grid grid-cols-2 gap-4">
@@ -630,7 +630,7 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
                                 key={index}
                                 src={photo}
                                 alt={`영수증 ${index + 1}`}
-                                className="w-full rounded-lg border border-gray-200"
+                                className="w-full rounded-lg border border-neutral-200"
                               />
                             ))}
                           </div>
@@ -638,7 +638,7 @@ export const DataDetailView = ({ item, onClose, onEdit, onDelete }: DataDetailVi
                       )}
                     </div>
 
-                    <div className="text-sm text-gray-500 mt-4 pt-3 border-t">
+                    <div className="text-sm text-neutral-500 mt-4 pt-3 border-t">
                       작성일: {formatDateTime(record.createdAt)}
                     </div>
                   </div>

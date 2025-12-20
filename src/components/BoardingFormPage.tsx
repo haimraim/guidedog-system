@@ -476,9 +476,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
   const getStatusColor = (status: BoardingForm['status']) => {
     switch (status) {
-      case 'waiting': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'boarding': return 'bg-green-100 text-green-800 border-green-300';
-      case 'completed': return 'bg-gray-100 text-gray-800 border-gray-300';
+      case 'waiting': return 'bg-warning-100 text-warning-800 border-warning-300';
+      case 'boarding': return 'bg-success-100 text-success-800 border-success-300';
+      case 'completed': return 'bg-neutral-100 text-neutral-800 border-neutral-300';
     }
   };
 
@@ -525,11 +525,11 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
       return (
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">보딩 신청서</h2>
+            <h2 className="text-2xl font-bold text-neutral-800 mb-4">보딩 신청서</h2>
             <p className="text-red-600">안내견 정보를 찾을 수 없습니다.</p>
             <button
               onClick={resetForm}
-              className="mt-4 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg"
+              className="mt-4 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-2 px-4 rounded-lg"
             >
               돌아가기
             </button>
@@ -541,57 +541,57 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
             {editingForm ? '보딩 신청서 수정' : '보딩 신청서 작성'}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* 기본 정보 (자동 입력) */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">기본 정보</h3>
+            <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+              <h3 className="font-semibold text-neutral-800 mb-3">기본 정보</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="font-semibold text-gray-700">견명:</span> {dogInfo.name}
+                  <span className="font-semibold text-neutral-700">견명:</span> {dogInfo.name}
                 </div>
                 <div>
-                  <span className="font-semibold text-gray-700">생년월일:</span> {formatDate(dogInfo.birthDate)}
+                  <span className="font-semibold text-neutral-700">생년월일:</span> {formatDate(dogInfo.birthDate)}
                 </div>
                 <div>
-                  <span className="font-semibold text-gray-700">성별:</span> {dogInfo.gender}
+                  <span className="font-semibold text-neutral-700">성별:</span> {dogInfo.gender}
                 </div>
                 <div>
-                  <span className="font-semibold text-gray-700">담당자:</span> {user?.name}
+                  <span className="font-semibold text-neutral-700">담당자:</span> {user?.name}
                 </div>
               </div>
             </div>
 
             {/* 보딩 기간 */}
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">보딩 기간</h3>
+            <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+              <h3 className="font-semibold text-neutral-800 mb-3">보딩 기간</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     보딩 시작일 *
                   </label>
                   <div className="flex space-x-2 mb-2">
                     <button
                       type="button"
                       onClick={() => setStartDate(getTodayDate())}
-                      className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
+                      className="px-3 py-1 text-sm bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg transition-colors"
                     >
                       오늘
                     </button>
                     <button
                       type="button"
                       onClick={() => setStartDate(getTomorrowDate())}
-                      className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
+                      className="px-3 py-1 text-sm bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg transition-colors"
                     >
                       내일
                     </button>
                     <button
                       type="button"
                       onClick={() => setStartDate(getDayAfterTomorrowDate())}
-                      className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
+                      className="px-3 py-1 text-sm bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg transition-colors"
                     >
                       모레
                     </button>
@@ -605,28 +605,28 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     보딩 종료일 *
                   </label>
                   <div className="flex space-x-2 mb-2">
                     <button
                       type="button"
                       onClick={() => setEndDate(getTodayDate())}
-                      className="px-3 py-1 text-sm bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors"
+                      className="px-3 py-1 text-sm bg-success-100 hover:bg-success-200 text-success-700 rounded-lg transition-colors"
                     >
                       오늘
                     </button>
                     <button
                       type="button"
                       onClick={() => setEndDate(getTomorrowDate())}
-                      className="px-3 py-1 text-sm bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors"
+                      className="px-3 py-1 text-sm bg-success-100 hover:bg-success-200 text-success-700 rounded-lg transition-colors"
                     >
                       내일
                     </button>
                     <button
                       type="button"
                       onClick={() => setEndDate(getDayAfterTomorrowDate())}
-                      className="px-3 py-1 text-sm bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors"
+                      className="px-3 py-1 text-sm bg-success-100 hover:bg-success-200 text-success-700 rounded-lg transition-colors"
                     >
                       모레
                     </button>
@@ -643,11 +643,11 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             </div>
 
             {/* 사료 정보 */}
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">사료 정보</h3>
+            <div className="bg-white border border-neutral-200 rounded-lg p-4">
+              <h3 className="font-semibold text-neutral-800 mb-3">사료 정보</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     사료 이름 *
                   </label>
                   <select
@@ -673,10 +673,10 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     급여량과 급여 시기 *
                   </label>
-                  <p className="text-xs text-gray-600 mb-2">
+                  <p className="text-xs text-neutral-600 mb-2">
                     급여량은 그램(g) 단위로, 현재 급식 시간과 급식량을 적어주세요.<br />
                     예: 오전8시 100g, 오후1시 30g, 오후6시 100g
                   </p>
@@ -689,10 +689,10 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">
                     먹이는 영양제 종류와 양, 시기
                   </label>
-                  <p className="text-xs text-gray-600 mb-2">
+                  <p className="text-xs text-neutral-600 mb-2">
                     예: 오전 파이보 1스푼, 오후 코텍스 2알
                   </p>
                   <textarea
@@ -706,8 +706,8 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             </div>
 
             {/* 맡긴 물품 */}
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">학교에 같이 맡긴 물품 *</h3>
+            <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+              <h3 className="font-semibold text-neutral-800 mb-3">학교에 같이 맡긴 물품 *</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {ITEMS_OPTIONS.map(item => (
                   <label key={item} className="flex items-center space-x-2 cursor-pointer">
@@ -715,14 +715,14 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       type="checkbox"
                       checked={selectedItems.includes(item)}
                       onChange={() => handleItemToggle(item)}
-                      className="w-4 h-4 text-blue-600"
+                      className="w-4 h-4 text-primary-600"
                     />
-                    <span className="text-sm text-gray-700">{item}</span>
+                    <span className="text-sm text-neutral-700">{item}</span>
                   </label>
                 ))}
               </div>
               <div className="mt-3">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
                   기타
                 </label>
                 <input
@@ -736,9 +736,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             </div>
 
             {/* 최근 목욕일 */}
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">최근 목욕일 *</h3>
-              <p className="text-xs text-gray-600 mb-2">
+            <div className="bg-white border border-neutral-200 rounded-lg p-4">
+              <h3 className="font-semibold text-neutral-800 mb-3">최근 목욕일 *</h3>
+              <p className="text-xs text-neutral-600 mb-2">
                 보딩 기간이 10일 이상인 경우에 한해 견사에서 목욕을 실시합니다.
               </p>
               <input
@@ -751,9 +751,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             </div>
 
             {/* 구충 시행 */}
-            <div className="bg-pink-50 border border-pink-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">보딩 기간 중 구충 시행</h3>
-              <p className="text-xs text-gray-600 mb-2">
+            <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+              <h3 className="font-semibold text-neutral-800 mb-3">보딩 기간 중 구충 시행</h3>
+              <p className="text-xs text-neutral-600 mb-2">
                 시행을 원하는 경우, 반드시 제공된 해당 구충 약품을 가져와 주세요.<br />
                 예: 하트가드 25년 1월 10일, 드론탈플러스 25년 3월 1일
               </p>
@@ -767,9 +767,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             </div>
 
             {/* 백신접종 */}
-            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">보딩 기간 중 백신접종 *</h3>
-              <p className="text-xs text-gray-600 mb-2">
+            <div className="bg-white border border-neutral-200 rounded-lg p-4">
+              <h3 className="font-semibold text-neutral-800 mb-3">보딩 기간 중 백신접종 *</h3>
+              <p className="text-xs text-neutral-600 mb-2">
                 건강수첩을 참고하여 작성해 주시고, 백신접종 시 건강수첩 제출은 필수입니다.
               </p>
               <div className="space-y-2">
@@ -779,9 +779,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       type="checkbox"
                       checked={selectedVaccines.includes(vaccine)}
                       onChange={() => handleVaccineToggle(vaccine)}
-                      className="w-4 h-4 text-blue-600"
+                      className="w-4 h-4 text-primary-600"
                     />
-                    <span className="text-sm text-gray-700">{vaccine}</span>
+                    <span className="text-sm text-neutral-700">{vaccine}</span>
                   </label>
                 ))}
               </div>
@@ -789,7 +789,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
             {/* 보딩 사유 */}
             <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">보딩 사유 *</h3>
+              <h3 className="font-semibold text-neutral-800 mb-3">보딩 사유 *</h3>
               <select
                 value={boardingReason}
                 onChange={(e) => setBoardingReason(e.target.value)}
@@ -804,7 +804,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               {(boardingReason === '진료' || boardingReason === '수술') && (
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-neutral-700 mb-2">
                       {boardingReason} 사유                    </label>
                     <input
                       type="text"
@@ -815,7 +815,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-neutral-700 mb-2">
                       {boardingReason}일 (외부 병원에서 {boardingReason}받은 경우)
                     </label>
                     <input
@@ -832,10 +832,10 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             {/* 안내견 전용 필드 */}
             {isGuideDog && (
               <div className="bg-teal-50 border border-teal-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-3">안내견 전용 정보</h3>
+                <h3 className="font-semibold text-neutral-800 mb-3">안내견 전용 정보</h3>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-neutral-700 mb-2">
                       담당 사후관리 선생님
                     </label>
                     <input
@@ -846,7 +846,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-neutral-700 mb-2">
                       바닥에 이불을 깔아주면 물어뜯나요?
                     </label>
                     <div className="flex space-x-4">
@@ -857,9 +857,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           value="예"
                           checked={tearsblanket === '예'}
                           onChange={(e) => setTearsblanket(e.target.value)}
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary-600"
                         />
-                        <span className="text-sm text-gray-700">예</span>
+                        <span className="text-sm text-neutral-700">예</span>
                       </label>
                       <label className="flex items-center space-x-2 cursor-pointer">
                         <input
@@ -868,9 +868,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           value="아니오"
                           checked={tearsblanket === '아니오'}
                           onChange={(e) => setTearsblanket(e.target.value)}
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary-600"
                         />
-                        <span className="text-sm text-gray-700">아니오</span>
+                        <span className="text-sm text-neutral-700">아니오</span>
                       </label>
                     </div>
                   </div>
@@ -879,8 +879,8 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             )}
 
             {/* 배변 DT벨트 (모든 견) */}
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 배변 시 DT밸트를 착용하나요?              </label>
               <div className="flex space-x-4">
                 <label className="flex items-center space-x-2 cursor-pointer">
@@ -890,9 +890,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     value="예"
                     checked={usesDTBelt === '예'}
                     onChange={(e) => setUsesDTBelt(e.target.value)}
-                    className="w-4 h-4 text-blue-600"
+                    className="w-4 h-4 text-primary-600"
                   />
-                  <span className="text-sm text-gray-700">예</span>
+                  <span className="text-sm text-neutral-700">예</span>
                 </label>
                 <label className="flex items-center space-x-2 cursor-pointer">
                   <input
@@ -901,9 +901,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     value="아니오"
                     checked={usesDTBelt === '아니오'}
                     onChange={(e) => setUsesDTBelt(e.target.value)}
-                    className="w-4 h-4 text-blue-600"
+                    className="w-4 h-4 text-primary-600"
                   />
-                  <span className="text-sm text-gray-700">아니오</span>
+                  <span className="text-sm text-neutral-700">아니오</span>
                 </label>
               </div>
             </div>
@@ -911,10 +911,10 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             {/* 퍼피 전용 필드 */}
             {isPuppy && (
               <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-3">퍼피 전용 정보</h3>
+                <h3 className="font-semibold text-neutral-800 mb-3">퍼피 전용 정보</h3>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-neutral-700 mb-2">
                       발톱 정리가 필요한가요?                    </label>
                     <div className="flex space-x-4">
                       <label className="flex items-center space-x-2 cursor-pointer">
@@ -924,9 +924,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           value="예"
                           checked={needsNailTrim === '예'}
                           onChange={(e) => setNeedsNailTrim(e.target.value)}
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary-600"
                               />
-                        <span className="text-sm text-gray-700">예</span>
+                        <span className="text-sm text-neutral-700">예</span>
                       </label>
                       <label className="flex items-center space-x-2 cursor-pointer">
                         <input
@@ -935,14 +935,14 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           value="아니오"
                           checked={needsNailTrim === '아니오'}
                           onChange={(e) => setNeedsNailTrim(e.target.value)}
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary-600"
                               />
-                        <span className="text-sm text-gray-700">아니오</span>
+                        <span className="text-sm text-neutral-700">아니오</span>
                       </label>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-neutral-700 mb-2">
                       패드 털 정리가 필요한가요?                    </label>
                     <div className="flex space-x-4">
                       <label className="flex items-center space-x-2 cursor-pointer">
@@ -952,9 +952,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           value="예"
                           checked={needsPadTrim === '예'}
                           onChange={(e) => setNeedsPadTrim(e.target.value)}
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary-600"
                               />
-                        <span className="text-sm text-gray-700">예</span>
+                        <span className="text-sm text-neutral-700">예</span>
                       </label>
                       <label className="flex items-center space-x-2 cursor-pointer">
                         <input
@@ -963,9 +963,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           value="아니오"
                           checked={needsPadTrim === '아니오'}
                           onChange={(e) => setNeedsPadTrim(e.target.value)}
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary-600"
                               />
-                        <span className="text-sm text-gray-700">아니오</span>
+                        <span className="text-sm text-neutral-700">아니오</span>
                       </label>
                     </div>
                   </div>
@@ -975,8 +975,8 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
             {/* 집으로 돌아갈 때 필요한 물품 */}
             <div className="bg-lime-50 border border-lime-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">집으로 돌아갈 때 필요한 물품</h3>
-              <p className="text-xs text-gray-600 mb-2">
+              <h3 className="font-semibold text-neutral-800 mb-3">집으로 돌아갈 때 필요한 물품</h3>
+              <p className="text-xs text-neutral-600 mb-2">
                 {isPuppy
                   ? '* 퍼피코트, 트릿백, 견줄은 반드시 이전에 사용하던 것을 반납해야 교환됩니다.'
                   : isGuideDog
@@ -994,9 +994,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             </div>
 
             {/* 기타 전달사항 */}
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-800 mb-3">기타 전달하고 싶은 내용</h3>
-              <p className="text-xs text-gray-600 mb-2">
+            <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+              <h3 className="font-semibold text-neutral-800 mb-3">기타 전달하고 싶은 내용</h3>
+              <p className="text-xs text-neutral-600 mb-2">
                 예: 왼쪽 귀가 좋지 않으니 자주 봐주세요. 등
               </p>
               <textarea
@@ -1011,14 +1011,14 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 {editingForm ? '수정하기' : '신청하기'}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 취소
               </button>
@@ -1035,7 +1035,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
+        <h2 className="text-2xl font-bold text-neutral-800">
           보딩 신청 관리{user?.role === 'admin' && ' (관리자)'}
         </h2>
         <div className="flex space-x-3">
@@ -1050,7 +1050,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
           {user?.role !== 'admin' && (
             <button
               onClick={() => setIsAdding(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
             >
               신청서 작성
             </button>
@@ -1061,10 +1061,10 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
       {/* 관리자 필터 및 정렬 */}
       {user?.role === 'admin' && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">필터 및 정렬</h3>
+          <h3 className="text-lg font-bold text-neutral-800 mb-4">필터 및 정렬</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 상태 필터
               </label>
               <select
@@ -1079,7 +1079,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 정렬 기준
               </label>
               <select
@@ -1093,7 +1093,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 정렬 순서
               </label>
               <select
@@ -1111,14 +1111,14 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
       {/* 신청서 목록 */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">신청서 목록</h3>
+        <h3 className="text-xl font-bold text-neutral-800 mb-4">신청서 목록</h3>
         {filteredAndSortedForms.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-neutral-500">
             <p>신청서가 없습니다.</p>
             {user?.role !== 'admin' && (
               <button
                 onClick={() => setIsAdding(true)}
-                className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+                className="mt-4 text-primary-600 hover:text-primary-800 font-semibold"
               >
                 첫 신청서 작성하기
               </button>
@@ -1129,7 +1129,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
             {filteredAndSortedForms.map((form) => (
               <div
                 key={form.id}
-                className="border border-gray-200 rounded-lg p-6 hover:bg-gray-50 transition-colors"
+                className="border border-neutral-200 rounded-lg p-6 hover:bg-neutral-50 transition-colors"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
@@ -1137,7 +1137,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     {form.userId === user?.id && form.status === 'waiting' ? (
                       <button
                         onClick={() => handleEdit(form)}
-                        className="text-lg font-bold text-blue-600 hover:text-blue-800 hover:underline mb-1 text-left"
+                        className="text-lg font-bold text-primary-600 hover:text-primary-800 hover:underline mb-1 text-left"
                         aria-label={`${form.dogName} 보딩 신청서 수정하기. 시작일 ${formatDateShort(form.startDate)}, 종료일 ${formatDateShort(form.endDate)}`}
                       >
                         시작일 {formatDateShort(form.startDate)} ~ 종료일: {formatDateShort(form.endDate)}
@@ -1145,13 +1145,13 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     ) : (
                       <button
                         onClick={() => handleViewDetails(form)}
-                        className="text-lg font-bold text-blue-600 hover:text-blue-800 hover:underline mb-1 text-left"
+                        className="text-lg font-bold text-primary-600 hover:text-primary-800 hover:underline mb-1 text-left"
                         aria-label={`${form.dogName} 보딩 신청서 상세보기. 시작일 ${formatDateShort(form.startDate)}, 종료일 ${formatDateShort(form.endDate)}`}
                       >
                         시작일 {formatDateShort(form.startDate)} ~ 종료일: {formatDateShort(form.endDate)}
                       </button>
                     )}
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-neutral-600">
                       {form.dogName} ({form.dogCategory}) - {form.userName}
                     </p>
                   </div>
@@ -1162,27 +1162,27 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
                   <div>
-                    <div className="font-semibold text-gray-700">사료</div>
-                    <div className="text-gray-600">{form.foodType}</div>
+                    <div className="font-semibold text-neutral-700">사료</div>
+                    <div className="text-neutral-600">{form.foodType}</div>
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-700">보딩 사유</div>
-                    <div className="text-gray-600">{form.boardingReason}</div>
+                    <div className="font-semibold text-neutral-700">보딩 사유</div>
+                    <div className="text-neutral-600">{form.boardingReason}</div>
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-700">맡긴 물품</div>
-                    <div className="text-gray-600">{form.items.join(', ')}</div>
+                    <div className="font-semibold text-neutral-700">맡긴 물품</div>
+                    <div className="text-neutral-600">{form.items.join(', ')}</div>
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-700">백신접종</div>
-                    <div className="text-gray-600">{form.vaccinations.join(', ')}</div>
+                    <div className="font-semibold text-neutral-700">백신접종</div>
+                    <div className="text-neutral-600">{form.vaccinations.join(', ')}</div>
                   </div>
                 </div>
 
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleViewDetails(form)}
-                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors relative"
+                    className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-lg transition-colors relative"
                   >
                     상세보기
                     {user && getUnreadCommentCount(form, user.id) > 0 && (
@@ -1198,7 +1198,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       {form.status === 'waiting' && (
                         <button
                           onClick={() => handleStatusChange(form.id, 'boarding')}
-                          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                          className="px-4 py-2 bg-success-600 hover:bg-success-700 text-white text-sm font-semibold rounded-lg transition-colors"
                         >
                           보딩 시작
                         </button>
@@ -1206,7 +1206,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       {form.status === 'boarding' && (
                         <button
                           onClick={() => handleStatusChange(form.id, 'completed')}
-                          className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                          className="px-4 py-2 bg-neutral-600 hover:bg-neutral-700 text-white text-sm font-semibold rounded-lg transition-colors"
                         >
                           보딩 종료
                         </button>
@@ -1214,7 +1214,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                       {/* 관리자: 모든 신청서 수정/삭제 가능 */}
                       <button
                         onClick={() => handleEdit(form)}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                        className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-lg transition-colors"
                       >
                         수정
                       </button>
@@ -1232,7 +1232,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     <>
                       <button
                         onClick={() => handleEdit(form)}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                        className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-lg transition-colors"
                       >
                         수정
                       </button>
@@ -1248,9 +1248,9 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
                 {/* 코멘트 섹션 - 목록에서 바로 확인 */}
                 {form.comments && form.comments.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="mt-4 pt-4 border-t border-neutral-200">
                     <div className="flex items-center justify-between mb-3">
-                      <h5 className="font-semibold text-gray-800 flex items-center">
+                      <h5 className="font-semibold text-neutral-800 flex items-center">
                         💬 관리자 코멘트
                         {user && getUnreadCommentCount(form, user.id) > 0 && (
                           <span className="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
@@ -1265,17 +1265,17 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                           key={comment.id}
                           className={`p-3 rounded-lg text-sm ${
                             !comment.isRead && comment.userId !== user?.id
-                              ? 'bg-yellow-50 border border-yellow-300'
-                              : 'bg-gray-50 border border-gray-200'
+                              ? 'bg-warning-50 border border-warning-300'
+                              : 'bg-neutral-50 border border-neutral-200'
                           }`}
                         >
                           <div className="flex justify-between items-start mb-1">
-                            <span className="font-semibold text-gray-800">{comment.userName}</span>
-                            <span className="text-xs text-gray-500">
+                            <span className="font-semibold text-neutral-800">{comment.userName}</span>
+                            <span className="text-xs text-neutral-500">
                               {new Date(comment.createdAt).toLocaleDateString('ko-KR')}
                             </span>
                           </div>
-                          <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
+                          <p className="text-neutral-700 whitespace-pre-wrap">{comment.content}</p>
                         </div>
                       ))}
                       {form.comments.length > 3 && (
@@ -1299,11 +1299,11 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
       {viewingForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-800">보딩 신청서 상세보기</h2>
+            <div className="sticky top-0 bg-white border-b border-neutral-200 p-6 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-neutral-800">보딩 신청서 상세보기</h2>
               <button
                 onClick={handleCloseDetails}
-                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                className="text-neutral-500 hover:text-neutral-700 text-2xl font-bold"
               >
                 &times;
               </button>
@@ -1311,23 +1311,23 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
             <div className="p-6 space-y-6">
               {/* 기본 정보 */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-3">기본 정보</h3>
+              <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+                <h3 className="font-semibold text-neutral-800 mb-3">기본 정보</h3>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
-                    <span className="font-semibold text-gray-700">견명:</span> {viewingForm.dogName}
+                    <span className="font-semibold text-neutral-700">견명:</span> {viewingForm.dogName}
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-700">생년월일:</span> {formatDate(viewingForm.dogBirthDate)}
+                    <span className="font-semibold text-neutral-700">생년월일:</span> {formatDate(viewingForm.dogBirthDate)}
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-700">성별:</span> {viewingForm.dogGender}
+                    <span className="font-semibold text-neutral-700">성별:</span> {viewingForm.dogGender}
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-700">카테고리:</span> {viewingForm.dogCategory}
+                    <span className="font-semibold text-neutral-700">카테고리:</span> {viewingForm.dogCategory}
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-700">신청자:</span> {viewingForm.userName}
+                    <span className="font-semibold text-neutral-700">신청자:</span> {viewingForm.userName}
                   </div>
                   <div>
                     <span className={`font-semibold px-3 py-1 rounded-full text-sm border ${getStatusColor(viewingForm.status)}`}>
@@ -1338,27 +1338,27 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               </div>
 
               {/* 보딩 기간 */}
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-3">보딩 기간</h3>
+              <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+                <h3 className="font-semibold text-neutral-800 mb-3">보딩 기간</h3>
                 <div className="text-sm">
                   {formatDate(viewingForm.startDate)} ~ {formatDate(viewingForm.endDate)}
                 </div>
               </div>
 
               {/* 사료 정보 */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-3">사료 정보</h3>
+              <div className="bg-white border border-neutral-200 rounded-lg p-4">
+                <h3 className="font-semibold text-neutral-800 mb-3">사료 정보</h3>
                 <div className="space-y-2 text-sm">
                   <div>
-                    <span className="font-semibold text-gray-700">사료 종류:</span> {viewingForm.foodType}
+                    <span className="font-semibold text-neutral-700">사료 종류:</span> {viewingForm.foodType}
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-700">급여량과 급여 시기:</span>
+                    <span className="font-semibold text-neutral-700">급여량과 급여 시기:</span>
                     <div className="whitespace-pre-wrap mt-1">{viewingForm.feedingSchedule}</div>
                   </div>
                   {viewingForm.supplements && (
                     <div>
-                      <span className="font-semibold text-gray-700">영양제:</span>
+                      <span className="font-semibold text-neutral-700">영양제:</span>
                       <div className="whitespace-pre-wrap mt-1">{viewingForm.supplements}</div>
                     </div>
                   )}
@@ -1366,8 +1366,8 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               </div>
 
               {/* 맡긴 물품 */}
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-3">학교에 같이 맡긴 물품</h3>
+              <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+                <h3 className="font-semibold text-neutral-800 mb-3">학교에 같이 맡긴 물품</h3>
                 <div className="text-sm">
                   {viewingForm.items.join(', ')}
                   {viewingForm.itemsEtc && `, ${viewingForm.itemsEtc}`}
@@ -1375,38 +1375,38 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               </div>
 
               {/* 건강 정보 */}
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-3">건강 정보</h3>
+              <div className="bg-white border border-neutral-200 rounded-lg p-4">
+                <h3 className="font-semibold text-neutral-800 mb-3">건강 정보</h3>
                 <div className="space-y-2 text-sm">
                   <div>
-                    <span className="font-semibold text-gray-700">최근 목욕일:</span> {formatDate(viewingForm.lastBathDate)}
+                    <span className="font-semibold text-neutral-700">최근 목욕일:</span> {formatDate(viewingForm.lastBathDate)}
                   </div>
                   {viewingForm.dewormingSchedule && (
                     <div>
-                      <span className="font-semibold text-gray-700">구충 시행:</span> {viewingForm.dewormingSchedule}
+                      <span className="font-semibold text-neutral-700">구충 시행:</span> {viewingForm.dewormingSchedule}
                     </div>
                   )}
                   <div>
-                    <span className="font-semibold text-gray-700">백신접종:</span> {viewingForm.vaccinations.join(', ')}
+                    <span className="font-semibold text-neutral-700">백신접종:</span> {viewingForm.vaccinations.join(', ')}
                   </div>
                 </div>
               </div>
 
               {/* 보딩 사유 */}
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-3">보딩 사유</h3>
+                <h3 className="font-semibold text-neutral-800 mb-3">보딩 사유</h3>
                 <div className="space-y-2 text-sm">
                   <div>
-                    <span className="font-semibold text-gray-700">사유:</span> {viewingForm.boardingReason}
+                    <span className="font-semibold text-neutral-700">사유:</span> {viewingForm.boardingReason}
                   </div>
                   {viewingForm.medicalReason && (
                     <div>
-                      <span className="font-semibold text-gray-700">{viewingForm.boardingReason} 사유:</span> {viewingForm.medicalReason}
+                      <span className="font-semibold text-neutral-700">{viewingForm.boardingReason} 사유:</span> {viewingForm.medicalReason}
                     </div>
                   )}
                   {viewingForm.medicalDate && (
                     <div>
-                      <span className="font-semibold text-gray-700">{viewingForm.boardingReason}일:</span> {formatDate(viewingForm.medicalDate)}
+                      <span className="font-semibold text-neutral-700">{viewingForm.boardingReason}일:</span> {formatDate(viewingForm.medicalDate)}
                     </div>
                   )}
                 </div>
@@ -1414,41 +1414,41 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
               {/* 추가 정보 */}
               {(viewingForm.aftercareTeacher || viewingForm.tearsblanket || viewingForm.needsNailTrim || viewingForm.needsPadTrim || viewingForm.returnItems || viewingForm.notes) && (
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-800 mb-3">추가 정보</h3>
+                <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-neutral-800 mb-3">추가 정보</h3>
                   <div className="space-y-2 text-sm">
                     {viewingForm.aftercareTeacher && (
                       <div>
-                        <span className="font-semibold text-gray-700">담당 사후관리 선생님:</span> {viewingForm.aftercareTeacher}
+                        <span className="font-semibold text-neutral-700">담당 사후관리 선생님:</span> {viewingForm.aftercareTeacher}
                       </div>
                     )}
                     {viewingForm.tearsblanket && (
                       <div>
-                        <span className="font-semibold text-gray-700">이불 물어뜯음:</span> {viewingForm.tearsblanket}
+                        <span className="font-semibold text-neutral-700">이불 물어뜯음:</span> {viewingForm.tearsblanket}
                       </div>
                     )}
                     <div>
-                      <span className="font-semibold text-gray-700">DT벨트 착용:</span> {viewingForm.usesDTBelt}
+                      <span className="font-semibold text-neutral-700">DT벨트 착용:</span> {viewingForm.usesDTBelt}
                     </div>
                     {viewingForm.needsNailTrim && (
                       <div>
-                        <span className="font-semibold text-gray-700">발톱 정리:</span> {viewingForm.needsNailTrim}
+                        <span className="font-semibold text-neutral-700">발톱 정리:</span> {viewingForm.needsNailTrim}
                       </div>
                     )}
                     {viewingForm.needsPadTrim && (
                       <div>
-                        <span className="font-semibold text-gray-700">패드 털 정리:</span> {viewingForm.needsPadTrim}
+                        <span className="font-semibold text-neutral-700">패드 털 정리:</span> {viewingForm.needsPadTrim}
                       </div>
                     )}
                     {viewingForm.returnItems && (
                       <div>
-                        <span className="font-semibold text-gray-700">집으로 돌아갈 때 필요한 물품:</span>
+                        <span className="font-semibold text-neutral-700">집으로 돌아갈 때 필요한 물품:</span>
                         <div className="whitespace-pre-wrap mt-1">{viewingForm.returnItems}</div>
                       </div>
                     )}
                     {viewingForm.notes && (
                       <div>
-                        <span className="font-semibold text-gray-700">기타 전달사항:</span>
+                        <span className="font-semibold text-neutral-700">기타 전달사항:</span>
                         <div className="whitespace-pre-wrap mt-1">{viewingForm.notes}</div>
                       </div>
                     )}
@@ -1457,35 +1457,35 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               )}
 
               {/* 코멘트 섹션 */}
-              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-800 mb-3">관리자 코멘트</h3>
+              <div className="bg-white border border-neutral-200 rounded-lg p-4">
+                <h3 className="font-semibold text-neutral-800 mb-3">관리자 코멘트</h3>
 
                 {/* 코멘트 목록 */}
                 <div className="space-y-3 mb-4">
                   {(!viewingForm.comments || viewingForm.comments.length === 0) && (
-                    <p className="text-sm text-gray-500">아직 코멘트가 없습니다.</p>
+                    <p className="text-sm text-neutral-500">아직 코멘트가 없습니다.</p>
                   )}
                   {viewingForm.comments && viewingForm.comments.map((comment) => (
                     <div
                       key={comment.id}
                       className={`p-3 rounded-lg ${
                         !comment.isRead && comment.userId !== user?.id
-                          ? 'bg-yellow-100 border border-yellow-300'
-                          : 'bg-white border border-gray-200'
+                          ? 'bg-warning-100 border border-warning-300'
+                          : 'bg-white border border-neutral-200'
                       }`}
                     >
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center space-x-2">
-                          <span className="font-semibold text-sm text-gray-800">{comment.userName}</span>
+                          <span className="font-semibold text-sm text-neutral-800">{comment.userName}</span>
                           {!comment.isRead && comment.userId !== user?.id && (
                             <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">새 코멘트</span>
                           )}
                         </div>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-neutral-500">
                           {new Date(comment.createdAt).toLocaleString('ko-KR')}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-700 whitespace-pre-wrap">{comment.content}</p>
+                      <p className="text-sm text-neutral-700 whitespace-pre-wrap">{comment.content}</p>
                     </div>
                   ))}
                 </div>
@@ -1493,7 +1493,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                 {/* 코멘트 작성 (관리자만) */}
                 {user?.role === 'admin' && (
                   <div className="mt-4">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-neutral-700 mb-2">
                       새 코멘트 작성
                     </label>
                     <textarea
@@ -1506,7 +1506,7 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
                     <button
                       onClick={handleAddComment}
                       disabled={!newComment.trim()}
-                      className="mt-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors"
+                      className="mt-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 disabled:bg-neutral-400 text-white font-semibold rounded-lg transition-colors"
                     >
                       코멘트 추가
                     </button>
@@ -1515,10 +1515,10 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6">
+            <div className="sticky bottom-0 bg-white border-t border-neutral-200 p-6">
               <button
                 onClick={handleCloseDetails}
-                className="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="w-full bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 닫기
               </button>

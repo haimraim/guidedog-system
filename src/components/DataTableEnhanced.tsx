@@ -455,7 +455,7 @@ export const DataTableEnhanced = () => {
                   setShowRegisterModal(false);
                   loadData();
                 }}
-                className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-semibold"
+                className="px-6 py-3 bg-neutral-600 text-white rounded-lg hover:bg-neutral-700 focus:ring-4 focus:ring-neutral-300 font-semibold"
                 aria-label="등록 취소"
               >
                 ✕ 닫기
@@ -477,7 +477,7 @@ export const DataTableEnhanced = () => {
                   setShowExcelImportModal(false);
                   loadData();
                 }}
-                className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-semibold"
+                className="px-6 py-3 bg-neutral-600 text-white rounded-lg hover:bg-neutral-700 focus:ring-4 focus:ring-neutral-300 font-semibold"
                 aria-label="닫기"
               >
                 ✕ 닫기
@@ -499,14 +499,14 @@ export const DataTableEnhanced = () => {
                 <div
                   role="alert"
                   aria-live="polite"
-                  className="mb-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded"
+                  className="mb-4 p-4 bg-primary-100 border border-primary-400 text-primary-700 rounded"
                 >
                   {deleteStatus}
                 </div>
               )}
 
               {/* 데이터 개수 */}
-              <p className="mb-4 text-gray-700">
+              <p className="mb-4 text-neutral-700">
             {filteredData.length !== data.length ? (
               <>
                 검색 결과: <span className="font-bold">{filteredData.length}</span>건
@@ -521,7 +521,7 @@ export const DataTableEnhanced = () => {
 
       {/* 데이터 리스트 */}
       {filteredData.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-neutral-500">
           {data.length === 0 ? (
             <>
               <p>등록된 데이터가 없습니다.</p>
@@ -538,7 +538,7 @@ export const DataTableEnhanced = () => {
               안내견과 파트너 목록 (스페이스 키로 선택, Enter 키로 상세보기, Delete 키로 삭제)
             </caption>
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-neutral-100">
                 <th scope="col" className="border border-gray-300 px-4 py-3 text-center w-16">
                   <input
                     type="checkbox"
@@ -586,8 +586,8 @@ export const DataTableEnhanced = () => {
                   onKeyDown={(e) => handleRowKeyDown(e, item)}
                   tabIndex={0}
                   className={`cursor-pointer transition-colors ${
-                    isSelected ? 'bg-blue-100' : index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                  } hover:bg-blue-50 focus:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    isSelected ? 'bg-primary-100' : index % 2 === 0 ? 'bg-white' : 'bg-neutral-50'
+                  } hover:bg-primary-50 focus:bg-primary-100 focus:outline-none focus:ring-2 focus:ring-primary-500`}
                   role="button"
                   aria-label={`${item.guideDog.name} 안내견, ${getResponsiblePerson()}. 스페이스로 선택, Enter로 상세보기`}
                 >
@@ -604,19 +604,19 @@ export const DataTableEnhanced = () => {
                   <td className="border border-gray-300 px-4 py-3">{index + 1}</td>
                   <td className="border border-gray-300 px-4 py-3">
                     <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                      item.guideDog.category === '신생자견' ? 'bg-pink-100 text-pink-800' :
-                      item.guideDog.category === '퍼피티칭' ? 'bg-yellow-100 text-yellow-800' :
-                      item.guideDog.category === '훈련견' ? 'bg-blue-100 text-blue-800' :
-                      item.guideDog.category === '반려견' ? 'bg-purple-100 text-purple-800' :
-                      item.guideDog.category === '안내견' ? 'bg-green-100 text-green-800' :
-                      item.guideDog.category === '안내견/폐사' ? 'bg-red-100 text-red-800' :
-                      item.guideDog.category === '안내견/일반안내견/기타' ? 'bg-teal-100 text-teal-800' :
-                      item.guideDog.category === '은퇴견' ? 'bg-gray-100 text-gray-800' :
-                      item.guideDog.category === '시범견' ? 'bg-indigo-100 text-indigo-800' :
-                      item.guideDog.category === '견사/기타' ? 'bg-orange-100 text-orange-800' :
-                      item.guideDog.category === '부견' ? 'bg-cyan-100 text-cyan-800' :
-                      item.guideDog.category === '모견' ? 'bg-rose-100 text-rose-800' :
-                      'bg-gray-100 text-gray-800'
+                      // 퍼피 단계 (따뜻한 노랑)
+                      (item.guideDog.category === '신생자견' || item.guideDog.category === '퍼피티칭')
+                        ? 'bg-warning-100 text-warning-800' :
+                      // 훈련 단계 (전문적인 파랑)
+                      (item.guideDog.category === '훈련견' || item.guideDog.category === '시범견' || item.guideDog.category === '반려견')
+                        ? 'bg-primary-100 text-primary-800' :
+                      // 활동 단계 (성공 초록)
+                      (item.guideDog.category === '안내견' || item.guideDog.category === '안내견/폐사' || item.guideDog.category === '안내견/일반안내견/기타')
+                        ? 'bg-success-100 text-success-800' :
+                      // 은퇴/부모견 (중립 회색)
+                      (item.guideDog.category === '은퇴견' || item.guideDog.category === '부견' || item.guideDog.category === '모견' || item.guideDog.category === '견사/기타')
+                        ? 'bg-neutral-200 text-neutral-800' :
+                      'bg-neutral-100 text-neutral-700'
                     }`}>
                       {item.guideDog.category || '-'}
                     </span>
@@ -624,7 +624,7 @@ export const DataTableEnhanced = () => {
                   <td className="border border-gray-300 px-4 py-3 font-semibold text-lg">
                     {item.guideDog.name || '-'}
                     {item.guideDog.birthDate && (
-                      <span className="ml-2 text-sm font-normal text-gray-600">
+                      <span className="ml-2 text-sm font-normal text-neutral-600">
                         ({calculateAgeWithMonths(item.guideDog.birthDate)})
                       </span>
                     )}
@@ -638,17 +638,17 @@ export const DataTableEnhanced = () => {
             </tbody>
           </table>
           <div className="mt-3 flex items-center justify-between">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-neutral-600">
               💡 스페이스 키로 선택, Enter 키로 상세보기, Delete 키로 삭제
             </p>
             {selectedItems.size > 0 && (
               <div className="flex items-center gap-3">
-                <span className="text-sm font-semibold text-blue-700">
+                <span className="text-sm font-semibold text-primary-700">
                   {selectedItems.size}개 선택됨
                 </span>
                 <button
                   onClick={handleDeleteSelected}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-semibold transition-colors"
+                  className="px-4 py-2 bg-error-600 text-white rounded-lg hover:bg-error-700 focus:ring-4 focus:ring-error-300 font-semibold transition-colors"
                   aria-label={`선택한 ${selectedItems.size}개 항목 삭제`}
                 >
                   🗑️ 선택 항목 삭제
@@ -660,7 +660,7 @@ export const DataTableEnhanced = () => {
       )}
 
       {/* 검색 영역 */}
-      <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div className="mt-8 p-4 bg-neutral-50 border border-neutral-200 rounded-lg">
         <h3 className="text-lg font-semibold mb-4">🔍 검색</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
@@ -738,7 +738,7 @@ export const DataTableEnhanced = () => {
           <div>
             <button
               onClick={handleSearch}
-              className="w-full px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+              className="w-full px-6 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300"
               aria-label="검색"
             >
               🔍 검색
@@ -755,7 +755,7 @@ export const DataTableEnhanced = () => {
               activeFilterRef.current = null; // 활성 필터 제거
               setFilteredData(data); // 전체 데이터 표시
             }}
-            className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:ring-4 focus:ring-gray-300"
+            className="mt-4 px-4 py-2 bg-neutral-500 text-white rounded-lg hover:bg-neutral-600 focus:ring-4 focus:ring-neutral-300"
           >
             검색 초기화
           </button>
@@ -763,19 +763,19 @@ export const DataTableEnhanced = () => {
       </div>
 
       {/* 액션 버튼 영역 */}
-      <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div className="mt-8 p-4 bg-neutral-50 border border-neutral-200 rounded-lg">
         <h3 className="text-lg font-semibold mb-4">📋 데이터 관리</h3>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setShowExcelImportModal(true)}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-semibold"
+            className="px-4 py-2 bg-success-600 text-white rounded-lg hover:bg-success-700 focus:ring-4 focus:ring-success-300 font-semibold"
             aria-label="엑셀 일괄 등록"
           >
             📊 엑셀 일괄등록
           </button>
           <button
             onClick={() => setShowRegisterModal(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold"
+            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-semibold"
             aria-label="새 데이터 등록"
           >
             ➕ 새 데이터 등록
@@ -783,7 +783,7 @@ export const DataTableEnhanced = () => {
           <button
             onClick={handleExportExcel}
             disabled={filteredData.length === 0}
-            className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 disabled:bg-gray-300 disabled:cursor-not-allowed font-semibold"
+            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 disabled:bg-neutral-300 disabled:cursor-not-allowed font-semibold"
             aria-label="Excel 파일로 내보내기"
           >
             📥 내보내기
@@ -791,19 +791,19 @@ export const DataTableEnhanced = () => {
           <button
             onClick={handlePrint}
             disabled={filteredData.length === 0}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 disabled:bg-gray-300 disabled:cursor-not-allowed font-semibold"
+            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 disabled:bg-neutral-300 disabled:cursor-not-allowed font-semibold"
             aria-label="프린트"
           >
             🖨️ 프린트
           </button>
           <button
             onClick={handleBackup}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 font-semibold"
+            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-semibold"
             aria-label="데이터 백업"
           >
             💾 데이터 백업
           </button>
-          <label className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 cursor-pointer font-semibold">
+          <label className="px-4 py-2 bg-warning-600 text-white rounded-lg hover:bg-warning-700 focus:ring-4 focus:ring-warning-300 cursor-pointer font-semibold">
             📂 복원
             <input
               type="file"
@@ -816,7 +816,7 @@ export const DataTableEnhanced = () => {
           <button
             onClick={handleClearAllData}
             disabled={data.length === 0}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 disabled:bg-gray-300 disabled:cursor-not-allowed font-semibold"
+            className="px-4 py-2 bg-error-600 text-white rounded-lg hover:bg-error-700 focus:ring-4 focus:ring-error-300 disabled:bg-neutral-300 disabled:cursor-not-allowed font-semibold"
             aria-label="모든 데이터 삭제"
           >
             🗑️ 전체 삭제
@@ -825,7 +825,7 @@ export const DataTableEnhanced = () => {
             <button
               onClick={handleMigration}
               disabled={isMigrating}
-              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:ring-4 focus:ring-yellow-300 disabled:bg-gray-300 disabled:cursor-not-allowed font-semibold"
+              className="px-4 py-2 bg-warning-600 text-white rounded-lg hover:bg-warning-700 focus:ring-4 focus:ring-warning-300 disabled:bg-neutral-300 disabled:cursor-not-allowed font-semibold"
               aria-label="Firestore 마이그레이션"
             >
               {isMigrating ? '⏳ 마이그레이션 중...' : '🔄 Firestore 마이그레이션'}
@@ -836,9 +836,9 @@ export const DataTableEnhanced = () => {
 
       {/* 마이그레이션 진행 로그 */}
       {isMigrating && migrationProgress.length > 0 && (
-        <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div className="mt-4 p-4 bg-neutral-50 border border-neutral-200 rounded-lg">
           <h3 className="text-lg font-semibold mb-2">마이그레이션 진행 상황</h3>
-          <div className="bg-black text-green-400 p-4 rounded-lg font-mono text-sm max-h-96 overflow-y-auto">
+          <div className="bg-black text-success-400 p-4 rounded-lg font-mono text-sm max-h-96 overflow-y-auto">
             {migrationProgress.map((log, index) => (
               <div key={index}>{log}</div>
             ))}

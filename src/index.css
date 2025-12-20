@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Pretendard 한글 웹폰트 (CDN) */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
 /* 접근성을 위한 포커스 스타일 */
 *:focus-visible {
   outline: 2px solid #2563eb;
@@ -29,4 +32,21 @@
   overflow: visible;
   clip: auto;
   white-space: normal;
+}
+
+/* 한글 가독성 최적화 */
+body {
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+p, li, td, th, label {
+  word-break: keep-all;
 }
