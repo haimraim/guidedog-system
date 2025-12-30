@@ -175,8 +175,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return true;
     }
 
-    // 기존 방식: 비밀번호 확인 (통일: 8922)
-    if (password !== '8922') {
+    // 환경변수에서 로컬 인증 비밀번호 가져오기
+    const localAuthPassword = import.meta.env.VITE_LOCAL_AUTH_PASSWORD;
+    if (!localAuthPassword || password !== localAuthPassword) {
       return false;
     }
 

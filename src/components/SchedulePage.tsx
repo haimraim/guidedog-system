@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { saveSchedule, getSchedules, deleteSchedule } from '../services/firestoreService';
 import type { Schedule, ScheduleCategory } from '../types/types';
 import { SCHEDULE_SUBCATEGORIES } from '../types/types';
@@ -30,6 +31,7 @@ const initialFormData = {
 
 export const SchedulePage = () => {
   const { user } = useAuth();
+  const toast = useToast();
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [filteredSchedules, setFilteredSchedules] = useState<Schedule[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -206,7 +208,7 @@ export const SchedulePage = () => {
 
   const handleSubmit = async () => {
     if (!formData.organization.trim()) {
-      alert('기관/단체명을 입력해주세요.');
+      toast.warning('기관/단체명을 입력해주세요.');
       return;
     }
 
@@ -223,8 +225,9 @@ export const SchedulePage = () => {
       await saveSchedule(schedule);
       await loadSchedules();
       closeModal();
+      toast.success(editingSchedule ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.');
     } catch (err) {
-      alert('저장에 실패했습니다.');
+      toast.error('저장에 실패했습니다.');
       console.error(err);
     }
   };
@@ -235,15 +238,16 @@ export const SchedulePage = () => {
     try {
       await deleteSchedule(id);
       await loadSchedules();
+      toast.success('일정이 삭제되었습니다.');
     } catch (err) {
-      alert('삭제에 실패했습니다.');
+      toast.error('삭제에 실패했습니다.');
       console.error(err);
     }
   };
 
   const handleDeleteSelected = async () => {
     if (selectedIds.size === 0) {
-      alert('삭제할 일정을 선택해주세요.');
+      toast.warning('삭제할 일정을 선택해주세요.');
       return;
     }
 
@@ -253,8 +257,9 @@ export const SchedulePage = () => {
       await Promise.all(Array.from(selectedIds).map(id => deleteSchedule(id)));
       setSelectedIds(new Set());
       await loadSchedules();
+      toast.success(`${selectedIds.size}개의 일정이 삭제되었습니다.`);
     } catch (err) {
-      alert('삭제에 실패했습니다.');
+      toast.error('삭제에 실패했습니다.');
       console.error(err);
     }
   };
@@ -320,7 +325,7 @@ export const SchedulePage = () => {
   // Excel 내보내기
   const handleExportExcel = () => {
     if (filteredSchedules.length === 0) {
-      alert('내보낼 데이터가 없습니다.');
+      toast.warning('내보낼 데이터가 없습니다.');
       return;
     }
 
@@ -513,7 +518,7 @@ export const SchedulePage = () => {
     // 확장자 검사
     const fileName = file.name.toLowerCase();
     if (!fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
-      alert('Excel 파일(.xlsx, .xls)만 가져올 수 있습니다.');
+      toast.error('Excel 파일(.xlsx, .xls)만 가져올 수 있습니다.');
       e.target.value = '';
       return;
     }
@@ -554,10 +559,10 @@ export const SchedulePage = () => {
           imported++;
         }
 
-        alert(`${imported}건의 일정을 가져왔습니다.`);
+        toast.success(`${imported}건의 일정을 가져왔습니다.`);
         await loadSchedules();
       } catch (err) {
-        alert('엑셀 파일을 읽는 중 오류가 발생했습니다.');
+        toast.error('엑셀 파일을 읽는 중 오류가 발생했습니다.');
         console.error(err);
       }
     };
@@ -910,18 +915,24 @@ export const SchedulePage = () => {
 
       {/* 추가/수정 모달 */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="schedule-modal-title"
+        >
           <div
             ref={modalRef}
             className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
           >
             <div className="sticky top-0 bg-white border-b border-neutral-200 p-4 flex justify-between items-center">
-              <h2 className="text-xl font-bold">
+              <h2 id="schedule-modal-title" className="text-xl font-bold">
                 {editingSchedule ? '일정 수정' : '일정 추가'}
               </h2>
               <button
                 onClick={closeModal}
                 className="text-2xl text-neutral-500 hover:text-neutral-700"
+                aria-label="닫기"
               >
                 &times;
               </button>

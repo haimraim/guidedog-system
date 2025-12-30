@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { getGuideDogs } from '../utils/storage';
 import type { BoardingForm, GuideDog, BoardingComment } from '../types/types';
 import { generateId } from '../utils/storage';
@@ -99,6 +100,7 @@ interface BoardingFormPageProps {
 
 export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
   const { user } = useAuth();
+  const toast = useToast();
   const [forms, setForms] = useState<BoardingForm[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingForm, setEditingForm] = useState<BoardingForm | null>(null);
@@ -185,33 +187,33 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     e.preventDefault();
 
     if (!user?.dogName && user?.role !== 'admin') {
-      alert('안내견 정보가 없습니다.');
+      toast.error('안내견 정보가 없습니다.');
       return;
     }
 
     if (!dogInfo) {
-      alert('안내견 정보를 찾을 수 없습니다.');
+      toast.error('안내견 정보를 찾을 수 없습니다.');
       return;
     }
 
     // 필수 항목: 보딩 시작일, 종료일, 사료, 급여 시기
     if (!startDate || !endDate) {
-      alert('⚠️ 보딩 시작일과 종료일은 필수입니다.');
+      toast.warning('보딩 시작일과 종료일은 필수입니다.');
       return;
     }
 
     if (!foodType) {
-      alert('⚠️ 사료 이름은 필수입니다.');
+      toast.warning('사료 이름은 필수입니다.');
       return;
     }
 
     if (foodType === '기타' && !foodTypeOther.trim()) {
-      alert('⚠️ 기타 사료 이름을 입력해주세요.');
+      toast.warning('기타 사료 이름을 입력해주세요.');
       return;
     }
 
     if (!feedingSchedule.trim()) {
-      alert('⚠️ 급여량과 급여 시기는 필수입니다.');
+      toast.warning('급여량과 급여 시기는 필수입니다.');
       return;
     }
 
@@ -219,7 +221,7 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     if (start > end) {
-      alert('⚠️ 보딩 시작일이 종료일보다 늦을 수 없습니다.\n\n시작일과 종료일을 다시 확인해주세요.');
+      toast.warning('보딩 시작일이 종료일보다 늦을 수 없습니다.');
       return;
     }
 
@@ -261,33 +263,17 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     try {
       await saveFormToFirestore(form);
 
-      // 신청 내용 상세 확인 메시지 (시각장애인 접근성)
-      const confirmMessage = `
-✅ ${editingForm ? '보딩 신청서가 수정되었습니다' : '보딩 신청서가 접수되었습니다'}
-
-📋 신청 내용:
-• 견명: ${form.dogName}
-• 카테고리: ${form.dogCategory}
-• 보딩 기간: ${formatDateShort(form.startDate)} ~ ${formatDateShort(form.endDate)}
-• 사료: ${form.foodType}
-• 급여 시기: ${form.feedingSchedule}
-${form.supplements ? `• 영양제: ${form.supplements}` : ''}
-• 맡긴 물품: ${form.items.join(', ')}${form.itemsEtc ? `, ${form.itemsEtc}` : ''}
-• 최근 목욕일: ${formatDateShort(form.lastBathDate)}
-• 백신접종: ${form.vaccinations.join(', ')}
-• 보딩 사유: ${form.boardingReason}
-${form.medicalReason ? `• ${form.boardingReason} 사유: ${form.medicalReason}` : ''}
-${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
-
-신청 상태: 대기
-      `.trim();
-
-      alert(confirmMessage);
+      toast.success(
+        editingForm
+          ? `${form.dogName} 보딩 신청서가 수정되었습니다. (${formatDateShort(form.startDate)} ~ ${formatDateShort(form.endDate)})`
+          : `${form.dogName} 보딩 신청서가 접수되었습니다. (${formatDateShort(form.startDate)} ~ ${formatDateShort(form.endDate)})`,
+        5000
+      );
       resetForm();
       await loadForms();
     } catch (error) {
       console.error('보딩 폼 저장 실패:', error);
-      alert('보딩 신청서 저장에 실패했습니다. 다시 시도해주세요.');
+      toast.error('보딩 신청서 저장에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -329,9 +315,10 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
       try {
         await deleteFormFromFirestore(id);
         await loadForms();
+        toast.success('보딩 신청서가 삭제되었습니다.');
       } catch (error) {
         console.error('보딩 폼 삭제 실패:', error);
-        alert('보딩 신청서 삭제에 실패했습니다.');
+        toast.error('보딩 신청서 삭제에 실패했습니다.');
       }
     }
   };
@@ -344,9 +331,10 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
     try {
       await saveFormToFirestore(updatedForm);
       await loadForms();
+      toast.success(`상태가 '${newStatus === 'waiting' ? '대기' : newStatus === 'approved' ? '승인' : newStatus === 'rejected' ? '반려' : '완료'}'(으)로 변경되었습니다.`);
     } catch (error) {
       console.error('상태 변경 실패:', error);
-      alert('상태 변경에 실패했습니다.');
+      toast.error('상태 변경에 실패했습니다.');
     }
   };
 
@@ -418,19 +406,20 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
       if (updatedForm) {
         setViewingForm(updatedForm);
       }
+      toast.success('코멘트가 추가되었습니다.');
     } catch (error) {
       console.error('코멘트 추가 실패:', error);
-      alert('코멘트 추가에 실패했습니다.');
+      toast.error('코멘트 추가에 실패했습니다.');
     }
   };
 
   // 모든 보딩 데이터 삭제
   const handleDeleteAllData = () => {
-    if (confirm('⚠️ 정말로 모든 보딩 신청 데이터를 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다!')) {
-      if (confirm('⚠️⚠️ 다시 한번 확인합니다.\n\n모든 보딩 신청서와 코멘트가 영구적으로 삭제됩니다.\n\n정말 삭제하시겠습니까?')) {
+    if (confirm('정말로 모든 보딩 신청 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다!')) {
+      if (confirm('다시 한번 확인합니다. 모든 보딩 신청서와 코멘트가 영구적으로 삭제됩니다. 정말 삭제하시겠습니까?')) {
         deleteAllBoardingForms();
         loadForms();
-        alert('✅ 모든 보딩 데이터가 삭제되었습니다.');
+        toast.success('모든 보딩 데이터가 삭제되었습니다.');
       }
     }
   };
@@ -1297,13 +1286,19 @@ ${form.notes ? `\n기타 전달사항:\n${form.notes}` : ''}
 
       {/* 상세 보기 모달 */}
       {viewingForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="boarding-detail-title"
+        >
           <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b border-neutral-200 p-6 flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-neutral-800">보딩 신청서 상세보기</h2>
+              <h2 id="boarding-detail-title" className="text-2xl font-bold text-neutral-800">보딩 신청서 상세보기</h2>
               <button
                 onClick={handleCloseDetails}
                 className="text-neutral-500 hover:text-neutral-700 text-2xl font-bold"
+                aria-label="닫기"
               >
                 &times;
               </button>

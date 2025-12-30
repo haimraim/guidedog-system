@@ -4195,15 +4195,21 @@ export const MonthlyReportPage = () => {
           };
 
           return (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="comparison-modal-title"
+            >
               <div className="bg-white rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] overflow-y-auto">
                 <div className="sticky top-0 bg-white border-b border-neutral-200 p-6 flex justify-between items-center z-10">
-                  <h3 className="text-2xl font-bold text-neutral-800">
+                  <h3 id="comparison-modal-title" className="text-2xl font-bold text-neutral-800">
                     보고서 비교 ({selectedReports.length}개)
                   </h3>
                   <button
                     onClick={() => setShowComparisonTable(false)}
                     className="text-neutral-600 hover:text-neutral-800 text-2xl font-bold"
+                    aria-label="닫기"
                   >
                     ×
                   </button>
@@ -4468,15 +4474,21 @@ export const MonthlyReportPage = () => {
 
         {/* 상세보기 모달 */}
         {viewingReport && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="report-detail-title"
+          >
             <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="sticky top-0 bg-white border-b border-neutral-200 p-6 flex justify-between items-center">
-                <h3 className="text-2xl font-bold text-neutral-800">
+                <h3 id="report-detail-title" className="text-2xl font-bold text-neutral-800">
                   {viewingReport.dogName}_{viewingReport.userName} - {viewingReport.reportMonth}
                 </h3>
                 <button
                   onClick={closeDetailView}
                   className="text-neutral-600 hover:text-neutral-800 text-2xl font-bold"
+                  aria-label="닫기"
                 >
                   ×
                 </button>
@@ -5224,15 +5236,21 @@ export const MonthlyReportPage = () => {
 
       {/* 상세보기 모달 */}
       {viewingReport && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="report-detail-title-2"
+        >
           <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b border-neutral-200 p-6 flex justify-between items-center">
-              <h3 className="text-2xl font-bold text-neutral-800">
+              <h3 id="report-detail-title-2" className="text-2xl font-bold text-neutral-800">
                 {viewingReport.dogName}_{viewingReport.userName} - {viewingReport.reportMonth}
               </h3>
               <button
                 onClick={closeDetailView}
                 className="text-neutral-600 hover:text-neutral-800 text-2xl font-bold"
+                aria-label="닫기"
               >
                 ×
               </button>

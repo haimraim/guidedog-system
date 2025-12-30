@@ -5,6 +5,7 @@
 
 import { useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ToastProvider } from './contexts/ToastContext';
 import { AuthPage } from './components/AuthPage';
 import { MainLayout } from './components/MainLayout';
 import { syncFromFirestore } from './utils/storage';
@@ -37,7 +38,9 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </AuthProvider>
   );
 }

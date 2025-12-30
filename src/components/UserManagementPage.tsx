@@ -10,6 +10,9 @@ import { getUsers, saveUser, deleteUser } from '../utils/storage';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
+// 환경변수에서 기본 비밀번호 가져오기
+const DEFAULT_PASSWORD = import.meta.env.VITE_LOCAL_AUTH_PASSWORD || '';
+
 interface PartnerInfo {
   id: string;
   name: string;
@@ -73,13 +76,13 @@ export const UserManagementPage = () => {
         id: 'guidedog',
         role: 'admin',
         name: '관리자 (시스템)',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
       },
       {
         id: '박태진',
         role: 'moderator',
         name: '박태진 (시스템)',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
       },
     ];
 
@@ -96,7 +99,7 @@ export const UserManagementPage = () => {
     const sampleUsers: User[] = [
       {
         id: 'puppy_kim',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
         role: 'puppyTeacher',
         name: '김민수',
         dogName: '바둑이',
@@ -104,7 +107,7 @@ export const UserManagementPage = () => {
       },
       {
         id: 'puppy_lee',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
         role: 'puppyTeacher',
         name: '이영희',
         dogName: '초코',
@@ -112,7 +115,7 @@ export const UserManagementPage = () => {
       },
       {
         id: 'partner_park',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
         role: 'partner',
         name: '박철수',
         dogName: '루시',
@@ -120,7 +123,7 @@ export const UserManagementPage = () => {
       },
       {
         id: 'partner_choi',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
         role: 'partner',
         name: '최지혜',
         dogName: '해피',
@@ -128,7 +131,7 @@ export const UserManagementPage = () => {
       },
       {
         id: 'retired_jung',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
         role: 'retiredHomeCare',
         name: '정수진',
         dogName: '노아',
@@ -136,7 +139,7 @@ export const UserManagementPage = () => {
       },
       {
         id: 'retired_kang',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
         role: 'retiredHomeCare',
         name: '강동원',
         dogName: '벨라',
@@ -144,7 +147,7 @@ export const UserManagementPage = () => {
       },
       {
         id: 'parent_han',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
         role: 'parentCaregiver',
         name: '한소희',
         dogName: '맥스',
@@ -152,7 +155,7 @@ export const UserManagementPage = () => {
       },
       {
         id: 'parent_yoon',
-        password: '8922',
+        password: DEFAULT_PASSWORD,
         role: 'parentCaregiver',
         name: '윤서준',
         dogName: '모카',
@@ -198,7 +201,7 @@ export const UserManagementPage = () => {
               address: partner.address || '',
               dogName: guideDog?.name || '',
               category: '안내견파트너',
-              password: passwords[caregiverId] || '8922', // 기본 비밀번호
+              password: passwords[caregiverId] || DEFAULT_PASSWORD, // 기본 비밀번호
             });
           }
         }
@@ -216,7 +219,7 @@ export const UserManagementPage = () => {
             address: dog.puppyTeacherAddress || '',
             dogName: dog.name,
             category: '퍼피티처',
-            password: passwords[caregiverId] || '8922',
+            password: passwords[caregiverId] || DEFAULT_PASSWORD,
           });
         }
 
@@ -230,7 +233,7 @@ export const UserManagementPage = () => {
             address: dog.retiredHomeCareAddress || '',
             dogName: dog.name,
             category: '은퇴견홈케어',
-            password: passwords[caregiverId] || '8922',
+            password: passwords[caregiverId] || DEFAULT_PASSWORD,
           });
         }
 
@@ -244,7 +247,7 @@ export const UserManagementPage = () => {
             address: dog.parentCaregiverAddress || '',
             dogName: dog.name,
             category: '부모견홈케어',
-            password: passwords[caregiverId] || '8922',
+            password: passwords[caregiverId] || DEFAULT_PASSWORD,
           });
         }
       });
