@@ -18,10 +18,11 @@ import { PrivacyPolicyPage } from './PrivacyPolicyPage';
 import { TermsOfServicePage } from './TermsOfServicePage';
 import { MessageSendPage } from './MessageSendPage';
 import { NoticeBoardPage } from './NoticeBoardPage';
+import { SchedulePage } from './SchedulePage';
 import { getCombinedData, calculateAgeWithMonths } from '../utils/storage';
 import type { CombinedData } from '../types/types';
 
-type MenuItem = 'home' | 'notice' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'message' | 'privacy' | 'terms';
+type MenuItem = 'home' | 'notice' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'message' | 'schedule' | 'privacy' | 'terms';
 
 export const MainLayout = () => {
   const { user, logout } = useAuth();
@@ -33,7 +34,7 @@ export const MainLayout = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = urlParams.get('page') as MenuItem;
 
-    if (pageParam && ['home', 'notice', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'message', 'privacy', 'terms'].includes(pageParam)) {
+    if (pageParam && ['home', 'notice', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'message', 'schedule', 'privacy', 'terms'].includes(pageParam)) {
       setCurrentPage(pageParam);
       window.history.replaceState({ page: pageParam }, '', `?page=${pageParam}`);
     } else {
@@ -133,6 +134,8 @@ export const MainLayout = () => {
         return <DataTableEnhanced />;
       case 'message':
         return <MessageSendPage />;
+      case 'schedule':
+        return <SchedulePage />;
       case 'privacy':
         return <PrivacyPolicyPage />;
       case 'terms':
@@ -232,6 +235,7 @@ export const MainLayout = () => {
                 {currentPage === 'medication' && '약품 체크'}
                 {currentPage === 'admin' && '안내견 관리'}
                 {currentPage === 'message' && '메시지 발송'}
+                {currentPage === 'schedule' && '일정 관리'}
                 {currentPage === 'privacy' && '개인정보 처리방침'}
                 {currentPage === 'terms' && '이용약관'}
               </span>
@@ -404,6 +408,21 @@ export const MainLayout = () => {
                     aria-current={currentPage === 'message' ? 'page' : undefined}
                   >
                     📨 메시지 발송
+                  </button>
+                </li>
+              )}
+              {(user?.role === 'admin' || user?.role === 'moderator') && (
+                <li>
+                  <button
+                    onClick={() => navigateToPage('schedule')}
+                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
+                      currentPage === 'schedule'
+                        ? 'bg-primary-600 text-white'
+                        : 'text-neutral-700 hover:bg-neutral-100'
+                    }`}
+                    aria-current={currentPage === 'schedule' ? 'page' : undefined}
+                  >
+                    일정 관리
                   </button>
                 </li>
               )}

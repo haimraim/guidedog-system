@@ -511,6 +511,38 @@ export interface MessageHistory {
 }
 
 /**
+ * 일정 카테고리
+ */
+export type ScheduleCategory = '내방' | '외부' | '안내견학교';
+
+/**
+ * 카테고리별 서브카테고리
+ */
+export const SCHEDULE_SUBCATEGORIES: Record<ScheduleCategory, string[]> = {
+  '내방': ['화재', '에버랜드', '인개원', '관계사', 'VIP', '학단', '시각장애', '행사', '기타'],
+  '외부': ['학교', '시각장애', '행사', '기타(회의 등)'],
+  '안내견학교': ['GD밧', '집합교육', '위탁식', '파트너교육', '기타(회의 등)']
+};
+
+/**
+ * 일정
+ */
+export interface Schedule {
+  id: string;
+  date: string;              // YYYY-MM-DD
+  time: string;              // HH:MM
+  category: ScheduleCategory;
+  subcategory: string;
+  organization: string;      // 기관/단체명
+  people: number;            // 인원수
+  manager: string;           // 담당자
+  contact: string;           // 연락처
+  note: string;              // 비고
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
  * 월간 보고서 (퍼피티칭 전용)
  */
 export interface MonthlyReport {

@@ -15,7 +15,7 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import type { GuideDog, Partner, Activity, DiaryPost, MedicalRecord, MedicationCheck, Product, ProductOrder, Lecture } from '../types/types';
+import type { GuideDog, Partner, Activity, DiaryPost, MedicalRecord, MedicationCheck, Product, ProductOrder, Lecture, Schedule } from '../types/types';
 
 // 컬렉션 이름
 const COLLECTIONS = {
@@ -28,6 +28,7 @@ const COLLECTIONS = {
   PRODUCTS: 'products',
   ORDERS: 'product_orders',
   LECTURES: 'lectures',
+  SCHEDULES: 'schedules',
 };
 
 // === 안내견 관련 ===
@@ -166,6 +167,22 @@ export const deleteLecture = async (id: string) => {
   await deleteDoc(doc(db, COLLECTIONS.LECTURES, id));
 };
 
+// === 일정 관련 ===
+export const saveSchedule = async (schedule: Schedule) => {
+  await setDoc(doc(db, COLLECTIONS.SCHEDULES, schedule.id), schedule);
+};
+
+export const getSchedules = async (): Promise<Schedule[]> => {
+  const snapshot = await getDocs(
+    query(collection(db, COLLECTIONS.SCHEDULES), orderBy('date', 'desc'))
+  );
+  return snapshot.docs.map(doc => doc.data() as Schedule);
+};
+
+export const deleteSchedule = async (id: string) => {
+  await deleteDoc(doc(db, COLLECTIONS.SCHEDULES, id));
+};
+
 // === 전체 데이터 삭제 (모든 개인정보 포함) ===
 export const clearAllData = async () => {
   // ⚠️ 모든 컬렉션 이름 (개인정보 보호법 준수)
@@ -179,6 +196,7 @@ export const clearAllData = async () => {
     COLLECTIONS.PRODUCTS,          // products
     COLLECTIONS.ORDERS,            // product_orders
     COLLECTIONS.LECTURES,          // lectures
+    COLLECTIONS.SCHEDULES,         // schedules (일정)
     'staff_courses',               // 직원 과정
     'staff_lectures',              // 직원 강의
     'school_videos',               // 학교 영상
