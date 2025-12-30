@@ -10,8 +10,8 @@ import { getUsers, saveUser, deleteUser } from '../utils/storage';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
-// 환경변수에서 기본 비밀번호 가져오기
-const DEFAULT_PASSWORD = import.meta.env.VITE_LOCAL_AUTH_PASSWORD || '';
+// 환경변수에서 기본 비밀번호 가져오기 (없으면 기본값 사용)
+const DEFAULT_PASSWORD = import.meta.env.VITE_LOCAL_AUTH_PASSWORD || '8922';
 
 interface PartnerInfo {
   id: string;

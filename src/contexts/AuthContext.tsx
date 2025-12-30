@@ -175,9 +175,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return true;
     }
 
-    // 환경변수에서 로컬 인증 비밀번호 가져오기
-    const localAuthPassword = import.meta.env.VITE_LOCAL_AUTH_PASSWORD;
-    if (!localAuthPassword || password !== localAuthPassword) {
+    // 환경변수에서 로컬 인증 비밀번호 가져오기 (없으면 기본값 사용)
+    const localAuthPassword = import.meta.env.VITE_LOCAL_AUTH_PASSWORD || '8922';
+    if (password !== localAuthPassword) {
       return false;
     }
 
