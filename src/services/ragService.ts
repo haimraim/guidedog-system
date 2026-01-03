@@ -1,13 +1,12 @@
 /**
  * RAG (Retrieval-Augmented Generation) 서비스
  * PDF 매뉴얼을 청크로 분할하고 벡터 검색 지원
+ *
+ * 보안: 임베딩 API 호출은 Vercel Serverless Function을 통해 수행됩니다.
  */
 
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const EMBEDDING_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent';
 
 // 청크 인터페이스
 export interface DocumentChunk {
@@ -69,32 +68,24 @@ export const splitTextIntoChunks = (
 };
 
 /**
- * Gemini 임베딩 API 호출
+ * 서버 API를 통한 임베딩 생성
  */
 export const getEmbedding = async (text: string): Promise<number[]> => {
-  if (!GEMINI_API_KEY) {
-    throw new Error('Gemini API 키가 설정되지 않았습니다.');
-  }
-
-  const response = await fetch(`${EMBEDDING_API_URL}?key=${GEMINI_API_KEY}`, {
+  const response = await fetch('/api/embedding', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      content: {
-        parts: [{ text }],
-      },
-    }),
+    body: JSON.stringify({ text }),
   });
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(`임베딩 생성 실패: ${JSON.stringify(error)}`);
+    throw new Error(error.error || `임베딩 생성 실패: ${response.status}`);
   }
 
   const data = await response.json();
-  return data.embedding.values;
+  return data.embedding;
 };
 
 /**
@@ -145,7 +136,7 @@ export const processAndStoreDocument = async (
     const chunk = chunks[i];
 
     try {
-      // 임베딩 생성 (API 레이트 리밋 고려하여 약간의 딜레이)
+      // 서버 API를 통한 임베딩 생성
       const embedding = await getEmbedding(chunk);
 
       // Firestore에 저장
