@@ -29,6 +29,7 @@ const COLLECTIONS = {
   ORDERS: 'product_orders',
   LECTURES: 'lectures',
   SCHEDULES: 'schedules',
+  QNA_MANUALS: 'qna_manuals',
 };
 
 // === 안내견 관련 ===
@@ -220,4 +221,35 @@ export const clearAllData = async () => {
 
   await Promise.all(deletePromises);
   console.log(`✅ 모든 Firestore 데이터 완전 삭제 완료 (${deletePromises.length}개 문서, 개인정보 포함)`);
+};
+
+// === Q&A 매뉴얼 관련 ===
+export type ManualCategory = '퍼피티칭' | '훈련견' | '안내견' | '은퇴견' | '부모견' | '공통';
+
+export interface QnAManual {
+  id: string;
+  fileName: string;
+  displayName: string;
+  fileUri: string;
+  mimeType: string;
+  sizeBytes: number;
+  uploadedAt: string;
+  uploadedBy: string;
+  expiresAt: string;
+  category: ManualCategory;
+}
+
+export const saveQnAManual = async (manual: QnAManual) => {
+  await setDoc(doc(db, COLLECTIONS.QNA_MANUALS, manual.id), manual);
+};
+
+export const getQnAManuals = async (): Promise<QnAManual[]> => {
+  const snapshot = await getDocs(
+    query(collection(db, COLLECTIONS.QNA_MANUALS), orderBy('uploadedAt', 'desc'))
+  );
+  return snapshot.docs.map(doc => doc.data() as QnAManual);
+};
+
+export const deleteQnAManual = async (id: string) => {
+  await deleteDoc(doc(db, COLLECTIONS.QNA_MANUALS, id));
 };

@@ -14,6 +14,8 @@ import { MedicationCheckPage } from './MedicationCheckPage';
 import { DataTableEnhanced } from './DataTableEnhanced';
 import { LecturePage } from './LecturePage';
 import { VideoRoomPage } from './VideoRoomPage';
+import { QnAPage } from './QnAPage';
+import { ManualManagePage } from './ManualManagePage';
 import { PrivacyPolicyPage } from './PrivacyPolicyPage';
 import { TermsOfServicePage } from './TermsOfServicePage';
 import { MessageSendPage } from './MessageSendPage';
@@ -22,7 +24,7 @@ import { SchedulePage } from './SchedulePage';
 import { getCombinedData, calculateAgeWithMonths } from '../utils/storage';
 import type { CombinedData } from '../types/types';
 
-type MenuItem = 'home' | 'notice' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'message' | 'schedule' | 'privacy' | 'terms';
+type MenuItem = 'home' | 'notice' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'qna' | 'manualManage' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'message' | 'schedule' | 'privacy' | 'terms';
 
 export const MainLayout = () => {
   const { user, logout } = useAuth();
@@ -34,7 +36,7 @@ export const MainLayout = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = urlParams.get('page') as MenuItem;
 
-    if (pageParam && ['home', 'notice', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'boarding', 'products', 'medical', 'medication', 'admin', 'message', 'schedule', 'privacy', 'terms'].includes(pageParam)) {
+    if (pageParam && ['home', 'notice', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'qna', 'manualManage', 'boarding', 'products', 'medical', 'medication', 'admin', 'message', 'schedule', 'privacy', 'terms'].includes(pageParam)) {
       setCurrentPage(pageParam);
       window.history.replaceState({ page: pageParam }, '', `?page=${pageParam}`);
     } else {
@@ -122,6 +124,10 @@ export const MainLayout = () => {
         return <LecturePage />;
       case 'videoroom':
         return <VideoRoomPage />;
+      case 'qna':
+        return <QnAPage />;
+      case 'manualManage':
+        return <ManualManagePage />;
       case 'boarding':
         return <BoardingFormPage onNavigateHome={() => setCurrentPage('home')} />;
       case 'products':
@@ -229,6 +235,8 @@ export const MainLayout = () => {
                 {currentPage === 'monthlyReport' && '월간 보고서'}
                 {currentPage === 'lecture' && '강의실'}
                 {currentPage === 'videoroom' && '영상 시청실 📹'}
+                {currentPage === 'qna' && '묻고답하기'}
+                {currentPage === 'manualManage' && '매뉴얼 관리'}
                 {currentPage === 'boarding' && (user?.role === 'admin' || user?.role === 'moderator' ? '보딩 폼 확인' : '보딩 폼 작성')}
                 {currentPage === 'products' && (user?.role === 'admin' ? '물품 확인' : '물품 신청')}
                 {currentPage === 'medical' && '진료 기록'}
@@ -329,6 +337,34 @@ export const MainLayout = () => {
                   영상 시청실 📹
                 </button>
               </li>
+              <li>
+                <button
+                  onClick={() => navigateToPage('qna')}
+                  className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
+                    currentPage === 'qna'
+                      ? 'bg-primary-600 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
+                  }`}
+                  aria-current={currentPage === 'qna' ? 'page' : undefined}
+                >
+                  묻고답하기 💬
+                </button>
+              </li>
+              {user?.role === 'admin' && (
+                <li>
+                  <button
+                    onClick={() => navigateToPage('manualManage')}
+                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
+                      currentPage === 'manualManage'
+                        ? 'bg-primary-600 text-white'
+                        : 'text-neutral-700 hover:bg-neutral-100'
+                    }`}
+                    aria-current={currentPage === 'manualManage' ? 'page' : undefined}
+                  >
+                    매뉴얼 관리 📚
+                  </button>
+                </li>
+              )}
               <li>
                 <button
                   onClick={() => navigateToPage('boarding')}
