@@ -15,6 +15,7 @@ import type {
   GuideDog,
   Partner,
   Activity,
+  User,
 } from '../types/types';
 import {
   calculateAge,
@@ -22,6 +23,12 @@ import {
   savePartner,
   saveActivity,
 } from '../utils/storage';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
+interface FirebaseUserWithUid extends User {
+  firebaseUid: string;
+}
 
 const categories: DogCategory[] = ['퍼피티칭', '안내견', '은퇴견', '부모견'];
 
@@ -32,6 +39,8 @@ interface DataEditModalProps {
 
 export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const [firebaseUsers, setFirebaseUsers] = useState<FirebaseUserWithUid[]>([]);
+  const [selectedAssignedUserId, setSelectedAssignedUserId] = useState<string>(item.guideDog.assignedUserId || '');
   const [formData, setFormData] = useState<FormData>({
     dogCategory: item.guideDog.category,
     dogName: item.guideDog.name,
@@ -70,6 +79,24 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
     return () => document.removeEventListener('keydown', handleEscape);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 마운트 시에만 실행
+
+  // Firebase 사용자 목록 로드
+  useEffect(() => {
+    const loadFirebaseUsers = async () => {
+      try {
+        const usersCollection = collection(db, 'users');
+        const usersSnapshot = await getDocs(usersCollection);
+        const users: FirebaseUserWithUid[] = usersSnapshot.docs.map(doc => ({
+          ...doc.data() as User,
+          firebaseUid: doc.id,
+        }));
+        setFirebaseUsers(users);
+      } catch (error) {
+        console.error('Firebase 사용자 목록 로드 실패:', error);
+      }
+    };
+    loadFirebaseUsers();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -135,6 +162,7 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
         birthDate: formData.dogBirthDate,
         gender: formData.dogGender as Gender,
         photo: formData.dogPhoto,
+        assignedUserId: selectedAssignedUserId || undefined,
         ...(formData.dogCategory === '퍼피티칭' && {
           puppyTeacherName: formData.puppyTeacherName,
           puppyTeacherPhone: formData.puppyTeacherPhone,
@@ -458,6 +486,35 @@ export const DataEditModal = ({ item, onClose }: DataEditModalProps) => {
                     className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
+              </div>
+            </fieldset>
+          )}
+
+          {/* 담당자 지정 (Firebase 사용자) */}
+          {firebaseUsers.length > 0 && (
+            <fieldset className="mb-8 border border-success-300 p-4 rounded bg-success-50">
+              <legend className="text-xl font-semibold px-2 text-success-900">담당자 지정 (보안)</legend>
+              <div className="mt-4">
+                <label htmlFor="edit-assignedUserId" className="block text-sm font-medium mb-1">
+                  담당자 선택
+                </label>
+                <select
+                  id="edit-assignedUserId"
+                  value={selectedAssignedUserId}
+                  onChange={(e) => setSelectedAssignedUserId(e.target.value)}
+                  className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-success-500"
+                >
+                  <option value="">담당자 없음 (관리자만 접근 가능)</option>
+                  {firebaseUsers.map(user => (
+                    <option key={user.firebaseUid} value={user.firebaseUid}>
+                      {user.name} ({user.id}) - {user.role}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-success-700 mt-2">
+                  담당자를 지정하면 해당 사용자만 이 안내견 정보를 볼 수 있습니다.
+                  담당자는 회원관리에서 Firebase 계정으로 생성된 사용자만 선택 가능합니다.
+                </p>
               </div>
             </fieldset>
           )}

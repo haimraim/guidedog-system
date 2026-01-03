@@ -12,6 +12,7 @@ import {
   deleteDoc,
   query,
   orderBy,
+  where,
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -37,8 +38,16 @@ export const saveDog = async (dog: GuideDog) => {
   await setDoc(doc(db, COLLECTIONS.DOGS, dog.id), dog);
 };
 
-export const getDogs = async (): Promise<GuideDog[]> => {
-  const snapshot = await getDocs(collection(db, COLLECTIONS.DOGS));
+export const getDogs = async (userId?: string): Promise<GuideDog[]> => {
+  let q;
+  if (userId) {
+    // 일반 사용자: 자기 담당만
+    q = query(collection(db, COLLECTIONS.DOGS), where('assignedUserId', '==', userId));
+  } else {
+    // 관리자: 전체
+    q = query(collection(db, COLLECTIONS.DOGS));
+  }
+  const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => doc.data() as GuideDog);
 };
 
@@ -51,8 +60,16 @@ export const savePartner = async (partner: Partner) => {
   await setDoc(doc(db, COLLECTIONS.PARTNERS, partner.id), partner);
 };
 
-export const getPartners = async (): Promise<Partner[]> => {
-  const snapshot = await getDocs(collection(db, COLLECTIONS.PARTNERS));
+export const getPartners = async (userId?: string): Promise<Partner[]> => {
+  let q;
+  if (userId) {
+    // 일반 사용자: 자기 담당만
+    q = query(collection(db, COLLECTIONS.PARTNERS), where('assignedUserId', '==', userId));
+  } else {
+    // 관리자: 전체
+    q = query(collection(db, COLLECTIONS.PARTNERS));
+  }
+  const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => doc.data() as Partner);
 };
 
@@ -79,10 +96,16 @@ export const saveDiaryPost = async (post: DiaryPost) => {
   await setDoc(doc(db, COLLECTIONS.DIARY, post.id), post);
 };
 
-export const getDiaryPosts = async (): Promise<DiaryPost[]> => {
-  const snapshot = await getDocs(
-    query(collection(db, COLLECTIONS.DIARY), orderBy('createdAt', 'desc'))
-  );
+export const getDiaryPosts = async (userId?: string): Promise<DiaryPost[]> => {
+  let q;
+  if (userId) {
+    // 일반 사용자: 자기가 작성한 것만
+    q = query(collection(db, COLLECTIONS.DIARY), where('userId', '==', userId), orderBy('createdAt', 'desc'));
+  } else {
+    // 관리자: 전체
+    q = query(collection(db, COLLECTIONS.DIARY), orderBy('createdAt', 'desc'));
+  }
+  const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => doc.data() as DiaryPost);
 };
 
@@ -141,10 +164,16 @@ export const saveProductOrder = async (order: ProductOrder) => {
   await setDoc(doc(db, COLLECTIONS.ORDERS, order.id), order);
 };
 
-export const getProductOrders = async (): Promise<ProductOrder[]> => {
-  const snapshot = await getDocs(
-    query(collection(db, COLLECTIONS.ORDERS), orderBy('createdAt', 'desc'))
-  );
+export const getProductOrders = async (userId?: string): Promise<ProductOrder[]> => {
+  let q;
+  if (userId) {
+    // 일반 사용자: 자기 주문만
+    q = query(collection(db, COLLECTIONS.ORDERS), where('userId', '==', userId), orderBy('createdAt', 'desc'));
+  } else {
+    // 관리자: 전체
+    q = query(collection(db, COLLECTIONS.ORDERS), orderBy('createdAt', 'desc'));
+  }
+  const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => doc.data() as ProductOrder);
 };
 

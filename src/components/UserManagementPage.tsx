@@ -7,8 +7,9 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import type { User, UserRole } from '../types/types';
 import { getUsers, saveUser, deleteUser } from '../utils/storage';
-import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { collection, getDocs, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { db, auth } from '../lib/firebase';
 
 // 환경변수에서 기본 비밀번호 가져오기 (없으면 기본값 사용)
 const DEFAULT_PASSWORD = import.meta.env.VITE_LOCAL_AUTH_PASSWORD || '8922';
@@ -41,6 +42,9 @@ export const UserManagementPage = () => {
   const [dogName, setDogName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
+  const [isCreatingFirebase, setIsCreatingFirebase] = useState(false);
+  const [firebaseEmail, setFirebaseEmail] = useState('');
+  const [firebasePassword, setFirebasePassword] = useState('');
 
   useEffect(() => {
     if (currentUser?.role === 'admin') {
@@ -325,6 +329,66 @@ export const UserManagementPage = () => {
     setIsEditing(false);
     setEditingUser(null);
     setEditingPartner(null);
+    setIsCreatingFirebase(false);
+    setFirebaseEmail('');
+    setFirebasePassword('');
+  };
+
+  // Firebase 계정 생성
+  const handleCreateFirebaseUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!firebaseEmail.trim() || !firebasePassword.trim() || !name.trim()) {
+      alert('이메일, 비밀번호, 이름은 필수 입력 항목입니다.');
+      return;
+    }
+
+    if (firebasePassword.length < 6) {
+      alert('비밀번호는 6자 이상이어야 합니다.');
+      return;
+    }
+
+    try {
+      // Firebase Authentication에 사용자 생성
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        firebaseEmail.trim(),
+        firebasePassword.trim()
+      );
+      const firebaseUser = userCredential.user;
+
+      // 프로필 업데이트
+      await updateProfile(firebaseUser, {
+        displayName: name.trim()
+      });
+
+      // Firestore에 사용자 정보 저장
+      const userData: User = {
+        id: firebaseEmail.trim(),
+        role,
+        name: name.trim(),
+        dogName: dogName.trim() || undefined,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      await setDoc(doc(db, 'users', firebaseUser.uid), userData);
+
+      resetForm();
+      loadFirebaseUsers();
+      alert(`Firebase 계정이 생성되었습니다.\n이메일: ${firebaseEmail}\n이 계정으로 로그인할 수 있습니다.`);
+    } catch (error: any) {
+      console.error('Firebase 계정 생성 실패:', error);
+      if (error.code === 'auth/email-already-in-use') {
+        alert('이미 사용 중인 이메일입니다.');
+      } else if (error.code === 'auth/invalid-email') {
+        alert('유효하지 않은 이메일 형식입니다.');
+      } else if (error.code === 'auth/weak-password') {
+        alert('비밀번호가 너무 약합니다. 6자 이상으로 설정해주세요.');
+      } else {
+        alert(`계정 생성 실패: ${error.message}`);
+      }
+    }
   };
 
   const handleEditPartner = (partner: PartnerInfo) => {
@@ -490,6 +554,129 @@ export const UserManagementPage = () => {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
           <p className="text-neutral-500">관리자만 접근할 수 있습니다.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Firebase 계정 생성 폼
+  if (isCreatingFirebase) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-6">
+            Firebase 계정 생성
+          </h2>
+
+          <div className="bg-success-50 border border-success-200 rounded-lg p-4 mb-6">
+            <p className="text-sm text-success-800">
+              Firebase 계정을 생성하면 Firestore 보안 규칙이 적용되어 해당 사용자는 자신이 담당하는 안내견 정보만 볼 수 있습니다.
+            </p>
+          </div>
+
+          <form onSubmit={handleCreateFirebaseUser} className="space-y-6">
+            <div>
+              <label htmlFor="firebaseEmail" className="block text-sm font-semibold text-neutral-700 mb-2">
+                이메일 *
+              </label>
+              <input
+                type="email"
+                id="firebaseEmail"
+                value={firebaseEmail}
+                onChange={(e) => setFirebaseEmail(e.target.value)}
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-success-500 focus:border-success-500 outline-none"
+                placeholder="example@email.com"
+                required
+              />
+              <p className="text-xs text-neutral-500 mt-1">
+                로그인 시 사용할 이메일 주소입니다.
+              </p>
+            </div>
+
+            <div>
+              <label htmlFor="firebasePassword" className="block text-sm font-semibold text-neutral-700 mb-2">
+                비밀번호 *
+              </label>
+              <input
+                type="text"
+                id="firebasePassword"
+                value={firebasePassword}
+                onChange={(e) => setFirebasePassword(e.target.value)}
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-success-500 focus:border-success-500 outline-none"
+                placeholder="6자 이상"
+                required
+                minLength={6}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="fbRole" className="block text-sm font-semibold text-neutral-700 mb-2">
+                권한 *
+              </label>
+              <select
+                id="fbRole"
+                value={role}
+                onChange={(e) => setRole(e.target.value as UserRole)}
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-success-500 focus:border-success-500 outline-none"
+                required
+              >
+                <option value="partner">파트너</option>
+                <option value="puppyTeacher">퍼피티처</option>
+                <option value="trainer">훈련사</option>
+                <option value="retiredHomeCare">은퇴견홈케어</option>
+                <option value="parentCaregiver">부모견홈케어</option>
+                <option value="admin">관리자</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="fbName" className="block text-sm font-semibold text-neutral-700 mb-2">
+                이름 *
+              </label>
+              <input
+                type="text"
+                id="fbName"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-success-500 focus:border-success-500 outline-none"
+                placeholder="담당자 이름"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="fbDogName" className="block text-sm font-semibold text-neutral-700 mb-2">
+                담당 안내견 이름
+              </label>
+              <input
+                type="text"
+                id="fbDogName"
+                value={dogName}
+                onChange={(e) => setDogName(e.target.value)}
+                className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-success-500 focus:border-success-500 outline-none"
+                placeholder="안내견 이름 (선택사항)"
+              />
+              <p className="text-xs text-neutral-500 mt-1">
+                안내견 관리에서 이 사용자를 담당자로 지정하면 해당 안내견만 볼 수 있습니다.
+              </p>
+            </div>
+
+            <div className="flex space-x-4">
+              <button
+                type="submit"
+                className="flex-1 bg-success-600 hover:bg-success-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                계정 생성
+              </button>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="flex-1 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                취소
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     );
@@ -737,6 +924,14 @@ export const UserManagementPage = () => {
     <div className="max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-neutral-800">회원 관리</h2>
+        {activeTab === 'firebase' && (
+          <button
+            onClick={() => setIsCreatingFirebase(true)}
+            className="bg-success-600 hover:bg-success-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+          >
+            + Firebase 계정 생성
+          </button>
+        )}
         {activeTab === 'users' && (
           <div className="flex gap-3">
             <button

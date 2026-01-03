@@ -18,9 +18,14 @@ service cloud.firestore {
              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
+    // 담당자인지 확인 (assignedUserId 필드 체크)
+    function isAssignedUser() {
+      return isAuthenticated() && resource.data.assignedUserId == request.auth.uid;
+    }
+
     // 사용자 컬렉션 규칙
     match /users/{userId} {
-      // 읽기: 로그인한 사용자는 자신의 데이터만 읽을 수 있음
+      // 읽기: 자신의 데이터 또는 관리자
       allow read: if isOwner(userId) || isAdmin();
 
       // 쓰기: 관리자만 가능
@@ -28,18 +33,9 @@ service cloud.firestore {
     }
 
     // 안내견 데이터 컬렉션 규칙
-    match /guideDogs/{dogId} {
-      // 읽기: 로그인한 사용자만 가능
-      allow read: if isAuthenticated();
-
-      // 쓰기: 관리자만 가능
-      allow write: if isAdmin();
-    }
-
-    // 활동 데이터 컬렉션 규칙
-    match /activities/{activityId} {
-      // 읽기: 로그인한 사용자만 가능
-      allow read: if isAuthenticated();
+    match /guide_dogs/{dogId} {
+      // 읽기: 관리자는 전체, 일반 사용자는 자기 담당만
+      allow read: if isAdmin() || isAssignedUser();
 
       // 쓰기: 관리자만 가능
       allow write: if isAdmin();
@@ -47,28 +43,45 @@ service cloud.firestore {
 
     // 파트너 데이터 컬렉션 규칙
     match /partners/{partnerId} {
-      // 읽기: 로그인한 사용자만 가능
-      allow read: if isAuthenticated();
+      // 읽기: 관리자는 전체, 일반 사용자는 자기 담당만
+      allow read: if isAdmin() || isAssignedUser();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 활동 데이터 컬렉션 규칙 (안내견-파트너 매칭)
+    match /activities/{activityId} {
+      // 읽기: 관리자는 전체, 일반 사용자는 자기 담당만
+      allow read: if isAdmin() || isAssignedUser();
 
       // 쓰기: 관리자만 가능
       allow write: if isAdmin();
     }
 
     // 일지 데이터 컬렉션 규칙
-    match /diaries/{diaryId} {
-      // 읽기: 로그인한 사용자만 가능
-      allow read: if isAuthenticated();
+    match /diary_posts/{diaryId} {
+      // 읽기: 관리자는 전체, 일반 사용자는 자기가 작성한 것만
+      allow read: if isAdmin() || resource.data.userId == request.auth.uid;
 
-      // 쓰기: 로그인한 사용자만 가능 (자신의 일지 작성)
+      // 쓰기: 로그인한 사용자는 자신의 일지 작성 가능
       allow create: if isAuthenticated();
-      allow update, delete: if isAuthenticated() &&
-                             (resource.data.userId == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin() || resource.data.userId == request.auth.uid;
     }
 
     // 의료 기록 컬렉션 규칙
-    match /medicalRecords/{recordId} {
-      // 읽기: 로그인한 사용자만 가능
-      allow read: if isAuthenticated();
+    match /medical_records/{recordId} {
+      // 읽기: 관리자는 전체, 일반 사용자는 자기 담당 개의 기록만
+      allow read: if isAdmin() || isAssignedUser();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 약품체크 컬렉션 규칙
+    match /medication_checks/{checkId} {
+      // 읽기: 관리자는 전체, 일반 사용자는 자기 담당만
+      allow read: if isAdmin() || isAssignedUser();
 
       // 쓰기: 관리자만 가능
       allow write: if isAdmin();
@@ -76,7 +89,7 @@ service cloud.firestore {
 
     // 제품 데이터 컬렉션 규칙
     match /products/{productId} {
-      // 읽기: 로그인한 사용자만 가능
+      // 읽기: 로그인한 사용자 모두 (물품 목록은 공개)
       allow read: if isAuthenticated();
 
       // 쓰기: 관리자만 가능
@@ -84,21 +97,65 @@ service cloud.firestore {
     }
 
     // 주문 데이터 컬렉션 규칙
-    match /orders/{orderId} {
-      // 읽기: 로그인한 사용자만 가능
+    match /product_orders/{orderId} {
+      // 읽기: 관리자는 전체, 일반 사용자는 자기 주문만
+      allow read: if isAdmin() || resource.data.userId == request.auth.uid;
+
+      // 쓰기: 로그인한 사용자는 자신의 주문 작성 가능
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin() || resource.data.userId == request.auth.uid;
+    }
+
+    // 강의자료 컬렉션 규칙
+    match /lectures/{lectureId} {
+      // 읽기: 로그인한 사용자 모두
       allow read: if isAuthenticated();
 
-      // 쓰기: 로그인한 사용자만 가능
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 일정 컬렉션 규칙
+    match /schedules/{scheduleId} {
+      // 읽기: 로그인한 사용자 모두
+      allow read: if isAuthenticated();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 보딩폼 컬렉션 규칙
+    match /boarding_forms/{formId} {
+      // 읽기: 관리자는 전체, 일반 사용자는 자기 것만
+      allow read: if isAdmin() || resource.data.userId == request.auth.uid;
+
+      // 쓰기: 로그인한 사용자 작성 가능
       allow create: if isAuthenticated();
-      allow update, delete: if isAuthenticated() &&
-                             (resource.data.userId == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin() || resource.data.userId == request.auth.uid;
+    }
+
+    // Q&A 매뉴얼 컬렉션 규칙
+    match /qna_manuals/{manualId} {
+      // 읽기: 로그인한 사용자 모두
+      allow read: if isAuthenticated();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
+    }
+
+    // 공지사항 컬렉션 규칙
+    match /notices/{noticeId} {
+      // 읽기: 로그인한 사용자 모두
+      allow read: if isAuthenticated();
+
+      // 쓰기: 관리자만 가능
+      allow write: if isAdmin();
     }
 
     // 기타 모든 컬렉션에 대한 기본 규칙
     match /{document=**} {
-      // 기본적으로 로그인한 사용자만 읽기 가능, 관리자만 쓰기 가능
-      allow read: if isAuthenticated();
-      allow write: if isAdmin();
+      // 기본적으로 관리자만 접근 가능
+      allow read, write: if isAdmin();
     }
   }
 }

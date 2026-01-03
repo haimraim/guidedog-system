@@ -23,6 +23,7 @@ export interface GuideDog {
   birthDate: string; // 견 생년월일 (YYYY-MM-DD)
   gender: Gender; // 견 성별
   photo?: string; // 사진 (Base64 또는 URL)
+  assignedUserId?: string; // 담당자 Firebase UID (보안 규칙용)
   // 퍼피티칭 카테고리일 때만 사용
   puppyTeacherName?: string; // 퍼피티처 이름
   puppyTeacherPhone?: string; // 퍼피티처 연락처
@@ -48,6 +49,7 @@ export interface Partner {
   phone: string; // 연락처
   address: string; // 주소
   photo?: string; // 사진 (Base64 또는 URL)
+  assignedUserId?: string; // 담당자 Firebase UID (보안 규칙용)
   createdAt: string; // 생성일시
   updatedAt: string; // 수정일시
 }
