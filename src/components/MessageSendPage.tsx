@@ -7,14 +7,36 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import type { MessageRecipient, MessageType, User, UserRole } from '../types/types';
 import { getUsers, getGuideDogs, getPartners, getActivities } from '../utils/storage';
-import { sendSMS, replaceMessageVariables, validatePhoneNumber, getRemainingCount } from '../services/aligoSmsService';
+
+/**
+ * 메시지 내용에 변수 치환
+ */
+const replaceMessageVariables = (
+  template: string,
+  variables: { [key: string]: string }
+): string => {
+  let result = template;
+  Object.keys(variables).forEach(key => {
+    const regex = new RegExp(`{${key}}`, 'g');
+    result = result.replace(regex, variables[key]);
+  });
+  return result;
+};
+
+/**
+ * 연락처 형식 검증
+ */
+const validatePhoneNumber = (phone: string): boolean => {
+  const cleaned = phone.replace(/-/g, '');
+  const regex = /^01[016789]\d{7,8}$/;
+  return regex.test(cleaned);
+};
 
 export const MessageSendPage = () => {
   const { user: currentUser } = useAuth();
   const [messageType, setMessageType] = useState<'sms' | 'lms'>('sms');
   const [subject, setSubject] = useState(''); // LMS 제목
   const [message, setMessage] = useState('');
-  const [testMode, setTestMode] = useState(false); // 테스트 모드
 
   // 수신자 선택
   const [selectMode, setSelectMode] = useState<'all' | 'role' | 'custom'>('all');
@@ -25,7 +47,6 @@ export const MessageSendPage = () => {
   // 발송 상태
   const [isSending, setIsSending] = useState(false);
   const [sendResult, setSendResult] = useState<string>('');
-  const [remainingCount, setRemainingCount] = useState<number>(0);
 
   // 미리보기
   const [previewMessage, setPreviewMessage] = useState('');
@@ -33,14 +54,8 @@ export const MessageSendPage = () => {
   useEffect(() => {
     if (currentUser?.role === 'admin') {
       loadAllRecipients();
-      loadRemainingCount();
     }
   }, [currentUser]);
-
-  const loadRemainingCount = async () => {
-    const count = await getRemainingCount();
-    setRemainingCount(count);
-  };
 
   // 메시지 미리보기 업데이트
   useEffect(() => {
@@ -177,65 +192,10 @@ export const MessageSendPage = () => {
   };
 
   /**
-   * 메시지 발송
+   * 메시지 발송 (현재 비활성화)
    */
   const handleSend = async () => {
-    try {
-      if (!message.trim()) {
-        alert('메시지 내용을 입력해주세요.');
-        return;
-      }
-
-      const recipients = getFilteredRecipients();
-
-      if (recipients.length === 0) {
-        alert('수신자를 선택해주세요.');
-        return;
-      }
-
-      // 연락처 없는 수신자 확인
-      const invalidRecipients = recipients.filter(r => !validatePhoneNumber(r.phone));
-      if (invalidRecipients.length > 0) {
-        alert(`올바르지 않은 연락처가 있습니다:\n${invalidRecipients.map(r => `${r.userName}: ${r.phone}`).join('\n')}`);
-        return;
-      }
-
-      const confirmMsg = testMode
-        ? `[테스트 모드] ${recipients.length}명에게 테스트 발송하시겠습니까?\n(실제로 문자가 발송되지 않습니다)`
-        : `${recipients.length}명에게 메시지를 발송하시겠습니까?`;
-
-      if (!confirm(confirmMsg)) {
-        return;
-      }
-
-      setIsSending(true);
-      setSendResult('');
-
-      // SMS/LMS 발송 (Aligo)
-      const result = await sendSMS({
-        receivers: recipients,
-        message,
-        subject: messageType === 'lms' ? subject : undefined,
-        msgType: messageType === 'lms' ? 'LMS' : 'SMS',
-        testMode,
-      });
-
-      const modeText = testMode ? '[테스트]' : '';
-      setSendResult(`${modeText} 발송 완료!\n메시지 ID: ${result.msg_id}\n성공: ${result.success_cnt}건 / 실패: ${result.error_cnt}건`);
-
-      // 발송 후 초기화
-      setMessage('');
-      setSubject('');
-      setSelectedRecipients(new Set());
-
-      // 잔여 건수 새로고침
-      loadRemainingCount();
-    } catch (error: any) {
-      console.error('메시지 발송 실패:', error);
-      setSendResult(`발송 실패: ${error.message}`);
-    } finally {
-      setIsSending(false);
-    }
+    alert('문자 발송 기능이 현재 비활성화되어 있습니다.');
   };
 
   /**
@@ -277,20 +237,11 @@ export const MessageSendPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 왼쪽: 메시지 작성 */}
         <div className="space-y-6">
-          {/* 잔여 건수 표시 */}
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md p-4 text-white">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm opacity-90">Aligo SMS 잔여 건수</p>
-                <p className="text-2xl font-bold">{remainingCount.toLocaleString()}건</p>
-              </div>
-              <button
-                onClick={loadRemainingCount}
-                className="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-sm transition-colors"
-              >
-                새로고침
-              </button>
-            </div>
+          {/* 안내 메시지 */}
+          <div className="bg-neutral-100 border border-neutral-300 rounded-lg p-4">
+            <p className="text-sm text-neutral-600">
+              문자 발송 기능이 현재 비활성화되어 있습니다.
+            </p>
           </div>
 
           {/* 메시지 타입 선택 */}
@@ -319,7 +270,7 @@ export const MessageSendPage = () => {
               </button>
             </div>
             <p className="text-xs text-neutral-500 mt-3">
-              SMS: 90자 이내 (8.4원) / LMS: 2000자 이내 (25원)
+              SMS: 90자 이내 / LMS: 2000자 이내
             </p>
           </div>
 
@@ -383,28 +334,7 @@ export const MessageSendPage = () => {
               <p className="text-xs text-neutral-500">
                 {message.length} / {messageType === 'sms' ? '90' : '2000'}자
               </p>
-              <p className="text-xs text-neutral-500">
-                예상 비용: {messageType === 'lms' ? '25원' : '8.4원'} x {filteredRecipients.length}명 = {((messageType === 'lms' ? 25 : 8.4) * filteredRecipients.length).toLocaleString()}원
-              </p>
             </div>
-          </div>
-
-          {/* 테스트 모드 */}
-          <div className="bg-warning-50 border border-warning-200 rounded-lg p-4">
-            <label className="flex items-center space-x-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={testMode}
-                onChange={(e) => setTestMode(e.target.checked)}
-                className="w-5 h-5 rounded border-warning-400 text-warning-600 focus:ring-yellow-500"
-              />
-              <div>
-                <span className="font-semibold text-warning-800">테스트 모드</span>
-                <p className="text-xs text-warning-700">
-                  체크하면 실제로 문자가 발송되지 않고 API 테스트만 수행합니다. (무료)
-                </p>
-              </div>
-            </label>
           </div>
 
           {/* 미리보기 */}

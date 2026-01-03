@@ -14,7 +14,6 @@ interface YouTubeVideo {
 }
 
 const PLAYLIST_ID = 'PLpNTjTrBrqfbZk7T0lFKfeND9b8obhe7f';
-const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 const CACHE_KEY = 'youtube_playlist_cache';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24시간
 
@@ -54,29 +53,15 @@ export const SchoolOfGuideDogPage = () => {
   };
 
   const fetchFromYouTube = async () => {
-    if (!API_KEY) {
-      setError('YouTube API 키가 설정되지 않았습니다.');
-      setLoading(false);
-      return;
-    }
-
-    const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
-
-    const response = await fetch(url);
+    const response = await fetch(`/api/youtube?playlistId=${PLAYLIST_ID}`);
 
     if (!response.ok) {
-      throw new Error(`YouTube API 오류: ${response.status}`);
+      const errorData = await response.json();
+      throw new Error(errorData.error || `YouTube API 오류: ${response.status}`);
     }
 
     const data = await response.json();
-
-    const videoList: YouTubeVideo[] = data.items.map((item: any) => ({
-      id: item.id,
-      title: item.snippet.title,
-      description: item.snippet.description,
-      thumbnailUrl: item.snippet.thumbnails.medium.url,
-      videoId: item.snippet.resourceId.videoId,
-    }));
+    const videoList: YouTubeVideo[] = data.videos;
 
     // localStorage에 캐시 저장
     localStorage.setItem(CACHE_KEY, JSON.stringify({
