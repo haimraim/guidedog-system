@@ -21,10 +21,11 @@ import { TermsOfServicePage } from './TermsOfServicePage';
 import { MessageSendPage } from './MessageSendPage';
 import { NoticeBoardPage } from './NoticeBoardPage';
 import { SchedulePage } from './SchedulePage';
+import { UserManagementPage } from './UserManagementPage';
 import { getCombinedData, calculateAgeWithMonths } from '../utils/storage';
 import type { CombinedData } from '../types/types';
 
-type MenuItem = 'home' | 'notice' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'qna' | 'manualManage' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'message' | 'schedule' | 'privacy' | 'terms';
+type MenuItem = 'home' | 'notice' | 'diary' | 'monthlyReport' | 'lecture' | 'videoroom' | 'qna' | 'manualManage' | 'boarding' | 'products' | 'medical' | 'medication' | 'admin' | 'message' | 'schedule' | 'userManagement' | 'privacy' | 'terms';
 
 export const MainLayout = () => {
   const { user, logout } = useAuth();
@@ -36,7 +37,7 @@ export const MainLayout = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = urlParams.get('page') as MenuItem;
 
-    if (pageParam && ['home', 'notice', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'qna', 'manualManage', 'boarding', 'products', 'medical', 'medication', 'admin', 'message', 'schedule', 'privacy', 'terms'].includes(pageParam)) {
+    if (pageParam && ['home', 'notice', 'diary', 'monthlyReport', 'lecture', 'videoroom', 'qna', 'manualManage', 'boarding', 'products', 'medical', 'medication', 'admin', 'message', 'schedule', 'userManagement', 'privacy', 'terms'].includes(pageParam)) {
       setCurrentPage(pageParam);
       window.history.replaceState({ page: pageParam }, '', `?page=${pageParam}`);
     } else {
@@ -142,6 +143,8 @@ export const MainLayout = () => {
         return <MessageSendPage />;
       case 'schedule':
         return <SchedulePage />;
+      case 'userManagement':
+        return <UserManagementPage />;
       case 'privacy':
         return <PrivacyPolicyPage />;
       case 'terms':
@@ -244,6 +247,7 @@ export const MainLayout = () => {
                 {currentPage === 'admin' && '안내견 관리'}
                 {currentPage === 'message' && '메시지 발송'}
                 {currentPage === 'schedule' && '일정 관리'}
+                {currentPage === 'userManagement' && '회원관리'}
                 {currentPage === 'privacy' && '개인정보 처리방침'}
                 {currentPage === 'terms' && '이용약관'}
               </span>
@@ -459,6 +463,21 @@ export const MainLayout = () => {
                     aria-current={currentPage === 'schedule' ? 'page' : undefined}
                   >
                     일정 관리
+                  </button>
+                </li>
+              )}
+              {user?.role === 'admin' && (
+                <li>
+                  <button
+                    onClick={() => navigateToPage('userManagement')}
+                    className={`px-6 py-4 font-semibold transition-colors whitespace-nowrap focus:ring-2 focus:ring-primary-500 outline-none ${
+                      currentPage === 'userManagement'
+                        ? 'bg-primary-600 text-white'
+                        : 'text-neutral-700 hover:bg-neutral-100'
+                    }`}
+                    aria-current={currentPage === 'userManagement' ? 'page' : undefined}
+                  >
+                    회원관리
                   </button>
                 </li>
               )}
