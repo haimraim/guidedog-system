@@ -299,14 +299,14 @@ export const DiaryPage = () => {
 
     // 개의 현재 카테고리 정보 가져오기 (Firestore 데이터 사용)
     const dogCategory = user?.dogName
-      ? firestoreDogs.find(dog => dog.name === user.dogName)?.category
-      : undefined;
+      ? firestoreDogs.find(dog => dog.name === user.dogName)?.category || ''
+      : '';
 
     const post: DiaryPost = {
       id: editingPost?.id || generateId(),
       userId: user!.id,
       userName: user!.name,
-      dogName: user?.dogName,
+      dogName: user?.dogName || '',
       dogCategory: dogCategory,
       title: user?.role === 'puppyTeacher' ? `${diaryDate} 일지` : user?.role === 'partner' ? `${diaryDate} 설문` : title.trim(),
       content: user?.role === 'puppyTeacher' ? '퍼피티칭 일지' : user?.role === 'partner' ? '안내견 파트너 설문' : content.trim(),
@@ -319,7 +319,7 @@ export const DiaryPage = () => {
         dt1Records: dt1Records.filter(d => d.time || d.place || d.success || d.accident || d.notes),
         dt2Records: dt2Records.filter(d => d.time || d.place || d.success || d.accident || d.notes),
         outings: outings.filter(o => o.place || o.duration || o.notes),
-        additionalNotes: additionalNotes || undefined,
+        additionalNotes: additionalNotes || '',
       }),
       // 파트너(안내견) 전용 설문 필드
       ...(user?.role === 'partner' && {
