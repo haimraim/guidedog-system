@@ -15,6 +15,7 @@ service cloud.firestore {
     // 사용자가 관리자 역할인지 확인
     function isAdmin() {
       return isAuthenticated() &&
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
@@ -64,8 +65,8 @@ service cloud.firestore {
       // 읽기: 관리자는 전체, 일반 사용자는 자기가 작성한 것만
       allow read: if isAdmin() || resource.data.userId == request.auth.uid;
 
-      // 쓰기: 로그인한 사용자는 자신의 일지 작성 가능
-      allow create: if isAuthenticated();
+      // 쓰기: 로그인한 사용자는 자신의 일지 작성 가능 (userId 검증)
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
       allow update, delete: if isAdmin() || resource.data.userId == request.auth.uid;
     }
 
@@ -101,8 +102,8 @@ service cloud.firestore {
       // 읽기: 관리자는 전체, 일반 사용자는 자기 주문만
       allow read: if isAdmin() || resource.data.userId == request.auth.uid;
 
-      // 쓰기: 로그인한 사용자는 자신의 주문 작성 가능
-      allow create: if isAuthenticated();
+      // 쓰기: 로그인한 사용자는 자신의 주문 작성 가능 (userId 검증)
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
       allow update, delete: if isAdmin() || resource.data.userId == request.auth.uid;
     }
 
@@ -129,8 +130,8 @@ service cloud.firestore {
       // 읽기: 관리자는 전체, 일반 사용자는 자기 것만
       allow read: if isAdmin() || resource.data.userId == request.auth.uid;
 
-      // 쓰기: 로그인한 사용자 작성 가능
-      allow create: if isAuthenticated();
+      // 쓰기: 로그인한 사용자 작성 가능 (userId 검증)
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
       allow update, delete: if isAdmin() || resource.data.userId == request.auth.uid;
     }
 
