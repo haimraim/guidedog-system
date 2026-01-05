@@ -16,7 +16,6 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
-import { getGuideDogs, getActivities, getPartners, getUsers } from '../utils/storage';
 
 interface AuthContextType {
   user: User | null;
@@ -83,20 +82,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           localStorage.setItem('guidedog_user', JSON.stringify(defaultUser));
         }
       } else {
-        // Firebase 로그아웃 시 로컬 스토리지도 확인
-        const savedUser = localStorage.getItem('guidedog_user');
-        if (savedUser) {
-          // 로컬 로그인 사용자가 있으면 유지
-          try {
-            const parsedUser = JSON.parse(savedUser);
-            setUser(parsedUser);
-          } catch {
-            setUser(null);
-            localStorage.removeItem('guidedog_user');
-          }
-        } else {
-          setUser(null);
-        }
+        // Firebase 로그아웃 시 사용자 정보 초기화
+        setUser(null);
+        localStorage.removeItem('guidedog_user');
       }
 
       setLoading(false);
@@ -137,178 +125,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      // Firebase Authentication 로그인 시도
+      // Firebase Authentication 로그인
       // username을 이메일 형식으로 변환
       const email = username.includes('@') ? username : `${username}@guidedogsystem.com`;
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        return true;
-      } catch (firebaseError) {
-        console.log('Firebase 로그인 실패, 로컬 인증 시도:', firebaseError);
-        // Firebase 로그인 실패 시 기존 로컬 인증으로 폴백
-        return localLogin(username, password);
-      }
+      await signInWithEmailAndPassword(auth, email, password);
+      return true;
     } catch (error) {
       console.error('로그인 실패:', error);
       return false;
     }
-  };
-
-  // 기존 로컬 인증 로직 (폴백용)
-  const localLogin = (username: string, password: string): boolean => {
-    // 먼저 로컬스토리지에 저장된 사용자 계정 확인
-    const users = getUsers();
-    const foundUser = users.find(u => u.id === username && u.password === password);
-
-    if (foundUser) {
-      // 로그인 성공 - 비밀번호 정보는 세션에 저장하지 않음
-      const userSession: User = {
-        id: foundUser.id,
-        role: foundUser.role,
-        name: foundUser.name,
-        dogName: foundUser.dogName,
-        category: foundUser.category,
-      };
-      setUser(userSession);
-      localStorage.setItem('guidedog_user', JSON.stringify(userSession));
-      return true;
-    }
-
-    // 환경변수에서 로컬 인증 비밀번호 가져오기 (없으면 기본값 사용)
-    const localAuthPassword = import.meta.env.VITE_LOCAL_AUTH_PASSWORD || '8922';
-    if (password !== localAuthPassword) {
-      return false;
-    }
-
-    // 관리자 로그인
-    if (username === 'guidedog') {
-      const adminUser: User = {
-        id: 'guidedog',
-        role: 'admin',
-        name: '관리자',
-      };
-      setUser(adminUser);
-      localStorage.setItem('guidedog_user', JSON.stringify(adminUser));
-      return true;
-    }
-
-    // 준관리자 로그인
-    if (username === '박태진') {
-      const moderatorUser: User = {
-        id: '박태진',
-        role: 'moderator',
-        name: '박태진',
-      };
-      setUser(moderatorUser);
-      localStorage.setItem('guidedog_user', JSON.stringify(moderatorUser));
-      return true;
-    }
-
-    // 담당자 로그인 (견명.담당자성명 형식)
-    // 견명.퍼피티처, 견명.훈련사, 견명.파트너, 견명.은퇴견홈케어, 견명.부모견홈케어 등 모두 가능
-    const dogs = getGuideDogs();
-    const activities = getActivities();
-    const partners = getPartners();
-
-    for (const dog of dogs) {
-      // 1. 퍼피티처 로그인 체크 (퍼피티칭 카테고리)
-      if (dog.category === '퍼피티칭' && dog.puppyTeacherName) {
-        const expectedUsername = `${dog.name}.${dog.puppyTeacherName}`;
-        if (username === expectedUsername) {
-          const puppyTeacherUser: User = {
-            id: username,
-            role: 'puppyTeacher',
-            name: dog.puppyTeacherName,
-            dogName: dog.name,
-            category: '퍼피티칭',
-          };
-          setUser(puppyTeacherUser);
-          localStorage.setItem('guidedog_user', JSON.stringify(puppyTeacherUser));
-          return true;
-        }
-      }
-
-      // 2. 훈련사 로그인 체크 (훈련견 카테고리)
-      if (dog.category === '훈련견' && dog.trainerName) {
-        const expectedUsername = `${dog.name}.${dog.trainerName}`;
-        if (username === expectedUsername) {
-          const trainerUser: User = {
-            id: username,
-            role: 'trainer',
-            name: dog.trainerName,
-            dogName: dog.name,
-            category: '훈련견',
-          };
-          setUser(trainerUser);
-          localStorage.setItem('guidedog_user', JSON.stringify(trainerUser));
-          return true;
-        }
-      }
-
-      // 3. 파트너 로그인 체크 (안내견 관련 카테고리)
-      if (
-        (dog.category === '안내견' ||
-         dog.category === '안내견/폐사' ||
-         dog.category === '안내견/일반안내견/기타')
-      ) {
-        const activity = activities.find(a => a.guideDogId === dog.id);
-        if (activity) {
-          const partner = partners.find(p => p.id === activity.partnerId);
-          if (partner) {
-            const expectedUsername = `${dog.name}.${partner.name}`;
-            if (username === expectedUsername) {
-              const partnerUser: User = {
-                id: username,
-                role: 'partner',
-                name: partner.name,
-                dogName: dog.name,
-                category: dog.category,
-              };
-              setUser(partnerUser);
-              localStorage.setItem('guidedog_user', JSON.stringify(partnerUser));
-              return true;
-            }
-          }
-        }
-      }
-
-      // 4. 은퇴견 홈케어 로그인 체크 (은퇴견 카테고리)
-      if (dog.category === '은퇴견' && dog.retiredHomeCareName) {
-        const expectedUsername = `${dog.name}.${dog.retiredHomeCareName}`;
-        if (username === expectedUsername) {
-          const retiredHomeCareUser: User = {
-            id: username,
-            role: 'retiredHomeCare',
-            name: dog.retiredHomeCareName,
-            dogName: dog.name,
-            category: '은퇴견',
-          };
-          setUser(retiredHomeCareUser);
-          localStorage.setItem('guidedog_user', JSON.stringify(retiredHomeCareUser));
-          return true;
-        }
-      }
-
-      // 5. 부모견 홈케어 로그인 체크 (부견/모견 카테고리)
-      if ((dog.category === '부견' || dog.category === '모견') && dog.parentCaregiverName) {
-        const expectedUsername = `${dog.name}.${dog.parentCaregiverName}`;
-        if (username === expectedUsername) {
-          const parentCaregiverUser: User = {
-            id: username,
-            role: 'parentCaregiver',
-            name: dog.parentCaregiverName,
-            dogName: dog.name,
-            category: dog.category,
-          };
-          setUser(parentCaregiverUser);
-          localStorage.setItem('guidedog_user', JSON.stringify(parentCaregiverUser));
-          return true;
-        }
-      }
-    }
-
-    return false;
   };
 
   const logout = async () => {
