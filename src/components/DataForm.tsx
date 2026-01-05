@@ -14,6 +14,7 @@ import type {
   GuideDog,
   Partner,
   Activity,
+  UserRole,
 } from '../types/types';
 import {
   generateId,
@@ -22,6 +23,9 @@ import {
   savePartner,
   saveActivity,
 } from '../utils/storage';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { db, auth } from '../lib/firebase';
 
 const initialFormData: FormData = {
   // 안내견 정보
@@ -65,6 +69,11 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
   const [calculatedAge, setCalculatedAge] = useState<number | null>(null);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+  // Firebase 계정 생성 필드
+  const [caregiverEmail, setCaregiverEmail] = useState('');
+  const [caregiverPassword, setCaregiverPassword] = useState('');
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -87,7 +96,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
     return true;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validate()) {
@@ -99,8 +108,80 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
       return;
     }
 
+    // Firebase 계정 생성 유효성 검사 (이메일 또는 비밀번호가 입력된 경우)
+    if (caregiverEmail || caregiverPassword) {
+      if (!caregiverEmail || !caregiverPassword) {
+        alert('이메일과 비밀번호를 모두 입력해주세요.');
+        return;
+      }
+      if (caregiverPassword.length < 6) {
+        alert('비밀번호는 6자 이상이어야 합니다.');
+        return;
+      }
+    }
+
     try {
+      setIsCreatingAccount(true);
       const now = new Date().toISOString();
+      let assignedUserId: string | undefined;
+
+      // Firebase 계정 생성 (이메일과 비밀번호가 입력된 경우)
+      if (caregiverEmail && caregiverPassword) {
+        try {
+          // 담당자 이름 설정 (카테고리별로 다름)
+          const caregiverName =
+            formData.dogCategory === '퍼피티칭' ? formData.puppyTeacherName :
+            formData.dogCategory === '은퇴견' ? formData.retiredHomeCareName :
+            formData.dogCategory === '부모견' ? formData.parentCaregiverName :
+            formData.partnerName;
+
+          // 카테고리별 권한 매핑
+          const roleMap: Record<string, UserRole> = {
+            '퍼피티칭': 'puppyTeacher',
+            '안내견': 'partner',
+            '은퇴견': 'retiredHomeCare',
+            '부모견': 'parentCaregiver',
+          };
+
+          // Firebase 계정 생성
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            caregiverEmail.trim(),
+            caregiverPassword.trim()
+          );
+
+          // 프로필 업데이트
+          await updateProfile(userCredential.user, {
+            displayName: caregiverName
+          });
+
+          // Firestore에 사용자 정보 저장
+          await setDoc(doc(db, 'users', userCredential.user.uid), {
+            id: caregiverEmail.trim(),
+            role: roleMap[formData.dogCategory as string] || 'partner',
+            name: caregiverName,
+            dogName: formData.dogName,
+            createdAt: now,
+            updatedAt: now,
+          });
+
+          assignedUserId = userCredential.user.uid;
+          console.log('Firebase 계정 생성 완료:', caregiverEmail);
+        } catch (firebaseError: any) {
+          console.error('Firebase 계정 생성 실패:', firebaseError);
+          if (firebaseError.code === 'auth/email-already-in-use') {
+            alert('이미 사용 중인 이메일입니다. 다른 이메일을 입력하거나 Firebase 계정 생성을 해제해주세요.');
+            setIsCreatingAccount(false);
+            return;
+          } else if (firebaseError.code === 'auth/invalid-email') {
+            alert('유효하지 않은 이메일 형식입니다.');
+            setIsCreatingAccount(false);
+            return;
+          } else {
+            alert(`Firebase 계정 생성에 실패했습니다: ${firebaseError.message}\n계정 없이 저장을 계속합니다.`);
+          }
+        }
+      }
 
       // 안내견 저장
       const guideDog: GuideDog = {
@@ -110,6 +191,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
         birthDate: formData.dogBirthDate,
         gender: (formData.dogGender as Gender) || '수컷',
         photo: formData.dogPhoto,
+        assignedUserId, // Firebase UID 추가
         ...(formData.dogCategory === '퍼피티칭' && {
           puppyTeacherName: formData.puppyTeacherName,
           puppyTeacherPhone: formData.puppyTeacherPhone,
@@ -139,6 +221,7 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
           phone: formData.phone,
           address: formData.address || '',
           photo: formData.partnerPhoto,
+          assignedUserId, // Firebase UID 추가
           createdAt: now,
           updatedAt: now,
         };
@@ -183,6 +266,14 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
       setSubmitStatus('success');
       setFormData(initialFormData);
       setCalculatedAge(null);
+      // Firebase 계정 생성 관련 state 초기화
+      setCaregiverEmail('');
+      setCaregiverPassword('');
+
+      // 성공 메시지
+      if (assignedUserId) {
+        alert(`안내견과 담당자가 저장되었습니다.\nFirebase 계정: ${caregiverEmail}\n이 계정으로 앱에 로그인할 수 있습니다.`);
+      }
 
       // 성공 콜백 호출
       if (onSuccess) {
@@ -198,6 +289,8 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
     } catch (error) {
       setSubmitStatus('error');
       console.error('데이터 저장 실패:', error);
+    } finally {
+      setIsCreatingAccount(false);
     }
   };
 
@@ -407,6 +500,43 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
+
+              {/* Firebase 계정 생성 (앱 로그인용) */}
+              <div className="md:col-span-2 mt-4 p-4 border border-primary-200 rounded bg-white">
+                <p className="font-semibold text-primary-800 mb-2">앱 로그인 계정</p>
+                <p className="text-xs text-neutral-500 mb-4">
+                  퍼피티처가 앱에 로그인할 수 있는 계정이 자동 생성됩니다.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="caregiverEmail" className="block text-sm font-medium mb-1">
+                      이메일 *
+                    </label>
+                    <input
+                      type="email"
+                      id="caregiverEmail"
+                      value={caregiverEmail}
+                      onChange={(e) => setCaregiverEmail(e.target.value)}
+                      placeholder="example@email.com"
+                      className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="caregiverPassword" className="block text-sm font-medium mb-1">
+                      비밀번호 * (6자 이상)
+                    </label>
+                    <input
+                      type="text"
+                      id="caregiverPassword"
+                      value={caregiverPassword}
+                      onChange={(e) => setCaregiverPassword(e.target.value)}
+                      placeholder="비밀번호 입력"
+                      className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
+                      minLength={6}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </fieldset>
         )}
@@ -458,6 +588,43 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
               </div>
+
+              {/* Firebase 계정 생성 (앱 로그인용) */}
+              <div className="md:col-span-2 mt-4 p-4 border border-success-200 rounded bg-white">
+                <p className="font-semibold text-success-800 mb-2">앱 로그인 계정</p>
+                <p className="text-xs text-neutral-500 mb-4">
+                  은퇴견 홈케어가 앱에 로그인할 수 있는 계정이 자동 생성됩니다.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="caregiverEmailRetired" className="block text-sm font-medium mb-1">
+                      이메일 *
+                    </label>
+                    <input
+                      type="email"
+                      id="caregiverEmailRetired"
+                      value={caregiverEmail}
+                      onChange={(e) => setCaregiverEmail(e.target.value)}
+                      placeholder="example@email.com"
+                      className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-success-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="caregiverPasswordRetired" className="block text-sm font-medium mb-1">
+                      비밀번호 * (6자 이상)
+                    </label>
+                    <input
+                      type="text"
+                      id="caregiverPasswordRetired"
+                      value={caregiverPassword}
+                      onChange={(e) => setCaregiverPassword(e.target.value)}
+                      placeholder="비밀번호 입력"
+                      className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-success-500"
+                      minLength={6}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </fieldset>
         )}
@@ -508,6 +675,43 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
                 />
+              </div>
+
+              {/* Firebase 계정 생성 (앱 로그인용) */}
+              <div className="md:col-span-2 mt-4 p-4 border border-cyan-200 rounded bg-white">
+                <p className="font-semibold text-cyan-800 mb-2">앱 로그인 계정</p>
+                <p className="text-xs text-neutral-500 mb-4">
+                  부모견 홈케어자가 앱에 로그인할 수 있는 계정이 자동 생성됩니다.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="caregiverEmailParent" className="block text-sm font-medium mb-1">
+                      이메일 *
+                    </label>
+                    <input
+                      type="email"
+                      id="caregiverEmailParent"
+                      value={caregiverEmail}
+                      onChange={(e) => setCaregiverEmail(e.target.value)}
+                      placeholder="example@email.com"
+                      className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-cyan-500"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="caregiverPasswordParent" className="block text-sm font-medium mb-1">
+                      비밀번호 * (6자 이상)
+                    </label>
+                    <input
+                      type="text"
+                      id="caregiverPasswordParent"
+                      value={caregiverPassword}
+                      onChange={(e) => setCaregiverPassword(e.target.value)}
+                      placeholder="비밀번호 입력"
+                      className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-cyan-500"
+                      minLength={6}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </fieldset>
@@ -580,6 +784,43 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
                 className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-primary-500"
               />
             </div>
+
+            {/* Firebase 계정 생성 (앱 로그인용) */}
+            <div className="md:col-span-2 mt-4 p-4 border border-warning-200 rounded bg-white">
+              <p className="font-semibold text-warning-800 mb-2">앱 로그인 계정</p>
+              <p className="text-xs text-neutral-500 mb-4">
+                파트너가 앱에 로그인할 수 있는 계정이 자동 생성됩니다.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="caregiverEmailPartner" className="block text-sm font-medium mb-1">
+                    이메일 *
+                  </label>
+                  <input
+                    type="email"
+                    id="caregiverEmailPartner"
+                    value={caregiverEmail}
+                    onChange={(e) => setCaregiverEmail(e.target.value)}
+                    placeholder="example@email.com"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-warning-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="caregiverPasswordPartner" className="block text-sm font-medium mb-1">
+                    비밀번호 * (6자 이상)
+                  </label>
+                  <input
+                    type="text"
+                    id="caregiverPasswordPartner"
+                    value={caregiverPassword}
+                    onChange={(e) => setCaregiverPassword(e.target.value)}
+                    placeholder="비밀번호 입력"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded focus:ring-2 focus:ring-warning-500"
+                    minLength={6}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </fieldset>
         )}
@@ -588,10 +829,15 @@ export const DataForm: React.FC<DataFormProps> = ({ onSuccess }) => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-6 py-3 bg-primary-600 text-white font-semibold rounded hover:bg-primary-700 focus:ring-4 focus:ring-primary-300"
+            disabled={isCreatingAccount}
+            className={`px-6 py-3 font-semibold rounded focus:ring-4 focus:ring-primary-300 ${
+              isCreatingAccount
+                ? 'bg-neutral-400 text-white cursor-not-allowed'
+                : 'bg-primary-600 text-white hover:bg-primary-700'
+            }`}
             aria-label="데이터 저장"
           >
-            저장
+            {isCreatingAccount ? '저장 중...' : '저장'}
           </button>
         </div>
       </form>
