@@ -4,25 +4,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyDFpZyTGYzi2N8SrK8JmWJi-iSRSZZ0NHk",
+  authDomain: "guidedogsystem.firebaseapp.com",
+  projectId: "guidedogsystem",
+  storageBucket: "guidedogsystem.firebasestorage.app",
+  messagingSenderId: "757099883206",
+  appId: "1:757099883206:web:dfd3a2e290594e1106c5c7"
 };
-
-// 환경변수 누락 체크
-const missingVars = Object.entries(firebaseConfig)
-  .filter(([, value]) => !value)
-  .map(([key]) => key);
-
-if (missingVars.length > 0) {
-  const errorMsg = `Firebase 환경변수 누락: ${missingVars.join(', ')}`;
-  console.error(errorMsg);
-  document.body.innerHTML = `<div style="padding:20px;color:red;font-size:18px;">${errorMsg}<br><br>Vercel 환경변수를 확인하세요.</div>`;
-  throw new Error(errorMsg);
-}
 
 // Firebase 앱 초기화
 const app = initializeApp(firebaseConfig);
