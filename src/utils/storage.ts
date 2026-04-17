@@ -165,22 +165,38 @@ export const getCombinedData = (): CombinedData[] => {
 
 /**
  * Firestore에서 데이터를 가져와 LocalStorage에 저장
+ * 일반 사용자는 firebaseUid를 반드시 전달해야 Firestore 보안 규칙을 통과함
+ * (user.id는 이메일이고, assignedUserId는 Firebase UID이므로 구분 필수)
  */
-export const syncFromFirestore = async (): Promise<void> => {
+export const syncFromFirestore = async (
+  firebaseUid?: string,
+  isAdmin?: boolean
+): Promise<void> => {
+  const userId = isAdmin ? undefined : firebaseUid;
+
+  // 컬렉션별로 독립적으로 처리: 한 쿼리 실패가 다른 동기화를 막지 않도록
   try {
-    const [dogs, partners, activities] = await Promise.all([
-      firestoreService.getDogs(),
-      firestoreService.getPartners(),
-      firestoreService.getActivities(),
-    ]);
-
+    const dogs = await firestoreService.getDogs(userId);
     localStorage.setItem(STORAGE_KEYS.GUIDE_DOGS, JSON.stringify(dogs));
-    localStorage.setItem(STORAGE_KEYS.PARTNERS, JSON.stringify(partners));
-    localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities));
-
-    console.log('✅ Firestore 동기화 완료');
   } catch (error) {
-    console.error('❌ Firestore 동기화 실패:', error);
+    console.error('❌ 안내견 동기화 실패:', error);
+  }
+
+  try {
+    const partners = await firestoreService.getPartners(userId);
+    localStorage.setItem(STORAGE_KEYS.PARTNERS, JSON.stringify(partners));
+  } catch (error) {
+    console.error('❌ 파트너 동기화 실패:', error);
+  }
+
+  try {
+    // activities는 관리자만 전체 조회 가능 (보안 규칙)
+    if (isAdmin) {
+      const activities = await firestoreService.getActivities();
+      localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities));
+    }
+  } catch (error) {
+    console.error('❌ 활동 동기화 실패:', error);
   }
 };
 

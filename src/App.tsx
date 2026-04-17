@@ -12,14 +12,15 @@ import { MainLayout } from './components/MainLayout';
 import { syncFromFirestore } from './utils/storage';
 
 function AppContent() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user, firebaseUser } = useAuth();
 
   // 앱 시작 시 Firestore에서 데이터 동기화
+  // firebaseUser.uid는 보안 규칙(assignedUserId 매칭)에 필수
   useEffect(() => {
-    if (isAuthenticated) {
-      syncFromFirestore();
+    if (isAuthenticated && firebaseUser) {
+      syncFromFirestore(firebaseUser.uid, user?.role === 'admin');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, firebaseUser, user?.role]);
 
   // 로딩 중에는 로딩 화면 표시
   if (loading) {

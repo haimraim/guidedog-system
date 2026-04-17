@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { getGuideDogs } from '../utils/storage';
+import { getDogs as getDogsFromFirestore } from '../services/firestoreService';
 import type { BoardingForm, GuideDog, BoardingComment } from '../types/types';
 import { generateId } from '../utils/storage';
 import {
@@ -99,7 +100,7 @@ interface BoardingFormPageProps {
 }
 
 export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
-  const { user } = useAuth();
+  const { user, firebaseUser } = useAuth();
   const toast = useToast();
   const [forms, setForms] = useState<BoardingForm[]>([]);
   const [isAdding, setIsAdding] = useState(false);
@@ -139,12 +140,20 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
   useEffect(() => {
     loadForms();
     loadDogInfo();
-  }, [user]);
+  }, [user, firebaseUser]);
 
-  const loadDogInfo = () => {
+  const loadDogInfo = async () => {
     if (!user?.dogName) return;
-    const allDogs = getGuideDogs();
-    const dog = allDogs.find(d => d.name === user.dogName);
+    const localDogs = getGuideDogs();
+    let dog = localDogs.find(d => d.name === user.dogName);
+    if (!dog && firebaseUser) {
+      // 다른 PC 접속 시 로컬 캐시가 비어 있을 수 있으므로 Firestore에서 직접 조회
+      // 보안 규칙상 assignedUserId는 Firebase UID이므로 user.id(이메일)가 아닌 firebaseUser.uid 사용
+      const remoteDogs = await getDogsFromFirestore(
+        user.role === 'admin' ? undefined : firebaseUser.uid
+      );
+      dog = remoteDogs.find(d => d.name === user.dogName);
+    }
     setDogInfo(dog || null);
   };
 
@@ -251,8 +260,8 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
       aftercareTeacher: (dogInfo.category === '안내견' || dogInfo.category === '안내견/폐사' || dogInfo.category === '안내견/일반안내견/기타') ? aftercareTeacher : undefined,
       tearsblanket: (dogInfo.category === '안내견' || dogInfo.category === '안내견/폐사' || dogInfo.category === '안내견/일반안내견/기타') ? tearsblanket : undefined,
       usesDTBelt,
-      needsNailTrim: dogInfo.category === '퍼피티칭' ? needsNailTrim : undefined,
-      needsPadTrim: dogInfo.category === '퍼피티칭' ? needsPadTrim : undefined,
+      needsNailTrim: dogInfo.category === '퍼피워킹' ? needsNailTrim : undefined,
+      needsPadTrim: dogInfo.category === '퍼피워킹' ? needsPadTrim : undefined,
       returnItems: returnItems || undefined,
       notes: notes || undefined,
       status: editingForm?.status || 'waiting',
@@ -506,7 +515,7 @@ export const BoardingFormPage = ({ onNavigateHome }: BoardingFormPageProps) => {
     dogInfo.category === '안내견/일반안내견/기타'
   );
 
-  const isPuppy = dogInfo && dogInfo.category === '퍼피티칭';
+  const isPuppy = dogInfo && dogInfo.category === '퍼피워킹';
 
   // 신청서 작성 폼
   if (isAdding) {
